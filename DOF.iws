@@ -1,0 +1,1681 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project relativePaths="false" version="4">
+  <component name="CCaseConfig">
+    <option name="checkoutReserved" value="false" />
+    <option name="markExternalChangeAsUpToDate" value="true" />
+    <option name="checkInUseHijack" value="true" />
+    <option name="useUcmModel" value="true" />
+    <option name="isOffline" value="false" />
+    <option name="synchOutside" value="false" />
+    <option name="isHistoryResticted" value="true" />
+    <option name="useIdenticalSwitch" value="true" />
+    <option name="synchActivitiesOnRefresh" value="true" />
+    <option name="lastScr" value="" />
+    <option name="scrTextFileName" value="" />
+    <option name="historyRevisionsNumber" value="4" />
+  </component>
+  <component name="ChangeBrowserSettings">
+    <option name="MAIN_SPLITTER_PROPORTION" value="0.3" />
+    <option name="MESSAGES_SPLITTER_PROPORTION" value="0.8" />
+    <option name="USE_DATE_BEFORE_FILTER" value="false" />
+    <option name="USE_DATE_AFTER_FILTER" value="false" />
+    <option name="USE_CHANGE_BEFORE_FILTER" value="false" />
+    <option name="USE_CHANGE_AFTER_FILTER" value="false" />
+    <option name="DATE_BEFORE" value="" />
+    <option name="DATE_AFTER" value="" />
+    <option name="CHANGE_BEFORE" value="" />
+    <option name="CHANGE_AFTER" value="" />
+    <option name="USE_USER_FILTER" value="false" />
+    <option name="USER" value="" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" name="Default" comment="" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CloverPlugin" class="com.cenqua.clover.idea6.config.IdeaCloverConfig">
+    <regexpContexts class="java.util.ArrayList" />
+    <flushInterval>5000</flushInterval>
+    <flattenPackages>false</flattenPackages>
+    <coveredHighlight null="true" />
+    <autoRefreshInterval>2000</autoRefreshInterval>
+    <excludes null="true" />
+    <showErrorMarks>true</showErrorMarks>
+    <showInline>true</showInline>
+    <contextFilter class="com.cenqua.clover.context.BlockContextFilter">
+      <filterMask>65535</filterMask>
+    </contextFilter>
+    <showTooltips>true</showTooltips>
+    <languageLevel>1.3</languageLevel>
+    <notCoveredHighlight>-341816</notCoveredHighlight>
+    <enabled>true</enabled>
+    <notCoveredStripe>-65536</notCoveredStripe>
+    <outOfDateStripe>-256</outOfDateStripe>
+    <instrumentTests>false</instrumentTests>
+    <showGutter>true</showGutter>
+    <manualInitString null="true" />
+    <includes null="true" />
+    <useGeneratedInitString>true</useGeneratedInitString>
+    <showSummaryInToolbar>true</showSummaryInToolbar>
+    <autoScroll>true</autoScroll>
+    <outOfDateHighlight>-32</outOfDateHighlight>
+    <showSummaryInToolwindow>true</showSummaryInToolwindow>
+    <relativeInitString>false</relativeInitString>
+    <span>0</span>
+    <flushPolicy>0</flushPolicy>
+    <autoScrollFromSource>false</autoScrollFromSource>
+    <coveredStripe>-16711936</coveredStripe>
+    <autoRefresh>false</autoRefresh>
+  </component>
+  <component name="Commander">
+    <leftPanel />
+    <rightPanel />
+    <splitter proportion="0.5" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="COMPILE_IN_BACKGROUND" value="false" />
+    <option name="AUTO_SHOW_ERRORS_IN_EDITOR" value="true" />
+    <option name="CLOSE_MESSAGE_VIEW_IF_SUCCESS" value="true" />
+    <option name="COMPILE_DEPENDENT_FILES" value="false" />
+    <option name="CLEAR_OUTPUT_DIRECTORY" value="false" />
+    <option name="ASSERT_NOT_NULL" value="true" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+    <option name="REVERSE_PATCH" value="false" />
+  </component>
+  <component name="Cvs2Configuration">
+    <option name="PRUNE_EMPTY_DIRECTORIES" value="true" />
+    <option name="MERGING_MODE" value="0" />
+    <option name="MERGE_WITH_BRANCH1_NAME" value="HEAD" />
+    <option name="MERGE_WITH_BRANCH2_NAME" value="HEAD" />
+    <option name="RESET_STICKY" value="false" />
+    <option name="CREATE_NEW_DIRECTORIES" value="true" />
+    <option name="DEFAULT_TEXT_FILE_SUBSTITUTION" value="kv" />
+    <option name="PROCESS_UNKNOWN_FILES" value="false" />
+    <option name="PROCESS_DELETED_FILES" value="false" />
+    <option name="PROCESS_IGNORED_FILES" value="false" />
+    <option name="RESERVED_EDIT" value="false" />
+    <option name="CHECKOUT_DATE_OR_REVISION_SETTINGS">
+      <value>
+        <option name="BRANCH" value="" />
+        <option name="DATE" value="" />
+        <option name="USE_BRANCH" value="false" />
+        <option name="USE_DATE" value="false" />
+      </value>
+    </option>
+    <option name="UPDATE_DATE_OR_REVISION_SETTINGS">
+      <value>
+        <option name="BRANCH" value="" />
+        <option name="DATE" value="" />
+        <option name="USE_BRANCH" value="false" />
+        <option name="USE_DATE" value="false" />
+      </value>
+    </option>
+    <option name="SHOW_CHANGES_REVISION_SETTINGS">
+      <value>
+        <option name="BRANCH" value="" />
+        <option name="DATE" value="" />
+        <option name="USE_BRANCH" value="false" />
+        <option name="USE_DATE" value="false" />
+      </value>
+    </option>
+    <option name="SHOW_OUTPUT" value="false" />
+    <option name="ADD_WATCH_INDEX" value="0" />
+    <option name="REMOVE_WATCH_INDEX" value="0" />
+    <option name="UPDATE_KEYWORD_SUBSTITUTION" />
+    <option name="MAKE_NEW_FILES_READONLY" value="false" />
+    <option name="SHOW_CORRUPTED_PROJECT_FILES" value="0" />
+    <option name="TAG_AFTER_PROJECT_COMMIT" value="false" />
+    <option name="OVERRIDE_EXISTING_TAG_FOR_PROJECT" value="true" />
+    <option name="TAG_AFTER_PROJECT_COMMIT_NAME" value="" />
+    <option name="CLEAN_COPY" value="false" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="DebuggerManager">
+    <line_breakpoints>
+      <breakpoint url="file://$PROJECT_DIR$/junit/manager/CustomerManagerTest.java" line="58" class="manager.CustomerManagerTest" package="manager">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/manager/CustomerManager.java" line="26" class="manager.CustomerManager" package="manager">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/junit/manager/CustomerManagerTest.java" line="55" class="manager.CustomerManagerTest" package="manager">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/junit/manager/CustomerManagerTest.java" line="84" class="manager.CustomerManagerTest" package="manager">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/jdbc_component/JdbcDbUtil.java" line="121" class="jdbc_component.JdbcDbUtil" package="jdbc_component">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/jdbc_component/JdbcInvoiceComponent.java" line="97" class="jdbc_component.JdbcInvoiceComponent" package="jdbc_component">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/jdbc_component/JdbcInvoiceComponent.java" line="109" class="jdbc_component.JdbcInvoiceComponent" package="jdbc_component">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/junit/entity/AccountingTest.java" line="76" class="entity.AccountingTest" package="entity">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/junit/dof_xml_handler/ManufacturerXmlFactoryTest.java" line="53" class="dof_xml_handler.ManufacturerXmlFactoryTest" package="dof_xml_handler">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/dof_src/com/ibm/dof/DOF.java" line="2" class="Class at DOF.java:2" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
+    <breakpoint_any>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </breakpoint_any>
+    <breakpoint_rules />
+    <ui_properties />
+  </component>
+  <component name="ErrorTreeViewConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="HIDE_WARNINGS" value="false" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="1" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="ManufacturerXmlFactoryTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/junit/dof_xml_handler/ManufacturerXmlFactoryTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="58" column="5" selection-start="1760" selection-end="1760" vertical-scroll-proportion="0.19450802">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InvoiceXmlFactoryTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/junit/dof_xml_handler/InvoiceXmlFactoryTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="15" column="13" selection-start="247" selection-end="247" vertical-scroll-proportion="0.097788125">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HbnAccountingTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/junit/entity/HbnAccountingTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="13" column="0" selection-start="200" selection-end="200" vertical-scroll-proportion="0.1784897">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/build.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="39" column="8" selection-start="1556" selection-end="1556" vertical-scroll-proportion="0.33333334">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DependentObjectHandler.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dof_src/com/ibm/dof/DependentObjectHandler.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="2" column="17" selection-start="39" selection-end="39" vertical-scroll-proportion="0.027939465">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DOF.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dof_src/com/ibm/dof/DOF.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="103" column="7" selection-start="3842" selection-end="3842" vertical-scroll-proportion="0.2491269">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HandlerMappings.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dof_src/com/ibm/dof/HandlerMappings.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="13" selection-start="74" selection-end="74" vertical-scroll-proportion="0.069848664">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HibernateUtil.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jpa_component/HibernateUtil.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="11" column="5" selection-start="196" selection-end="196" vertical-scroll-proportion="0.123569794">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AccountingTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/junit/entity/AccountingTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="13" column="0" selection-start="185" selection-end="185" vertical-scroll-proportion="0.013969732">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Invoice.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/entity/Invoice.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="105" column="0" selection-start="2215" selection-end="2215" vertical-scroll-proportion="0.013729977">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AllTestSuite.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/junit/AllTestSuite.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="12" column="8" selection-start="395" selection-end="395" vertical-scroll-proportion="0.13729978">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JdbcInvoiceComponent.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jdbc_component/JdbcInvoiceComponent.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="53" column="12" selection-start="1965" selection-end="1965" vertical-scroll-proportion="0.013969732">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="HierarchyBrowserManager">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="SORT_ALPHABETICALLY" value="false" />
+    <option name="HIDE_CLASSES_WHERE_METHOD_NOT_IMPLEMENTED" value="false" />
+  </component>
+  <component name="ModuleEditorState">
+    <option name="LAST_EDITED_MODULE_NAME" />
+    <option name="LAST_EDITED_TAB_NAME" />
+  </component>
+  <component name="PackagesPane">
+    <subPane>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="1.ipr" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="1" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+    </subPane>
+  </component>
+  <component name="PerforceChangeBrowserSettings">
+    <option name="USE_CLIENT_FILTER" value="true" />
+    <option name="CLIENT" value="" />
+  </component>
+  <component name="PerforceDirect.Settings">
+    <option name="port" value="jasper:1666" />
+    <option name="useNativeApi" value="true" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkin" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <OptionsSetting value="true" id="Undo Check Out" />
+    <OptionsSetting value="true" id="Compare with SourceSafe Version" />
+    <OptionsSetting value="true" id="Get Latest Version" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectPane">
+    <subPane>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\SDWest\DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\SDWest\DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\SDWest\DOF\junit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\SDWest\DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\SDWest\DOF\dof_src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\SDWest\DOF\dof_src\com\ibm\dof" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\SDWest\DOF" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:C:\SDWest\DOF\build" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+    </subPane>
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="0.16666667" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <showStructure Scope="false" PackagesPane="false" ProjectPane="false" />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="RunManagerConfig.compileBeforeRunning" value="true" />
+    <property name="RunManagerConfig.showSettingsBeforeRunnig" value="false" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
+    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="GoToClass.includeJavaFiles" value="false" />
+    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="GoToClass.includeLibraries" value="false" />
+    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="entity" />
+      <recent name="hsqldb" />
+      <recent name="hbn_component" />
+      <recent name="component" />
+    </key>
+    <key name="MoveMembersDialog.RECENTS_KEY">
+      <recent name="component.CustomerTestUtils" />
+    </key>
+    <key name="IntroduceConstantDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="hbn_component" />
+      <recent name="global" />
+      <recent name="entity" />
+      <recent name="component" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.DBTestSetup.testRecreateSchema">
+    <tempConfiguration default="false" name="JdbcDbUtil" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" value="jdbc_component.JdbcDbUtil" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="shutdown" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <RunnerSettings RunnerId="Profile ">
+        <option name="myExternalizedOptions" value="&#13;&#10;snapshots-dir=&#13;&#10;" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </tempConfiguration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="/home/jgordon/IntelliJ-IDEA-3.0.1/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG" enabled="false" merge="false">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="WebLogic Instance" factoryName="Local">
+      <option name="WORKING_DIRECTORY" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="7001" />
+      <option name="LOCAL" value="true" />
+      <option name="OPEN_IN_BROWSER" value="true" />
+      <option name="OPEN_IN_BROWSER_URL" value="/" />
+      <option name="COMMON_VM_ARGUMENTS" value="" />
+      <option name="DOMAIN_PATH" value="" />
+      <option name="USER" value="weblogic" />
+      <option name="PASSWORD" value="weblogic" />
+      <option name="SERVER_NAME" value="myserver" />
+      <option name="DOMAIN_NAME" value="mydomain" />
+      <predefined_log_file id="WEBLOGIC_DOMAIN_LOG_FILE" enabled="true" />
+      <predefined_log_file id="WEBLOGIC_SERVER_LOG_FILE" enabled="true" />
+    </configuration>
+    <configuration default="false" name="AccountingTest.testFlagOverdueCustomers" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <pattern value="component.*" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="entity" />
+      <option name="MAIN_CLASS_NAME" value="entity.AccountingTest" />
+      <option name="METHOD_NAME" value="testFlagOverdueCustomers" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Profile ">
+        <option name="myExternalizedOptions" value="&#13;&#10;snapshots-dir=&#13;&#10;" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="false" name="AccountingTest.testAddChargeToCustomerIncreasesCustomersBalance" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <pattern value="component.*" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="entity" />
+      <option name="MAIN_CLASS_NAME" value="entity.AccountingTest" />
+      <option name="METHOD_NAME" value="testAddChargeToCustomerIncreasesCustomersBalance" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Profile ">
+        <option name="myExternalizedOptions" value="&#13;&#10;snapshots-dir=&#13;&#10;" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="false" name="DBTestSetup.testRecreateSchema" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <pattern value="global.*" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="PACKAGE_NAME" value="global" />
+      <option name="MAIN_CLASS_NAME" value="global.DBTestSetup" />
+      <option name="METHOD_NAME" value="testRecreateSchema" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Profile ">
+        <option name="myExternalizedOptions" value="&#13;&#10;snapshots-dir=&#13;&#10;" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="false" name="MockAccountingTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <pattern value="entity.*" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="entity" />
+      <option name="MAIN_CLASS_NAME" value="entity.MockAccountingTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="false" name="JdbcAccountingTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <pattern value="entity.*" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="entity" />
+      <option name="MAIN_CLASS_NAME" value="entity.JdbcAccountingTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="false" name="InvoiceXmlFactoryTest.testNewInvoiceSubtotal" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <pattern value="dof_xml_handler.*" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="dof_xml_handler" />
+      <option name="MAIN_CLASS_NAME" value="dof_xml_handler.InvoiceXmlFactoryTest" />
+      <option name="METHOD_NAME" value="testNewInvoiceSubtotal" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="2493" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <list size="7">
+      <item index="0" class="java.lang.String" itemvalue="Application.JdbcDbUtil" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.AccountingTest.testFlagOverdueCustomers" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.AccountingTest.testAddChargeToCustomerIncreasesCustomersBalance" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.DBTestSetup.testRecreateSchema" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.MockAccountingTest" />
+      <item index="5" class="java.lang.String" itemvalue="JUnit.JdbcAccountingTest" />
+      <item index="6" class="java.lang.String" itemvalue="JUnit.InvoiceXmlFactoryTest.testNewInvoiceSubtotal" />
+    </list>
+  </component>
+  <component name="ScopeViewComponent">
+    <subPane subId="Project">
+      <PATH>
+        <PATH_ELEMENT USER_OBJECT="Root">
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="" />
+        </PATH_ELEMENT>
+      </PATH>
+    </subPane>
+  </component>
+  <component name="StarteamConfiguration">
+    <option name="SERVER" value="" />
+    <option name="PORT" value="49201" />
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="PROJECT" value="" />
+    <option name="VIEW" value="" />
+    <option name="ALTERNATIVE_WORKING_PATH" value="" />
+    <option name="LOCK_ON_CHECKOUT" value="false" />
+    <option name="UNLOCK_ON_CHECKIN" value="false" />
+  </component>
+  <component name="StructureViewFactory">
+    <option name="AUTOSCROLL_MODE" value="true" />
+    <option name="AUTOSCROLL_FROM_SOURCE" value="false" />
+    <option name="ACTIVE_ACTIONS" value="" />
+  </component>
+  <component name="Struts Assistant">
+    <option name="showInputs" value="true" />
+    <option name="resources">
+      <value>
+        <option name="strutsPath" />
+        <option name="strutsHelp" />
+      </value>
+    </option>
+    <option name="selectedTaglibs" />
+    <option name="selectedTaglibs" />
+    <option name="myStrutsValidationEnabled" value="true" />
+    <option name="myTilesValidationEnabled" value="true" />
+    <option name="myValidatorValidationEnabled" value="true" />
+    <option name="myReportErrorsAsWarnings" value="true" />
+  </component>
+  <component name="SvnChangesBrowserSettings">
+    <option name="USE_AUTHOR_FIELD" value="true" />
+    <option name="AUTHOR" value="" />
+    <option name="LOCATION" value="" />
+    <option name="USE_PROJECT_SETTINGS" value="true" />
+    <option name="USE_ALTERNATE_LOCATION" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="UPDATE_RUN_STATUS" value="false" />
+    <option name="UPDATE_RECURSIVELY" value="true" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <configuration useDefault="true">C:\Documents and Settings\Administrator\Application Data\Subversion</configuration>
+  </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-4" y="-4" width="1608" height="1208" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="12" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" order="1" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32744187" order="1" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="3" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="13" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="14" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12465374" order="9" />
+      <window_info id="SVN Repositories" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963988" order="-1" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="6" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="0" />
+      <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
+      <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25128534" order="0" />
+      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="11" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="2" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="5" />
+      <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39348838" order="2" />
+      <window_info id="Clover" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
+      <window_info id="File View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="7" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="0" />
+      <window_info id="Profile" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="10" />
+      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="2" />
+      <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="4" />
+      <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
+    </layout>
+  </component>
+  <component name="VCS.FileViewConfiguration">
+    <option name="SELECTED_STATUSES" value="DEFAULT" />
+    <option name="SELECTED_COLUMNS" value="DEFAULT" />
+    <option name="SHOW_FILTERS" value="true" />
+    <option name="CUSTOMIZE_VIEW" value="true" />
+    <option name="SHOW_FILE_HISTORY_AS_TREE" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="PERFORM_UPDATE_IN_BACKGROUND" value="false" />
+    <option name="PERFORM_COMMIT_IN_BACKGROUND" value="false" />
+    <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
+    <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
+    <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
+    <option name="LAST_COMMIT_MESSAGE" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
+    <option name="FILE_HISTORY_DIALOG_COMMENTS_SPLITTER_PROPORTION" value="0.8" />
+    <option name="FILE_HISTORY_DIALOG_SPLITTER_PROPORTION" value="0.5" />
+    <option name="ACTIVE_VCS_NAME" value="" />
+    <option name="UPDATE_GROUP_BY_PACKAGES" value="false" />
+    <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
+    <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
+    <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
+  </component>
+  <component name="VssConfiguration">
+    <option name="CLIENT_PATH" value="" />
+    <option name="SRCSAFEINI_PATH" value="" />
+    <option name="USER_NAME" value="" />
+    <option name="PWD" value="" />
+    <CheckoutOptions>
+      <option name="COMMENT" value="" />
+      <option name="DO_NOT_GET_LATEST_VERSION" value="false" />
+      <option name="REPLACE_WRITABLE" value="false" />
+      <option name="RECURSIVE" value="false" />
+    </CheckoutOptions>
+    <CheckinOptions>
+      <option name="COMMENT" value="" />
+      <option name="KEEP_CHECKED_OUT" value="false" />
+      <option name="RECURSIVE" value="false" />
+    </CheckinOptions>
+    <AddOptions>
+      <option name="STORE_ONLY_LATEST_VERSION" value="false" />
+      <option name="CHECK_OUT_IMMEDIATELY" value="false" />
+    </AddOptions>
+    <UndocheckoutOptions>
+      <option name="MAKE_WRITABLE" value="false" />
+      <option name="REPLACE_LOCAL_COPY" value="0" />
+      <option name="RECURSIVE" value="false" />
+    </UndocheckoutOptions>
+    <GetOptions>
+      <option name="REPLACE_WRITABLE" value="0" />
+      <option name="MAKE_WRITABLE" value="false" />
+      <option name="ANSWER_NEGATIVELY" value="false" />
+      <option name="ANSWER_POSITIVELY" value="false" />
+      <option name="RECURSIVE" value="false" />
+      <option name="VERSION" />
+    </GetOptions>
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+    <buildFile url="file://$PROJECT_DIR$/build.xml">
+      <antCommandLine value="" />
+      <runInBackground value="true" />
+      <targetFilters />
+      <treeView value="true" />
+      <verbose value="true" />
+      <viewClosedWhenNoErrors value="false" />
+    </buildFile>
+  </component>
+  <component name="com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable" proportions="0.16666667" version="1">
+    <option name="myLastEditedConfigurable" value="Local Scopes" />
+  </component>
+  <component name="com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectRootMasterDetailsConfigurable" proportions="0.16666667,0.5" version="1">
+    <option name="myPlainMode" value="false" />
+    <option name="myLastEditedConfigurable" value="1" />
+  </component>
+  <component name="com.intellij.profile.ui.ErrorOptionsConfigurable" proportions="0.16666667" version="1">
+    <option name="myLastEditedConfigurable" value="IDE Profiles" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="jar://C:/dev/jdk1.5.0_09/src.zip!/java/lang/Exception.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="13" selection-start="495" selection-end="495" vertical-scroll-proportion="0.25225225">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/dev/jdk1.5.0_09/src.zip!/java/util/Currency.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="249" column="19" selection-start="11308" selection-end="11308" vertical-scroll-proportion="0.34234235">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/dev/jdk1.5.0_09/src.zip!/java/util/List.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="89" column="17" selection-start="4130" selection-end="4130" vertical-scroll-proportion="0.33333334">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/global/Constants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="17" selection-start="84" selection-end="84" vertical-scroll-proportion="0.071428575">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/manager/CustomerManagerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="11" selection-start="423" selection-end="423" vertical-scroll-proportion="0.33170733">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/DuplicateRecordException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="7" selection-start="346" selection-end="346" vertical-scroll-proportion="0.537931">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jdbc_component/ResultSetProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="16" selection-start="100" selection-end="100" vertical-scroll-proportion="0.114285715">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/Component.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="15" selection-start="64" selection-end="64" vertical-scroll-proportion="0.15841584">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/global/PropertyFileConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="13" selection-start="256" selection-end="256" vertical-scroll-proportion="1.4444444">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/global/Configuration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="63" column="0" selection-start="1340" selection-end="1340" vertical-scroll-proportion="1.4074074">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/dev/jdk1.5.0_09/src.zip!/java/lang/String.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="555" column="21" selection-start="21660" selection-end="21660" vertical-scroll-proportion="0.2888889">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/global/DBTestSetup.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="9" selection-start="459" selection-end="459" vertical-scroll-proportion="0.4311377">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/global/DBTestCase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="1" selection-start="343" selection-end="343" vertical-scroll-proportion="0.38323355">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hsqldb/Testdb.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="120" column="20" selection-start="4700" selection-end="4700" vertical-scroll-proportion="2.3225806">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jdbc_component/JdbcPaymentComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="0" selection-start="226" selection-end="226" vertical-scroll-proportion="0.5714286">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/manager/CustomerManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="16" selection-start="1966" selection-end="1966" vertical-scroll-proportion="0.74603176">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/component/MockInvoiceComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="26" selection-start="1705" selection-end="1705" vertical-scroll-proportion="0.74603176">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/component/JdbcCustomerComponentTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="24" selection-start="1544" selection-end="1544" vertical-scroll-proportion="0.9361277">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/component/MockPaymentComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="58" selection-start="117" selection-end="117" vertical-scroll-proportion="0.09580839">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/PaymentComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="0" selection-start="130" selection-end="130" vertical-scroll-proportion="0.42857143">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/global/ComponentFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="4" selection-start="259" selection-end="259" vertical-scroll-proportion="0.5777778">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/dev/jdk1.5.0_09/src.zip!/java/text/SimpleDateFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="314" column="13" selection-start="13154" selection-end="13154" vertical-scroll-proportion="0.10526316">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/global/MockComponentFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="23" selection-start="520" selection-end="520" vertical-scroll-proportion="0.89719623">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/component/MockManufacturerComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="5" selection-start="208" selection-end="208" vertical-scroll-proportion="0.31111112">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/entity/Product.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="0" selection-start="1018" selection-end="1018" vertical-scroll-proportion="1.4851851">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/dof_xml_handler/ProductXmlFactoryTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="227" selection-end="227" vertical-scroll-proportion="0.28659794">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/dof_xml_handler/ManufacturerXmlFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="0" selection-start="770" selection-end="770" vertical-scroll-proportion="0.32592592">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_data/manufacturer.20.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="0" selection-start="147" selection-end="147" vertical-scroll-proportion="0.17777778">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/DOF.jar!/com/ibm/dof/DependentObjectHandler.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="17" selection-start="153" selection-end="153" vertical-scroll-proportion="0.17777778">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/dof_xml_handler/ProductXmlFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="82" column="8" selection-start="2823" selection-end="2823" vertical-scroll-proportion="0.33195877">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/component/MockProductComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="8" selection-start="198" selection-end="198" vertical-scroll-proportion="0.4">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/ProductComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="17" selection-start="164" selection-end="164" vertical-scroll-proportion="0.24742268">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jdbc_component/JdbcProductComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="5" selection-start="576" selection-end="576" vertical-scroll-proportion="0.37777779">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jdbc_component/JdbcManufacturerComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="19" selection-start="699" selection-end="699" vertical-scroll-proportion="0.23505154">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/ManufacturerComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="12" selection-start="137" selection-end="137" vertical-scroll-proportion="0.22268042">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_data/customer.25.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="0" selection-start="149" selection-end="149" vertical-scroll-proportion="0.12371134">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_data/product.14.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="0" selection-start="166" selection-end="166" vertical-scroll-proportion="0.17319588">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_data/product.13.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="0" selection-end="42" vertical-scroll-proportion="0.024742268">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/etc/accounting.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="4" selection-start="536" selection-end="536" vertical-scroll-proportion="1.3533834">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/entity/LineItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/InvoiceComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="47" selection-start="379" selection-end="379" vertical-scroll-proportion="0.7669173">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/entity/Payment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="0" selection-start="360" selection-end="360" vertical-scroll-proportion="0.7518797">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/entity/MockAccountingTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="30" selection-start="200" selection-end="200" vertical-scroll-proportion="0.45112783">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/entity/CustomerTestUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="0" selection-start="1593" selection-end="1593" vertical-scroll-proportion="1.1466166">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/global/GlobalContext.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="32" selection-start="466" selection-end="466" vertical-scroll-proportion="0.90225565">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/CustomerComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="57" selection-start="435" selection-end="435" vertical-scroll-proportion="0.90225565">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/component/MockCustomerComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="22" selection-start="626" selection-end="626" vertical-scroll-proportion="1.0827068">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_data/invoice.100.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="16" selection-start="510" selection-end="510" vertical-scroll-proportion="0.62222224">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/dof_xml_handler/InvoiceXmlFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="0" selection-start="2192" selection-end="2192" vertical-scroll-proportion="0.5037037">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/global/JdbcComponentFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="35" selection-start="656" selection-end="656" vertical-scroll-proportion="1.3333334">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jdbc_component/JdbcBaseComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="22" selection-start="68" selection-end="68" vertical-scroll-proportion="0.17777778">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jpa_component/JpaCustomerComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="13" selection-start="141" selection-end="141" vertical-scroll-proportion="0.08888889">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jpa_component/JpaInvoiceComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="13" selection-start="158" selection-end="158" vertical-scroll-proportion="0.08888889">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jpa_component/JpaManufacturerComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="13" selection-start="120" selection-end="120" vertical-scroll-proportion="0.08888889">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jpa_component/JpaPaymentComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="13" selection-start="100" selection-end="100" vertical-scroll-proportion="0.08888889">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jpa_component/JpaProductComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="13" selection-start="158" selection-end="158" vertical-scroll-proportion="0.08888889">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/entity/Customer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="11" selection-start="757" selection-end="757" vertical-scroll-proportion="0.65413535">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/entity/JdbcAccountingTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="13" selection-start="93" selection-end="93" vertical-scroll-proportion="0.22222222">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/dof_xml_handler/CustomerXmlFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="49" selection-start="1372" selection-end="1372" vertical-scroll-proportion="0.35234898">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/etc/handler_mappings.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="0" selection-start="156" selection-end="201" vertical-scroll-proportion="0.060402684">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jdbc_component/JdbcCustomerComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="0" selection-start="1784" selection-end="1784" vertical-scroll-proportion="0.18284424">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jdbc_component/JdbcDbUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="252" column="7" selection-start="6465" selection-end="6465" vertical-scroll-proportion="0.49323016">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/global/JpaComponentFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="0" selection-start="669" selection-end="669" vertical-scroll-proportion="0.35976788">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/etc/configuration.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="0" selection-start="232" selection-end="232" vertical-scroll-proportion="0.116054155">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/etc/log4j.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="0" selection-start="501" selection-end="501" vertical-scroll-proportion="0.17408124">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/etc/META-INF/persistence.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="35" selection-start="647" selection-end="647" vertical-scroll-proportion="0.18181819">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/entity/Manufacturer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="0" selection-start="636" selection-end="636" vertical-scroll-proportion="0.6727689">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/dof_xml_handler/CustomerXmlFactoryTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="13" selection-start="145" selection-end="145" vertical-scroll-proportion="0.09610984">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/dof_xml_handler/ManufacturerXmlFactoryTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="58" column="5" selection-start="1760" selection-end="1760" vertical-scroll-proportion="0.19450802">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/dof_xml_handler/InvoiceXmlFactoryTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="13" selection-start="247" selection-end="247" vertical-scroll-proportion="0.097788125">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jpa_component/HibernateUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="5" selection-start="196" selection-end="196" vertical-scroll-proportion="0.123569794">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/entity/AccountingTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="0" selection-start="185" selection-end="185" vertical-scroll-proportion="0.013969732">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/entity/Invoice.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="0" selection-start="2215" selection-end="2215" vertical-scroll-proportion="0.013729977">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/AllTestSuite.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="8" selection-start="395" selection-end="395" vertical-scroll-proportion="0.13729978">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jdbc_component/JdbcInvoiceComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="12" selection-start="1965" selection-end="1965" vertical-scroll-proportion="0.013969732">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/junit/entity/HbnAccountingTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="0" selection-start="200" selection-end="200" vertical-scroll-proportion="0.1784897">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dof_src/com/ibm/dof/DependentObjectHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="17" selection-start="39" selection-end="39" vertical-scroll-proportion="0.027939465">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dof_src/com/ibm/dof/HandlerMappings.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="13" selection-start="74" selection-end="74" vertical-scroll-proportion="0.069848664">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dof_src/com/ibm/dof/DOF.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="103" column="7" selection-start="3842" selection-end="3842" vertical-scroll-proportion="0.2491269">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="8" selection-start="1556" selection-end="1556" vertical-scroll-proportion="0.33333334">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+
