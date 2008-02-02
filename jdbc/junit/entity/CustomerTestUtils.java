@@ -1,12 +1,10 @@
 package entity;
 
 import global.*;
-
-import java.util.*;
-import java.math.*;
-
 import junit.framework.*;
-import component.*;
+
+import java.math.*;
+import java.util.*;
 
 public class CustomerTestUtils
 {
@@ -19,7 +17,9 @@ public class CustomerTestUtils
         return customer;
     }
 
-    public static Customer createInvoiceForNewCustomer(String name, Date invoiceDate, BigDecimal amount)
+    public static Customer createInvoiceForNewCustomer(String name,
+                                                       Date invoiceDate,
+                                                       BigDecimal amount)
     {
         Customer customer = createCustomerRecordWithNamePhoneNumber(name, "8085551212");
         Assert.assertEquals(new BigDecimal(0.0), customer.getBalance());
@@ -28,10 +28,10 @@ public class CustomerTestUtils
         return customer;
     }
 
-    public static void createInvoiceWithAmountForCustomer(Customer customer, BigDecimal amount,
-                                                           Date invoiceDate)
+    public static void createInvoiceWithAmountForCustomer(Customer customer,
+                                                          BigDecimal amount,
+                                                          Date invoiceDate)
     {
-        InvoiceComponent invoiceComponent = GlobalContext.getComponentFactory().getInvoiceComponent();
         Invoice invoice = new Invoice();
         invoice.setCustomer(customer);
         invoice.setSubTotal(amount);

@@ -18,7 +18,7 @@ public class DBTestSetup extends DBTestCase
             while ((s = br.readLine()) != null)
             {
                 sql.append(s);
-                if (s.length() > 0 && s.charAt(s.length() -1 ) == ';')
+                if (s.length() > 0 && s.charAt(s.length() - 1) == ';')
                 {
                     JdbcDbUtil.update(sql.toString());
                     sql.delete(0, sql.length());

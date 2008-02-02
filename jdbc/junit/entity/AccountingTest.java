@@ -1,12 +1,11 @@
 package entity;
 
+import component.*;
+import global.*;
 import junit.framework.*;
 
-import java.util.*;
 import java.math.*;
-
-import global.*;
-import component.*;
+import java.util.*;
 
 /**
  * User: gordonju Date: Jan 11, 2008 Time: 8:04:30 PM
@@ -16,8 +15,8 @@ public abstract class AccountingTest extends TestCase
 
 
     /**
-     * Sets up the fixture, for example, open a network connection. This method is called before a test
-     * is executed.
+     * Sets up the fixture, for example, open a network connection. This method is called before a
+     * test is executed.
      */
     protected void setUp() throws Exception
     {
@@ -28,7 +27,8 @@ public abstract class AccountingTest extends TestCase
     public void testAddCustomerRecord()
     {
         final String lastName = "Gordon" + System.currentTimeMillis();
-        Customer createdCustomer = CustomerTestUtils.createCustomerRecordWithNamePhoneNumber(lastName, "8085551212");
+        Customer createdCustomer =
+                CustomerTestUtils.createCustomerRecordWithNamePhoneNumber(lastName, "8085551212");
         Customer fetchedCustomer = getCustomerComponent().getById(createdCustomer.getId());
         assertNotNull(fetchedCustomer);
         assertEquals(lastName, fetchedCustomer.getName());
@@ -39,7 +39,8 @@ public abstract class AccountingTest extends TestCase
     public void testDeleteCustomerRecord()
     {
         final String lastName = "Smith";
-        Customer customer = CustomerTestUtils.createCustomerRecordWithNamePhoneNumber(lastName, "8085551212");
+        Customer customer =
+                CustomerTestUtils.createCustomerRecordWithNamePhoneNumber(lastName, "8085551212");
         assertNotNull(getCustomerComponent().getById(customer.getId()));
         customer.delete();
         assertNull(getCustomerComponent().getById(customer.getId()));
@@ -81,9 +82,10 @@ public abstract class AccountingTest extends TestCase
         Date twoMonthsAgo = calendar.getTime();
 
         Customer lopez = CustomerTestUtils.
-                createInvoiceForNewCustomer("Lopez" + System.currentTimeMillis(), today,
+                createInvoiceForNewCustomer("Lopez" + System.currentTimeMillis(),
+                                            today,
                                             invoiceAmount1);
-        CustomerTestUtils.createInvoiceWithAmountForCustomer(lopez,invoiceAmount2, twoMonthsAgo);
+        CustomerTestUtils.createInvoiceWithAmountForCustomer(lopez, invoiceAmount2, twoMonthsAgo);
         CustomerTestUtils.createInvoiceWithAmountForCustomer(lopez, invoiceAmount3, oneMonthsAgo);
 
         List<Invoice> list = lopez.getInvoices();
@@ -96,9 +98,10 @@ public abstract class AccountingTest extends TestCase
     public void testRecordPaymentDecreasesCustomerBalanceAndLastInvoicePendingAmount()
     {
         BigDecimal invoiceAmount = new BigDecimal("12.34");
-        Customer irons = CustomerTestUtils.createInvoiceForNewCustomer("Irons" + System.currentTimeMillis(),
-                                                                       new Date(),
-                                                                       invoiceAmount);
+        Customer irons =
+                CustomerTestUtils.createInvoiceForNewCustomer("Irons" + System.currentTimeMillis(),
+                                                              new Date(),
+                                                              invoiceAmount);
         BigDecimal originalBalance = irons.getBalance();
         Payment newPayment = new Payment();
         final BigDecimal paymentAmount = new BigDecimal("11.00");
@@ -128,15 +131,13 @@ public abstract class AccountingTest extends TestCase
         Date twoMonthsAgo = calendar.getTime();
 
         String uniqueName = "Potter" + System.currentTimeMillis();
-        Customer potter = CustomerTestUtils.createInvoiceForNewCustomer(uniqueName, today,
-                                                                       invoiceAmount1);
+        Customer potter =
+                CustomerTestUtils.createInvoiceForNewCustomer(uniqueName, today, invoiceAmount1);
         CustomerTestUtils.createInvoiceWithAmountForCustomer(potter, invoiceAmount2, twoMonthsAgo);
         CustomerTestUtils.createInvoiceWithAmountForCustomer(potter, invoiceAmount3, oneMonthsAgo);
 
         BigDecimal originalBalance = potter.getBalance();
 
-        PaymentComponent paymentComponent =
-                GlobalContext.getComponentFactory().getPaymentComponent();
         Payment newPayment = new Payment();
         final BigDecimal paymentAmount = new BigDecimal("26.00");
         newPayment.setAmount(paymentAmount);
@@ -150,8 +151,6 @@ public abstract class AccountingTest extends TestCase
         assertEquals(BigDecimal.ZERO, invoices.get(1).getPendingBalance()); // paid off
         assertEquals(potter.getBalance(), invoices.get(2).getPendingBalance()); // balance
     }
-
-
 
 
     public CustomerComponent getCustomerComponent()

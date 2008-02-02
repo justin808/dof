@@ -1,15 +1,14 @@
 package dof_xml_handler;
 
+import com.ibm.dof.*;
+import component.*;
+import entity.*;
+import global.*;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.*;
 import javax.xml.xpath.*;
 import java.io.*;
-
-import com.ibm.dof.*;
-import component.*;
-import global.*;
-import entity.*;
 
 public class CustomerXmlFactory implements DependentObjectHandler
 {
@@ -19,7 +18,7 @@ public class CustomerXmlFactory implements DependentObjectHandler
 
 
     /**
-     * @param xmlDescriptionFile
+     * @param xmlDescriptionFile File describing the customer record
      *
      * @return a Customer object with corresponding name and id
      */

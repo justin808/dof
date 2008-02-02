@@ -1,16 +1,18 @@
-import junit.framework.*;
-import entity.*;
 import dof_xml_handler.*;
+import entity.*;
+import junit.framework.*;
 
-public class AllTestSuite extends TestSuite
+public class AllTestSuite extends TestCase
 {
-    public void testAll()
+    public static Test suite()
     {
-        addTest(new TestSuite(MockAccountingTest.class));
-        addTest(new TestSuite(JdbcAccountingTest.class));
-        addTest(new TestSuite(InvoiceXmlFactoryTest.class));
-        addTest(new TestSuite(CustomerXmlFactoryTest.class));
-        addTest(new TestSuite(HbnAccountingTest.class));
+        TestSuite suite = new TestSuite();
+        suite.addTest(new TestSuite(MockAccountingTest.class));
+        suite.addTest(new TestSuite(JdbcAccountingTest.class));
+        suite.addTest(new TestSuite(InvoiceXmlFactoryTest.class));
+        suite.addTest(new TestSuite(CustomerXmlFactoryTest.class));
+        return suite;
     }
+
 
 }

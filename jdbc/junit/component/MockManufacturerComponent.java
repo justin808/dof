@@ -2,9 +2,6 @@ package component;
 
 import entity.*;
 
-import java.util.*;
-import java.math.*;
-
 public class MockManufacturerComponent implements ManufacturerComponent
 {
     public void insert(Manufacturer manufacturer)

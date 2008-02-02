@@ -1,6 +1,10 @@
 package dof_xml_handler;
 
 import com.ibm.dof.*;
+import component.*;
+import entity.*;
+import global.*;
+import jdbc_component.*;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.*;
@@ -9,21 +13,14 @@ import java.io.*;
 import java.math.*;
 import java.util.*;
 
-import component.*;
-import global.*;
-import entity.*;
-import jdbc_component.*;
-
 
 public class InvoiceXmlFactory implements DependentObjectHandler
 {
 
-    InvoiceComponent invoiceComponent =
-            GlobalContext.getComponentFactory().getInvoiceComponent();
+    InvoiceComponent invoiceComponent = GlobalContext.getComponentFactory().getInvoiceComponent();
     CustomerComponent customerComponent =
             GlobalContext.getComponentFactory().getCustomerComponent();
-    ProductComponent productComponent =
-            GlobalContext.getComponentFactory().getProductComponent();
+    ProductComponent productComponent = GlobalContext.getComponentFactory().getProductComponent();
 
     /**
      * @param xmlDescriptionFile
@@ -77,8 +74,10 @@ public class InvoiceXmlFactory implements DependentObjectHandler
             invoice.setTotal(total);
             invoice.setPendingBalance(pendingBalance);
 
-            NodeList lineItemNodes = (NodeList) xPath.evaluate("/invoice/line_items/line_item", item,
-                                                               XPathConstants.NODESET);
+            NodeList lineItemNodes =
+                    (NodeList) xPath.evaluate("/invoice/line_items/line_item",
+                                              item,
+                                              XPathConstants.NODESET);
             int nodeListLength = lineItemNodes.getLength();
             List<LineItem> lineItems = new ArrayList<LineItem>(nodeListLength);
             for (int i = 0; i < nodeListLength; i++)

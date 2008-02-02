@@ -1,6 +1,5 @@
 package global;
 
-import global.*;
 import component.*;
 
 public class MockComponentFactory implements ComponentFactory

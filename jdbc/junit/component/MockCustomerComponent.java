@@ -2,12 +2,12 @@ package component;
 
 import entity.*;
 
-import java.util.*;
 import java.math.*;
+import java.util.*;
 
 public class MockCustomerComponent implements CustomerComponent
 {
-    private static Map<Integer, Customer> customerIdToCustomer = new HashMap<Integer,Customer>();
+    private static Map<Integer, Customer> customerIdToCustomer = new HashMap<Integer, Customer>();
     private static int lastCustomerId = 1000;
 
 
@@ -28,7 +28,6 @@ public class MockCustomerComponent implements CustomerComponent
      * @param customer
      *
      * @throws DuplicateRecordException
-     *
      */
     public void update(Customer customer) throws DuplicateRecordException
     {
@@ -47,17 +46,19 @@ public class MockCustomerComponent implements CustomerComponent
     private void checkForCustomerMatch(Customer customer)
     {
         Set<Map.Entry<Integer, Customer>> entries = customerIdToCustomer.entrySet();
-        for (Iterator<Map.Entry<Integer, Customer>> iterator = entries.iterator(); iterator.hasNext();)
+        for (Iterator<Map.Entry<Integer, Customer>> iterator = entries.iterator();
+             iterator.hasNext();)
         {
             Map.Entry<Integer, Customer> entry = iterator.next();
             Customer customerToTest = entry.getValue();
-            if (customerToTest.getName().equals(customer.getName())
-                && customerToTest.getId() != customer.getId())
+            if (customerToTest.getName().equals(customer.getName()) &&
+                customerToTest.getId() != customer.getId())
             {
-                throw new DuplicateRecordException("Found customer duplicate customer: " + customerToTest);
+                throw new DuplicateRecordException("Found customer duplicate customer: " +
+                                                   customerToTest);
             }
         }
-   }
+    }
 
     public boolean delete(Customer customer)
     {

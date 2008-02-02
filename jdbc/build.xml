@@ -1,0 +1,65 @@
+<!--The tasks relevant to building the dof.jar start with "dof"
+    All other tasks are part of the sample accounting program which demonstrates
+    the proper functioning of the DOF, as well as the use of mock objects
+    and a dependency location pattern -->
+
+<project name="DOF" default="compile" basedir=".">
+
+    <!-- Name of project and version -->
+    <property name="proj.name" value="DependentObjectFramework"/>
+    <property name="proj.shortname" value="dof"/>
+    <property name="version" value="1.0"/>
+
+    <!-- Global properties for this build -->
+    <property name="dof.src.java.dir" value="dof_src"/>
+    <property name="src.java.dir" value="src"/>
+    <property name="src.etc.dir" value="etc"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="class.dir" value="classes"/>
+    <property name="build.dir" value="build"/>
+
+    <!-- Classpath declaration -->
+    <path id="project.classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+            <include name="**/*.zip"/>
+        </fileset>
+    </path>
+
+    <!-- Useful shortcuts -->
+    <patternset id="meta.files">
+        <include name="**/*.xml"/>
+        <include name="**/*.properties"/>
+    </patternset>
+
+    <target name="clean" description="Clean the build directory">
+        <delete dir="${class.dir}"/>
+        <delete dir="${build.dir}"/>
+        <mkdir dir="${class.dir}"/>
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="dof.compile">
+        <mkdir dir="${class.dir}"/>
+        <javac srcdir="${dof.src.java.dir}"
+               destdir="${class.dir}"/>
+    </target>
+
+    <target name="dof.jar" depends="dof.compile">
+        <mkdir dir="${build.dir}"/>
+        <jar destfile="${build.dir}/dof.jar">
+            <fileset dir="${class.dir}"
+                     includes="com/ibm/dof/**"/>
+        </jar>
+    </target>
+
+
+    <target name="compile">
+        <mkdir dir="${class.dir}"/>
+        <javac srcdir="${src.java.dir}"
+               destdir="${class.dir}"
+               classpathref="project.classpath"/>
+    </target>
+
+
+</project>

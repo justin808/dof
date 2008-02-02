@@ -1,4 +1,10 @@
-1. To setup HSQLDB:
+1. The jdbc module is setup to be dependent on the core module in the IntelliJ setup. Alternately,
+  it could reference DOF.jar, which is constructed by building the core jar.
+
+2. It is necessary to have the etc and test_data directories in the classpath, as those files are
+   loaded as resources.
+
+3. To setup HSQLDB for running the tests:
   a. Make sure that this is in your sqltool.rc in your home directory
       # This is for a hsqldb Server running with default settings on your local
       # computer (and for which you have not changed the password for "sa").

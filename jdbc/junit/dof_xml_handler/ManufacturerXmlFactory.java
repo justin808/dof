@@ -1,20 +1,20 @@
 package dof_xml_handler;
 
 import com.ibm.dof.*;
+import component.*;
+import entity.*;
+import global.*;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.*;
 import javax.xml.xpath.*;
 import java.io.*;
 
-import org.w3c.dom.*;
-import component.*;
-import entity.*;
-import global.*;
-
 public class ManufacturerXmlFactory implements DependentObjectHandler
 {
 
-    ManufacturerComponent manufacturerComponent = GlobalContext.getComponentFactory().getManufacturerComponent();
+    ManufacturerComponent manufacturerComponent =
+            GlobalContext.getComponentFactory().getManufacturerComponent();
 
 
     /**

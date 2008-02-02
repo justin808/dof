@@ -1,8 +1,8 @@
 package component;
 
-import junit.framework.*;
 import entity.*;
 import global.*;
+import junit.framework.*;
 
 /**
  * User: gordonju Date: Jan 13, 2008 Time: 4:57:20 PM
@@ -62,7 +62,6 @@ public class JdbcCustomerComponentTest extends TestCase
         Customer c1FromDbAgain =
                 GlobalContext.getComponentFactory().getCustomerComponent().getById(c1.getId());
         assertNull(c1FromDbAgain);
-        
 
 
     }

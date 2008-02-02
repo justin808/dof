@@ -1,16 +1,15 @@
 package dof_xml_handler;
 
 import com.ibm.dof.*;
+import component.*;
+import entity.*;
+import global.*;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.*;
 import javax.xml.xpath.*;
 import java.io.*;
 import java.math.*;
-
-import org.w3c.dom.*;
-import entity.*;
-import component.*;
-import global.*;
 
 public class ProductXmlFactory implements DependentObjectHandler
 {
@@ -19,7 +18,7 @@ public class ProductXmlFactory implements DependentObjectHandler
     ProductComponent m_productComponent = GlobalContext.getComponentFactory().getProductComponent();
 
     /**
-     * @param xmlDescriptionFile
+     * @param xmlDescriptionFile xml file describing the product
      *
      * @return a Manufacturer object with corresponding name and id
      */
@@ -42,11 +41,13 @@ public class ProductXmlFactory implements DependentObjectHandler
             BigDecimal price = new BigDecimal(sPrice);
             String sManufacturerId = xPath.evaluate("/product/manufacturer_id", item);
             int manufacturerId = Integer.parseInt(sManufacturerId);
-            ManufacturerComponent manufacturerComponent = GlobalContext.getComponentFactory().getManufacturerComponent();
+            ManufacturerComponent manufacturerComponent =
+                    GlobalContext.getComponentFactory().getManufacturerComponent();
             Manufacturer manufacturer = manufacturerComponent.get(manufacturerId + "");
             if (manufacturer == null)
             {
-                throw new RuntimeException("Manufacturer with id " + manufacturerId +
+                throw new RuntimeException("Manufacturer with id " +
+                                           manufacturerId +
                                            " does not exist!");
             }
             return new Product(id, name, price, manufacturer);

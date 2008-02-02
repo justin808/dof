@@ -1,14 +1,13 @@
 package dof_xml_handler;
 
-import junit.framework.*;
 import com.ibm.dof.*;
-
-import java.util.*;
-import java.math.*;
-
 import component.*;
 import entity.*;
 import global.*;
+import junit.framework.*;
+
+import java.math.*;
+import java.util.*;
 
 /**
  * User: gordonju Date: Jan 13, 2008 Time: 10:53:59 PM
@@ -24,7 +23,8 @@ public class InvoiceXmlFactoryTest extends TestCase
         DOF.delete("invoice.100.xml");
         assertNull(invoiceComponent.getById(100));
 
-        CustomerComponent customerComponent = GlobalContext.getComponentFactory().getCustomerComponent();
+        CustomerComponent customerComponent =
+                GlobalContext.getComponentFactory().getCustomerComponent();
         assertNull(customerComponent.getById(25));
 
 
@@ -38,12 +38,12 @@ public class InvoiceXmlFactoryTest extends TestCase
 
         LineItem firstLineItem = lineItems.get(0);
         assertEquals(8.99, firstLineItem.getProduct().getPrice().doubleValue());
-        assertEquals(5, firstLineItem.getQuantity());
+        assertEquals(new BigDecimal(5), firstLineItem.getQuantity());
         assertEquals(13, firstLineItem.getProduct().getId());
 
         LineItem secondLineItem = lineItems.get(1);
         assertEquals(4.99, secondLineItem.getProduct().getPrice().doubleValue());
-        assertEquals(8, secondLineItem.getQuantity());
+        assertEquals(new BigDecimal(8), secondLineItem.getQuantity());
         assertEquals(14, secondLineItem.getProduct().getId());
 
         //assertEquals(8.25, invoice.getTaxRate().doubleValue());
@@ -68,8 +68,7 @@ public class InvoiceXmlFactoryTest extends TestCase
 
         // triangulation
         assertEquals(coffee.getPrice()
-                .multiply(THREE).add(tea.getPrice().multiply(TWO)),
-                                                 invoice.getSubTotal());
+                .multiply(THREE).add(tea.getPrice().multiply(TWO)), invoice.getSubTotal());
 
         // Test persistence
         invoice.persist();

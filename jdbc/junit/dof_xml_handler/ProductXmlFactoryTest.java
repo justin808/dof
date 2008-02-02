@@ -1,13 +1,12 @@
 package dof_xml_handler;
 
-import junit.framework.*;
 import com.ibm.dof.*;
+import component.*;
+import entity.*;
+import global.*;
+import junit.framework.*;
 
 import java.math.*;
-
-import component.*;
-import global.*;
-import entity.*;
 
 /**
  * User: gordonju Date: Jan 13, 2008 Time: 10:51:33 PM
@@ -49,7 +48,8 @@ public class ProductXmlFactoryTest extends TestCase
         DOF.delete("manufacturer.30.xml");
 
         // verify
-        ManufacturerComponent manufacturerComponent = GlobalContext.getComponentFactory().getManufacturerComponent();
+        ManufacturerComponent manufacturerComponent =
+                GlobalContext.getComponentFactory().getManufacturerComponent();
         assertNull(manufacturerComponent.get("30"));
 
         String testFile = "product.30.xml";
@@ -96,7 +96,7 @@ public class ProductXmlFactoryTest extends TestCase
 
     public void testRecursiveDelete()
     {
-        Product p = (Product) DOF.require("product.30.xml");
+        DOF.require("product.30.xml");
         DOF.delete("product.30.xml"); // should delete manufacturer 30
 
         ProductXmlFactory productXmlFactory = new ProductXmlFactory();

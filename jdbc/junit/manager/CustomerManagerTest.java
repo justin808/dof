@@ -1,13 +1,12 @@
 package manager;
 
+import component.*;
+import entity.*;
+import global.*;
 import junit.framework.*;
 
-import java.util.*;
 import java.math.*;
-
-import component.*;
-import global.*;
-import entity.*;
+import java.util.*;
 
 /**
  * User: gordonju Date: Jan 12, 2008 Time: 1:50:05 PM
@@ -40,22 +39,29 @@ public class CustomerManagerTest extends TestCase
         // SETUP 3 records
         final GregorianCalendar ironsDate = new GregorianCalendar();
         ironsDate.add(GregorianCalendar.MONTH, -5);
-        Customer irons = CustomerTestUtils.createInvoiceForNewCustomer("Irons", ironsDate.getTime(),
-                                                                    new BigDecimal(12.34));
+        Customer irons =
+                CustomerTestUtils.createInvoiceForNewCustomer("Irons",
+                                                              ironsDate.getTime(),
+                                                              new BigDecimal(12.34));
 
         final GregorianCalendar machadoDate = new GregorianCalendar();
         machadoDate.add(GregorianCalendar.DATE, -1);
-        Customer machado = CustomerTestUtils.createInvoiceForNewCustomer("Machado", machadoDate.getTime(),
-                                                                      new BigDecimal(12.34));
+        Customer machado =
+                CustomerTestUtils.createInvoiceForNewCustomer("Machado",
+                                                              machadoDate.getTime(),
+                                                              new BigDecimal(12.34));
 
         final GregorianCalendar slaterDate = new GregorianCalendar();
         slaterDate.add(GregorianCalendar.DATE, -35);
-        Customer slater = CustomerTestUtils.createInvoiceForNewCustomer("slater", slaterDate.getTime(),
-                                                                     new BigDecimal(12.34));
+        Customer slater =
+                CustomerTestUtils.createInvoiceForNewCustomer("slater",
+                                                              slaterDate.getTime(),
+                                                              new BigDecimal(12.34));
 
         CustomerManager.updateOverDueFlagsAndAddInvoicesForLateFees();
 
-        CustomerComponent customerComponent = GlobalContext.getComponentFactory().getCustomerComponent();
+        CustomerComponent customerComponent =
+                GlobalContext.getComponentFactory().getCustomerComponent();
         irons = customerComponent.getById(irons.getId());
         assertTrue(irons.isOverDue());
         slater = customerComponent.getById(slater.getId());
@@ -77,8 +83,8 @@ public class CustomerManagerTest extends TestCase
         calendar.add(Calendar.MONTH, -2);
         Date fourMonthsAgo = calendar.getTime();
 
-        Customer curren = CustomerTestUtils.createInvoiceForNewCustomer("Curren", today,
-                                                                        invoiceAmount1);
+        Customer curren =
+                CustomerTestUtils.createInvoiceForNewCustomer("Curren", today, invoiceAmount1);
         CustomerTestUtils.createInvoiceWithAmountForCustomer(curren, invoiceAmount2, fourMonthsAgo);
         CustomerTestUtils.createInvoiceWithAmountForCustomer(curren, invoiceAmount3, twoMonthsAgo);
 
@@ -92,9 +98,10 @@ public class CustomerManagerTest extends TestCase
         BigDecimal newBalance = currenFromDB.getBalance();
         BigDecimal latePercentage = GlobalContext.getConstants().getLateFeePercentage();
 
-        BigDecimal expectedLateCharge = GlobalContext.currencyRound(invoiceAmount2.add(invoiceAmount3).multiply(latePercentage));
-        assertEquals(oldBalance.add(expectedLateCharge),
-                     newBalance);
+        BigDecimal expectedLateCharge =
+                GlobalContext.currencyRound(invoiceAmount2.add(invoiceAmount3).multiply(
+                        latePercentage));
+        assertEquals(oldBalance.add(expectedLateCharge), newBalance);
 
         List<Invoice> invoices = curren.getInvoices();
         Invoice lateChargeInvoice = invoices.get(invoices.size() - 1);
