@@ -62,7 +62,9 @@ import java.util.regex.*;
  <code>customer.xml=dof_xml_handler.CustomerXmlFactory</code>
  <p/>
  It states that a customer.PK.xml file maps to the handler class dof_xml_handler.CustomerXmlFactory Note, the
- CustomerXmlFactory class must implement interface <b>DependentObjectHandler</b>
+ CustomerXmlFactory class must implement interface <b>DependentObjectHandler</b>. Even though fileToLoad uses the period
+ as the delimiter, the primary key may contain periods because the first and last periods are used to find the object
+ type and the file suffix. This also means that object types may NOT contain a period.
 
  @author Justin Gordon
  @date January, 2008
@@ -82,19 +84,23 @@ public class DOF
      those will get loaded recursively depth first. Thus, if object A depends on object B that depends on object C, then
      a request for object A invokes the request for object B which invokes the request for object C.
      <p/>
+     Note that the fileToLoad uses a specific format to define the file to load which encodes the:
      <pre>
-     Note that the fileToLoad uses a specific format to define the
      1. Object Type
      2. Object PK
      3. Object File Type (like xml)
      </pre>
      <p/>
-     The file processor looks in the definition files for this pattern:<p> <b>$require("{file_name}");</b>
+     The file processor looks for dependencies in the definition files using this pattern:<p>
+     <b>$require("{file_name}");</b>
      <p/>
-     where {file_name} might be something like "manufacturer.35.xml"
+     where {file_name} might be something like "manufacturer.35.xml".
      <p/>
-     Thus, in an XML file, one would use the commented form: <code> &lt;!-- $require("manufacturer.35.xml"); --&gt;
-     </code>
+     Thus, in an XML file, one would use the commented form:<p>
+     <code> &lt;!-- $require("manufacturer.35.xml"); --&gt; </code><p>
+     Even though fileToLoad uses the period as the delimiter, the primary key may contain periods because the first and
+     last periods are used to find the object type and the file suffix. This also means that object types may NOT
+     contain a period.
 
      @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}
 
@@ -113,7 +119,7 @@ public class DOF
      files often need frequent tweaking. Note, it is critical that objects created with the require method be deleted
      using this method because the require method caches the created objects by the file name.
      <p/>
-     Note, this method takes the same paramter as the require method to facilitate copying and pasting the require line.
+     Note, this method takes the same parameter as the require method to facilitate copying and pasting the require line.
 
      @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}
 
@@ -217,7 +223,13 @@ public class DOF
 
     static String[] getFileNameParts(String fileToLoad)
     {
-        String[] fileNameParts = fileToLoad.split("\\.");
+        final String period = ".";
+        int firstPeriodIndex = fileToLoad.indexOf(period);
+        int lastPeriodIndex = fileToLoad.lastIndexOf(period);
+        String[] fileNameParts = new String[3];
+        fileNameParts[0] = fileToLoad.substring(0, firstPeriodIndex);
+        fileNameParts[1] = fileToLoad.substring(firstPeriodIndex + 1, lastPeriodIndex);
+        fileNameParts[2] = fileToLoad.substring(lastPeriodIndex + 1);
         return fileNameParts;
     }
 
