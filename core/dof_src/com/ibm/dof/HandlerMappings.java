@@ -1,9 +1,29 @@
 package com.ibm.dof;
 
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
-public class HandlerMappings
+
+/**
+ This is helper class for that handles the mappings of the Handler classes to the object types. The user of the DOF is
+ responsible for having a file "handler_mappings.properties" located in the classpath.
+ <p/>
+ The format of the properties file is:
+ <p/>
+ <code>objectType.fileSuffix=DependentObjectHandlerImplementationClassName</code>
+ <p/>
+ This is an example of a line in the mappings file:
+ <p/>
+ <code>customer.xml=dof_xml_handler.CustomerXmlFactory</code>
+ <p/>
+ It states that a customer.PK.xml file maps to the handler class dof_xml_handler.CustomerXmlFactory Note, the
+ CustomerXmlFactory class must implement interface <b>DependentObjectHandler</b>
+
+ @author Justin Gordon
+ @date January, 2008 */
+
+
+class HandlerMappings
 {
     static Properties m_handlerMappings;
 
@@ -22,9 +42,17 @@ public class HandlerMappings
     }
 
 
-    public static String getHandlerClassNameForObject(String objectType, String fileType)
+    static String getHandlerClassNameForObject(String objectType, String fileType)
     {
         return (String) m_handlerMappings.get(objectType + "." + fileType);
     }
+
+    /**
+     No need for public constructor
+     */
+    private HandlerMappings()
+    {
+    }
+
 
 }

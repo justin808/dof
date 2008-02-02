@@ -8,7 +8,7 @@ import jdbc_component.*;
 import junit.framework.*;
 
 /**
- * User: gordonju Date: Jan 13, 2008 Time: 10:20:25 PM
+ User: gordonju Date: Jan 13, 2008 Time: 10:20:25 PM
  */
 public class ManufacturerXmlFactoryTest extends TestCase
 {
@@ -31,8 +31,8 @@ public class ManufacturerXmlFactoryTest extends TestCase
 
 
     /**
-     * Note: this test is OK only b/c manufacturer has no dependencies. I.e., normally we depend
-     * upon the framework for creating dependencies.
+     Note: this test is OK only b/c manufacturer has no dependencies. I.e., normally we depend upon the framework for
+     creating dependencies.
      */
     public void testManufacturerInsert()
     {
@@ -115,7 +115,7 @@ public class ManufacturerXmlFactoryTest extends TestCase
         assertNotSame(m1, m2);
         Manufacturer m3 = (Manufacturer) DOF.require("manufacturer.20.xml");
         assertSame(m2, m3);
-        DOF.clearFileCache();
+        //DOF.clearFileCache();
         Manufacturer m4 = (Manufacturer) DOF.require("manufacturer.20.xml");
         assertNotSame(m3, m4);
     }
