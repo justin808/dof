@@ -1,4 +1,4 @@
-package com.ibm.dof;
+package com.doframework;
 
 import java.io.*;
 import java.util.*;

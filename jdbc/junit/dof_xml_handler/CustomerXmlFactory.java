@@ -1,6 +1,6 @@
 package dof_xml_handler;
 
-import com.ibm.dof.*;
+import com.doframework.*;
 import component.*;
 import entity.*;
 import global.*;
