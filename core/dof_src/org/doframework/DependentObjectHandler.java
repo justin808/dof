@@ -1,4 +1,4 @@
-package com.doframework;
+package org.doframework;
 
 /**
  This is the basic interface that "handler" classes must implement. Note, the choice of the PK is up to the handler. The

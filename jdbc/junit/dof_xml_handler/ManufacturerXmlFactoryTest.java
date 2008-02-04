@@ -1,11 +1,11 @@
 package dof_xml_handler;
 
-import com.doframework.*;
 import component.*;
 import entity.*;
 import global.*;
 import jdbc_component.*;
 import junit.framework.*;
+import org.doframework.*;
 
 /**
  User: gordonju Date: Jan 13, 2008 Time: 10:20:25 PM

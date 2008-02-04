@@ -1,12 +1,13 @@
 package dof_xml_handler;
 
-import com.doframework.*;
 import component.*;
 import entity.*;
 import global.*;
 import junit.framework.*;
 
 import java.math.*;
+
+import org.doframework.*;
 
 /**
  * User: gordonju Date: Jan 13, 2008 Time: 10:51:33 PM

@@ -15,6 +15,8 @@
     <property name="lib.dir" value="lib"/>
     <property name="class.dir" value="classes"/>
     <property name="build.dir" value="build"/>
+    <property name="javadoc.dir" value="../javadoc"/>
+    <property name="dof.release.destfile" value="../release/DOF-0.9.zip"/>
 
     <!-- Classpath declaration -->
     <path id="project.classpath">
@@ -23,6 +25,8 @@
             <include name="**/*.zip"/>
         </fileset>
     </path>
+
+
 
     <target name="clean" description="Clean the build directory">
         <delete dir="${class.dir}"/>
@@ -41,8 +45,32 @@
         <mkdir dir="${build.dir}"/>
         <jar destfile="${build.dir}/DOF.jar">
             <fileset dir="${class.dir}"
-                     includes="com/ibm/dof/**"/>
+                     includes="org/ibm/dof/**"/>
         </jar>
+    </target>
+
+
+    <target name="dof.doc">
+        <delete dir="${javadoc.dir}"/>
+        <mkdir dir="${javadoc.dir}"/>
+        <javadoc sourcepath="${dof.src.java.dir}" author="true" destdir="${javadoc.dir}"/>
+    </target>
+
+    <target name="dof.release" depends="dof.jar, dof.doc">
+        <mkdir dir="../release"/>
+        <zip basedir=".." destfile="${dof.release.destfile}">
+            <!--<include name="**/*.java"/>-->
+            <!--<include name="**/*.zip"/>-->
+            <!--<include name="**/*.xml"/>-->
+            <!--<include name="**/*.txt"/>-->
+            <!--<include name="**/*.TXT"/>-->
+            <!--<include name="**/*.HTML"/>-->
+            <exclude name="release/**"/>
+            <exclude name="**/out/**"/>
+            <exclude name="**/classes/**"/>
+            <exclude name="**/*.class"/>
+        </zip>
+
     </target>
 
 </project>

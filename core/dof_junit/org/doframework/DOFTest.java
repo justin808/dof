@@ -1,4 +1,4 @@
-package com.doframework;
+package org.doframework;
 
 import junit.framework.*;
 

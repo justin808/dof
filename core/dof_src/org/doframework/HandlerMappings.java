@@ -1,4 +1,4 @@
-package com.doframework;
+package org.doframework;
 
 import java.io.*;
 import java.util.*;

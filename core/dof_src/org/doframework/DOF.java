@@ -1,4 +1,4 @@
-package com.doframework;
+package org.doframework;
 
 
 import java.io.*;
@@ -9,7 +9,7 @@ import java.util.regex.*;
 /**
  This class is the engine of the Dependent Object Framework.<p>
  <p/>
- The general problem this framework solves is how does a JUnit test ensure that an persistent object needed for a test
+ The general problem this framework solves is how does a JUnit test ensure that a persistent object needed for a test
  exists in the database (or any persistent store). Alternative solutions to this problem include running SQL scripts to
  populate the database and restoring database backups. Both methods are inconvenient.
  <p/>

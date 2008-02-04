@@ -1,11 +1,11 @@
 package dof_xml_handler;
 
-import com.doframework.*;
 import component.*;
 import entity.*;
 import global.*;
 import jdbc_component.*;
 import org.w3c.dom.*;
+import org.doframework.*;
 
 import javax.xml.parsers.*;
 import javax.xml.xpath.*;
