@@ -3,7 +3,7 @@
     the proper functioning of the DOF, as well as the use of mock objects
     and a dependency location pattern -->
 
-<project name="DOF" default="dof.jar" basedir=".">
+<project name="DOF_CORE" default="dof.jar" basedir=".">
 
     <!-- Name of project and version -->
     <property name="proj.name" value="DependentObjectFramework"/>
@@ -15,8 +15,9 @@
     <property name="lib.dir" value="lib"/>
     <property name="class.dir" value="classes"/>
     <property name="build.dir" value="build"/>
+    <property name="release.dir" value="../release"/>
     <property name="javadoc.dir" value="../javadoc"/>
-    <property name="dof.release.destfile" value="../release/DOF-0.9.zip"/>
+    <property name="dof.release.destfile" value="../release/DOF-0.9.1.zip"/>
 
     <!-- Classpath declaration -->
     <path id="project.classpath">
@@ -31,8 +32,12 @@
     <target name="clean" description="Clean the build directory">
         <delete dir="${class.dir}"/>
         <delete dir="${build.dir}"/>
+        <delete>
+            <fileset dir="${release.dir}" includes="**/*"/>
+        </delete>
         <mkdir dir="${class.dir}"/>
         <mkdir dir="${build.dir}"/>
+        <mkdir dir="${release.dir}"/>
     </target>
 
     <target name="dof.compile">
@@ -56,7 +61,7 @@
         <javadoc sourcepath="${dof.src.java.dir}" author="true" destdir="${javadoc.dir}"/>
     </target>
 
-    <target name="dof.release" depends="dof.jar, dof.doc">
+    <target name="dof.release" depends="clean, dof.jar, dof.doc">
         <mkdir dir="../release"/>
         <zip basedir=".." destfile="${dof.release.destfile}">
             <!--<include name="**/*.java"/>-->
@@ -65,6 +70,7 @@
             <!--<include name="**/*.txt"/>-->
             <!--<include name="**/*.TXT"/>-->
             <!--<include name="**/*.HTML"/>-->
+            <exclude name="**/*.jar"/>
             <exclude name="release/**"/>
             <exclude name="**/out/**"/>
             <exclude name="**/classes/**"/>
