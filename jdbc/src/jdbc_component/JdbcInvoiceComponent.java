@@ -35,6 +35,7 @@ public class JdbcInvoiceComponent extends JdbcBaseComponent implements InvoiceCo
             invoice.setInvoiceDate(invoiceDate);
             invoice.setSubTotal(amount);
             invoice.setPendingBalance(pendingBalance);
+            invoice.setLineItems(lineItems);
             return invoice;
         }
     }

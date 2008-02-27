@@ -50,7 +50,7 @@
         <mkdir dir="${build.dir}"/>
         <jar destfile="${build.dir}/DOF.jar">
             <fileset dir="${class.dir}"
-                     includes="org/ibm/dof/**"/>
+                     includes="org/doframework/**"/>
         </jar>
     </target>
 

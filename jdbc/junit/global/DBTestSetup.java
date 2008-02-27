@@ -4,6 +4,9 @@ import jdbc_component.*;
 
 import java.io.*;
 
+/**
+ Run this test to create the schema
+ */
 public class DBTestSetup extends DBTestCase
 {
     public void testRecreateSchema()
