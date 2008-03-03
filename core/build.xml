@@ -17,7 +17,7 @@
     <property name="build.dir" value="build"/>
     <property name="release.dir" value="../release"/>
     <property name="javadoc.dir" value="../javadoc"/>
-    <property name="dof.release.destfile" value="../release/DOF-0.9.1.zip"/>
+    <property name="dof.release.destfile" value="../release/DOF-0.9.3.zip"/>
 
     <!-- Classpath declaration -->
     <path id="project.classpath">
@@ -32,9 +32,7 @@
     <target name="clean" description="Clean the build directory">
         <delete dir="${class.dir}"/>
         <delete dir="${build.dir}"/>
-        <delete>
-            <fileset dir="${release.dir}" includes="**/*"/>
-        </delete>
+        <delete dir="${release.dir}"/>
         <mkdir dir="${class.dir}"/>
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${release.dir}"/>
@@ -70,7 +68,7 @@
             <!--<include name="**/*.txt"/>-->
             <!--<include name="**/*.TXT"/>-->
             <!--<include name="**/*.HTML"/>-->
-            <exclude name="**/*.jar"/>
+            <exclude name="database/**"/>
             <exclude name="release/**"/>
             <exclude name="**/out/**"/>
             <exclude name="**/classes/**"/>

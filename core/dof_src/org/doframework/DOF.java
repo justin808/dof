@@ -245,7 +245,6 @@ public class DOF
      */
     private static boolean deleteObjectWorker(String fileToLoad, Set<String> processedDeletions)
     {
-        processedDeletions.add(fileToLoad);
         String[] fileNameParts = getFileNameParts(fileToLoad);
         String objectType = fileNameParts[0];
         String pk = fileNameParts[1];
@@ -254,6 +253,10 @@ public class DOF
 
         // delete parent object first
         boolean deletedParent = dbJUnitHandler.delete(pk);
+        if (deletedParent)
+        {
+            processedDeletions.add(fileToLoad);
+        }
 
         m_pathToLoadedObject.remove(fileToLoad);
 
