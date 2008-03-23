@@ -1,4 +1,4 @@
-<!-- $require("manufacturer.37.xml"); -->
+<!-- @require("manufacturer.37.xml") -->
 <product>
     <id>14</id>
     <name>tea</name>

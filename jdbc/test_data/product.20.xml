@@ -1,5 +1,5 @@
 <!--Important that this is the only product that depends on manufacturer 20 b/c testing delete-->
-<!-- $require("manufacturer.20.xml"); -->
+<!-- @require("manufacturer.20.xml") -->
 <product>
     <id>20</id>
     <name>water</name>

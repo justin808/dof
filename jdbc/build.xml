@@ -3,7 +3,7 @@
     the proper functioning of the DOF, as well as the use of mock objects
     and a dependency location pattern -->
 
-<project name="DOF_JDBC" default="compile" basedir=".">
+<project name="DOF_JDBC" default="junit.compile" basedir=".">
 
     <!-- Name of project and version -->
     <property name="proj.name" value="DependentObjectFramework"/>
@@ -17,25 +17,35 @@
     <property name="class.dir" value="classes"/>
     <property name="dof.src.dir" value="../core/dof_src"/>
     <property name="dof.class.dir" value="../core/classes"/>
+    <property name="src.junit.dir" value="junit"/>
+
+
+    <property name="db.dir" value="./db"/>
+    <property name="home.path" value="${env.HOMEPATH}"/>
+
 
     <!-- Classpath declaration -->
     <path id="project.classpath">
-        <fileset dir="${dof.class.dir}"/>
+        <pathelement path="${dof.class.dir}"/>
+        <pathelement path="${class.dir}"/>
         <fileset dir="${lib.dir}">
             <include name="**/*.jar"/>
             <include name="**/*.zip"/>
         </fileset>
     </path>
 
-
-    <target name="clean" description="Clean the class directories">
-        <delete dir="${class.dir}"/>
-        <delete dir="${dof.class.dir}"/>
+    <target name="setup">
         <mkdir dir="${dof.class.dir}"/>
         <mkdir dir="${class.dir}"/>
     </target>
 
-    <target name="dof.compile">
+
+    <target name="clean" description="Clean the class directories">
+        <delete dir="${class.dir}"/>
+        <delete dir="${dof.class.dir}"/>
+    </target>
+
+    <target name="dof.compile" depends="setup">
         <mkdir dir="${class.dir}"/>
         <javac srcdir="${dof.src.dir}"
                destdir="${dof.class.dir}"/>
@@ -47,6 +57,46 @@
                destdir="${class.dir}"
                classpathref="project.classpath"/>
     </target>
+
+    <target name="junit.compile" depends="compile, dof.compile">
+        <mkdir dir="${class.dir}"/>
+        <javac srcdir="${src.junit.dir}"
+               destdir="${class.dir}"
+               classpathref="project.classpath"/>
+    </target>
+
+
+    <target name="start.hsqldb">
+        <copy file="etc/sqltool.rc" todir="${home.path}"/>
+        <mkdir dir="${db.dir}"/>
+        <copy file="etc/server.properties" todir="${db.dir}"/>
+        <java classname="org.hsqldb.Server" fork="true" dir="${db.dir}">
+            <classpath>
+                <path refid="project.classpath"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="start.db.gui">
+        <java classname="org.hsqldb.util.DatabaseManager" fork="true">
+            <classpath>
+                <path refid="project.classpath"/>
+            </classpath>
+        </java>
+    </target>
+
+
+    <target name="create.schema" depends="compile">
+        <java classname="global.CreateSchema" fork="true">
+            <classpath>
+                <path refid="project.classpath"/>
+                <pathelement location="${src.etc.dir}"/>
+            </classpath>
+        </java>
+    </target>
+
+
+
 
 
 </project>

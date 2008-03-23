@@ -40,11 +40,11 @@ import java.util.regex.*;
  }
  </pre>
  The product file may specify the manufacturer required, note in the XML comment using the form
- <b>$require("fileToLoad");</b> that indicates the dependency on manufacturer 35.
+ <b>@require("fileToLoad")</b> that indicates the dependency on manufacturer 35.
  <p/>
  <pre>
  product.13.xml
- &lt;!-- $require("manufacturer.35.xml"); --&gt;
+ &lt;!-- @require("manufacturer.35.xml") --&gt;
  &lt;product&gt;
      &lt;id&gt;13&lt;/id&gt;
      &lt;name&gt;coffee&lt;/name&gt;
@@ -92,12 +92,12 @@ public class DOF
      </pre>
      <p/>
      The file processor looks for dependencies in the definition files using this pattern:<p>
-     <b>$require("{file_name}");</b>
+     <b>@require("{file_name}")</b>
      <p/>
      where {file_name} might be something like "manufacturer.35.xml".
      <p/>
      Thus, in an XML file, one would use the commented form:<p>
-     <code> &lt;!-- $require("manufacturer.35.xml"); --&gt; </code><p>
+     <code> &lt;!-- @require("manufacturer.35.xml") --&gt; </code><p>
      Even though fileToLoad uses the period as the delimiter, the primary key may contain periods because the first and
      last periods are used to find the object type and the file suffix. This also means that object types may NOT
      contain a period.
@@ -175,7 +175,12 @@ public class DOF
 
     private static void checkRepIncludeDependencyInitialized()
     {
-        repIncludeDependency = Pattern.compile("\\$require\\s*\\(\\s*\"(.*)\"\\s*\\);");
+        // Original pattern -- use the @require("type.pk.ext")
+        //repIncludeDependency = Pattern.compile("\\$require\\s*\\(\\s*\"(.*)\"\\s*\\);");
+
+        // Changed 3/20/2008 to use annotation format:
+        // Leading @ and removed the trailing semicolon
+        repIncludeDependency = Pattern.compile("@require\\s*\\(\\s*\"(.*)\"\\s*\\)");
     }
 
 

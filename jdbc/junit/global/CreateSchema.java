@@ -7,10 +7,11 @@ import java.io.*;
 /**
  Run this test to create the schema
  */
-public class DBTestSetup extends DBTestCase
+public class CreateSchema
 {
-    public void testRecreateSchema()
+    public static void main(String[] args)
     {
+        System.out.println("Creating Schema");
         InputStream is = ClassLoader.getSystemResourceAsStream("accounting.sql");
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr);

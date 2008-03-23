@@ -1,8 +1,8 @@
 <!-- list of dependencies for invoice number 100 -->
-        <!-- $require("customer.25.xml"); -->
-        <!-- $require("product.13.xml"); -->
-        <!-- $require("product.14.xml"); -->
-        <!-- $require("product.15.xml"); -->
+        <!-- @require("customer.25.xml") -->
+        <!-- @require("product.13.xml") -->
+        <!-- @require("product.14.xml") -->
+        <!-- @require("product.15.xml") -->
 <invoice>
     <id>100</id>
     <customer_id>25</customer_id>
