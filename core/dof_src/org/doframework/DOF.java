@@ -1,5 +1,7 @@
 package org.doframework;
 
+// Released under the Eclipse Public License-v1.0
+
 
 import java.io.*;
 import java.util.*;
@@ -68,7 +70,11 @@ import java.util.regex.*;
 
  @author Justin Gordon
  @date January, 2008
- @see DependentObjectHandler */
+ @see DependentObjectHandler
+
+
+
+ */
 public class DOF
 {
 
@@ -92,9 +98,9 @@ public class DOF
      </pre>
      <p/>
      The file processor looks for dependencies in the definition files using this pattern:<p>
-     <b>@require("{file_name}")</b>
+     <b>@require("{object_type.object_pk.extension}")</b>
      <p/>
-     where {file_name} might be something like "manufacturer.35.xml".
+     where {object_type.object_pk.extension} might be something like "manufacturer.35.xml".
      <p/>
      Thus, in an XML file, one would use the commented form:<p>
      <code> &lt;!-- @require("manufacturer.35.xml") --&gt; </code><p>

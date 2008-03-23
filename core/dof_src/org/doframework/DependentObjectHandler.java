@@ -1,4 +1,6 @@
 package org.doframework;
+// Released under the Eclipse Public License - v 1.0
+
 
 /**
  This is the basic interface that "handler" classes must implement. Note, the choice of the PK is up to the handler. The
@@ -6,7 +8,9 @@ package org.doframework;
  operations as they are implemented to decide what to do with the PK.
 
  @author Justin Gordon
- @date January, 2008 */
+ @date January, 2008
+
+ */
 public interface DependentObjectHandler
 {
 

@@ -8,7 +8,7 @@
     <!-- Name of project and version -->
     <property name="proj.name" value="DependentObjectFramework"/>
     <property name="proj.shortname" value="dof"/>
-    <property name="version" value="1.0"/>
+    <property name="version" value="0.9.4"/>
 
     <!-- Global properties for this build -->
     <property name="dof.src.java.dir" value="dof_src"/>
@@ -17,7 +17,7 @@
     <property name="build.dir" value="build"/>
     <property name="release.dir" value="../release"/>
     <property name="javadoc.dir" value="../javadoc"/>
-    <property name="dof.release.destfile" value="../release/DOF-0.9.3.zip"/>
+    <property name="dof.release.destfile" value="../release/DOF-${version}.zip"/>
 
     <!-- Classpath declaration -->
     <path id="project.classpath">

@@ -1,5 +1,7 @@
 package org.doframework;
 
+// Released under the Eclipse Public License-v1.0
+
 import java.io.*;
 import java.util.*;
 
@@ -20,7 +22,10 @@ import java.util.*;
  CustomerXmlFactory class must implement interface <b>DependentObjectHandler</b>
 
  @author Justin Gordon
- @date January, 2008 */
+ @date January, 2008
+
+
+ */
 
 
 class HandlerMappings
