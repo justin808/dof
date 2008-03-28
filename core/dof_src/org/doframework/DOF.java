@@ -381,7 +381,7 @@ public class DOF
         {
             Class<? extends DependentObjectHandler> handlerClass =
                     (Class<? extends DependentObjectHandler>) Class.forName(className);
-            return (DependentObjectHandler) handlerClass.newInstance();
+            return handlerClass.newInstance();
         }
         catch (ClassNotFoundException e)
         {
