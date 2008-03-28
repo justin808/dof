@@ -25,5 +25,15 @@ public class DOFTest extends TestCase
         assertEquals("xml", parts[2]);
     }
 
+    public void testGetPropertiesErrorMessageWhenPropertiesFile()
+    {
+        if (DOF.DOF_DEFS_DIR.length() == 0)
+        {
+            fail("Please define DOF_DIR when invoking the test runner. Use VM parameter -DDOF_DIR={directory to core/test_data}");
+        }
+        final String resourceAsString = DOF.getResourceAsString("product.40.xml");
+        assertNotNull(resourceAsString);
+    }
+
 
 }
