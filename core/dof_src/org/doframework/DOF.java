@@ -379,7 +379,8 @@ public class DOF
         // todo -- store instance in a map
         try
         {
-            Class handlerClass = Class.forName(className);
+            Class<? extends DependentObjectHandler> handlerClass =
+                    (Class<? extends DependentObjectHandler>) Class.forName(className);
             return (DependentObjectHandler) handlerClass.newInstance();
         }
         catch (ClassNotFoundException e)

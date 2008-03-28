@@ -2,6 +2,8 @@ package component;
 
 public class DuplicateRecordException extends RuntimeException
 {
+    private static final long serialVersionUID = 1L;
+
 
     /**
      * Constructs a new exception with <code>null</code> as its detail message. The cause is not
