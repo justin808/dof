@@ -34,6 +34,11 @@ class HandlerMappings
     private static final String DEFAULT_DOF_FILE_NAME_PARTS_PROCESSOR = "org.doframework.TypePkExtensionFileNamePartsProcessor";
     private static FileNamePartsProcessor fileNamePartsProcessor;
 
+    /**
+     * This is the property to specify a custom FileNamePartsProcessor
+     */
+    private static final String FILE_NAME_PARTS_PROCESSOR_PROPERTY = "FileNamePartsProcessor";
+
 
     static
     {
@@ -84,7 +89,7 @@ class HandlerMappings
     {
         if (fileNamePartsProcessor == null)
         {
-            String c = (String) m_handlerMappings.get("FileNamePartsProcessorClass");
+            String c = (String) m_handlerMappings.get(FILE_NAME_PARTS_PROCESSOR_PROPERTY);
             if (c == null || c.length() == 0)
             {
                 c = DEFAULT_DOF_FILE_NAME_PARTS_PROCESSOR;

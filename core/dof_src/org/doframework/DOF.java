@@ -71,10 +71,14 @@ import java.util.regex.*;
  * CustomerXmlFactory class must implement interface <b>DependentObjectHandler</b>. Even though fileToLoad uses the
  * period as the delimiter, the primary key may contain periods because the first and last periods are used to find the
  * object type and the file suffix. This also means that object types may NOT contain a period.
+ * <p/>
+ * Note: You may specify a custom FileNamePartsProcessor class in case you do not like the form of objectType.PK.fileType.
+ * Do this by putting in a property FileNamePartsProcessor=FullClassName in file handler_mappings.properties
  *
  * @author Justin Gordon
  * @date January, 2008
- * @see DependentObjectHandler
+ * @see org.doframework.DependentObjectHandler
+ * @see org.doframework.FileNamePartsProcessor
  */
 public class DOF
 {
