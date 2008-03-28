@@ -4,6 +4,8 @@
     <classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1" />
     <classpathentry kind="src" path="dof_junit" />
     <classpathentry kind="src" path="dof_src" />
+    <classpathentry kind="src" path="etc" />
+    <classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/etc" />
     <classpathentry kind="output" path="bin" />
 </classpath>
 

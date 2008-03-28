@@ -31,6 +31,9 @@ import java.util.*;
 class HandlerMappings
 {
     static Properties m_handlerMappings;
+    private static final String DEFAULT_DOF_FILE_NAME_PARTS_PROCESSOR = "org.doframework.TypePkExtensionFileNamePartsProcessor";
+    private static FileNamePartsProcessor fileNamePartsProcessor;
+
 
     static
     {
@@ -70,6 +73,41 @@ class HandlerMappings
         {
             throw new RuntimeException(e);
         }
+    }
+
+
+    /**
+     * Get the file name parts processor class
+     * @return The fully qualified class name that implements the interface org.doframework.FileNamePartsProcessor
+     */
+    static FileNamePartsProcessor getFileNamePartsProcessor()
+    {
+        if (fileNamePartsProcessor == null)
+        {
+            String c = (String) m_handlerMappings.get("FileNamePartsProcessorClass");
+            if (c == null || c.length() == 0)
+            {
+                c = DEFAULT_DOF_FILE_NAME_PARTS_PROCESSOR;
+            }
+            try
+            {
+                Class fileNamePartsProcessorClass = Class.forName(c);
+                fileNamePartsProcessor = (FileNamePartsProcessor) fileNamePartsProcessorClass.newInstance();
+            }
+            catch (ClassNotFoundException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (InstantiationException e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+        return fileNamePartsProcessor;
     }
 
 

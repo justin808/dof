@@ -216,10 +216,11 @@ public class DOF
         if (resultObject == null)
         {
             // Get handler class for object
-            String[] fileNameParts = getFileNameParts(fileToLoad);
-            String objectType = fileNameParts[0];
-            String pk = fileNameParts[1];
-            String fileType = fileNameParts[2].toLowerCase();
+            FileNameParts fileNameParts = getFileNameParts(fileToLoad);
+            String objectType = fileNameParts.objectType;
+            String pk = fileNameParts.pk;
+            String fileType = fileNameParts.fileType.toLowerCase();
+
             DependentObjectHandler dbJUnitHandler = getHandlerForObject(objectType, fileType);
 
             loadDependencies(fileToLoad);
@@ -241,17 +242,22 @@ public class DOF
     }
 
 
-    static String[] getFileNameParts(String fileToLoad)
+    static FileNameParts getFileNameParts(String fileToLoad)
     {
-        final String period = ".";
-        int firstPeriodIndex = fileToLoad.indexOf(period);
-        int lastPeriodIndex = fileToLoad.lastIndexOf(period);
-        String[] fileNameParts = new String[3];
-        fileNameParts[0] = fileToLoad.substring(0, firstPeriodIndex);
-        fileNameParts[1] = fileToLoad.substring(firstPeriodIndex + 1, lastPeriodIndex);
-        fileNameParts[2] = fileToLoad.substring(lastPeriodIndex + 1);
-        return fileNameParts;
+        return HandlerMappings.getFileNamePartsProcessor().getFileNameParts(fileToLoad);
     }
+
+    //static String[] getFileNameParts(String fileToLoad)
+    //{
+    //    final String period = ".";
+    //    int firstPeriodIndex = fileToLoad.indexOf(period);
+    //    int lastPeriodIndex = fileToLoad.lastIndexOf(period);
+    //    String[] fileNameParts = new String[3];
+    //    fileNameParts[0] = fileToLoad.substring(0, firstPeriodIndex);
+    //    fileNameParts[1] = fileToLoad.substring(firstPeriodIndex + 1, lastPeriodIndex);
+    //    fileNameParts[2] = fileToLoad.substring(lastPeriodIndex + 1);
+    //    return fileNameParts;
+    //}
 
 
     /**
@@ -265,10 +271,11 @@ public class DOF
      */
     private static boolean deleteObjectWorker(String fileToLoad, Set<String> processedDeletions)
     {
-        String[] fileNameParts = getFileNameParts(fileToLoad);
-        String objectType = fileNameParts[0];
-        String pk = fileNameParts[1];
-        String fileType = fileNameParts[2].toLowerCase();
+        FileNameParts fileNameParts = getFileNameParts(fileToLoad);
+        String objectType = fileNameParts.objectType;
+        String pk = fileNameParts.pk;
+        String fileType = fileNameParts.fileType.toLowerCase();
+
         DependentObjectHandler dbJUnitHandler = getHandlerForObject(objectType, fileType);
 
         // delete parent object first
