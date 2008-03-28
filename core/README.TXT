@@ -26,3 +26,10 @@ Instructions for creating a release:
 7. Open up class AllTestSuite and run as JUNit test
 
 If all went well, the JUnit tests ran.
+
+
+** Miscellaneous
+
+* Eclipse
+  * Make Eclipse ignore .svn directories
+    Window -> Preferences..., Java -> Compiler -> Building. Under "Output folder" add ", .svn/" to "Filtered Resources" (so that you get "*.launch, .svn/").
