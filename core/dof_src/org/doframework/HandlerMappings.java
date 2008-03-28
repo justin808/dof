@@ -35,7 +35,33 @@ class HandlerMappings
     static
     {
         m_handlerMappings = new Properties();
-        InputStream handlerMappingsInputStream = ClassLoader.getSystemResourceAsStream("handler_mappings.properties");
+        final String PROPERTIES_FILE_NAME = "handler_mappings.properties";
+        InputStream handlerMappingsInputStream = ClassLoader.getSystemResourceAsStream(PROPERTIES_FILE_NAME);
+        if (handlerMappingsInputStream == null)
+        {
+            if (DOF.DOF_DEFS_DIR.length() > 0)
+            {
+                String resourceAbsolutePath = DOF.getResourceAbsolutePath(PROPERTIES_FILE_NAME);
+                File file = new File(resourceAbsolutePath);
+                try
+                {
+                    handlerMappingsInputStream = new BufferedInputStream(new FileInputStream(file));
+                }
+                catch (FileNotFoundException e)
+                {
+                    throw new RuntimeException("You must put '" + PROPERTIES_FILE_NAME + "'" +
+                                               " in the classpath or under directory defined by system property " +
+                                               "DOF_DIR: " + file.getAbsolutePath());
+                }
+            }
+            else
+            {
+                throw new RuntimeException("You must put '" + PROPERTIES_FILE_NAME + "'" +
+                                           " in the classpath or under directory defined by system property " +
+                                           "DOF_DIR.");
+
+            }
+        }
         try
         {
             m_handlerMappings.load(handlerMappingsInputStream);
