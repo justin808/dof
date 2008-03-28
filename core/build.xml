@@ -80,6 +80,7 @@
                 <exclude name="**/hibernate/**"/>
                 <exclude name="**/db/**"/>
                 <exclude name="**/.metadata/**"/>
+                <exclude name="**/*.zip"/>
             </fileset>
         </copy>
     </target>

@@ -176,6 +176,39 @@ public class DOF
         pathToLoadedObject.clear();
     }
 
+
+    /**
+     * Used to take the fileToLoad and to convert it into the FileNameParts
+     *
+     * @param fileToLoad, which may contain a leading path
+     *
+     * @return The FileNameParts containing the object type, pk, and file type
+     */
+    public static FileNameParts getFileNameParts(String fileToLoad)
+    {
+        return HandlerMappings.getFileNamePartsProcessor().getFileNameParts(fileToLoad);
+    }
+
+
+    /**
+     * If property DOF_DEFS_DIR is defined, then the files are retrieved from that directory, or else the files are
+     * retrieved using ClassLoader.getSystemResourceAsStream
+     *
+     * @param resourceName
+     *
+     * @return
+     */
+    public static String getResourceAsString(String resourceName)
+    {
+        if (DOF_DEFS_DIR.length() == 0)
+        {
+            return getResourceAsStringFromClassLoader(resourceName);
+        }
+        else
+        {
+            return getResourceAsStringFromDofDefsDir(resourceName);
+        }
+    }
     //////////////////////////////////////////////////////////////////////////////////////////////
     // private members and methods ///////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -246,10 +279,6 @@ public class DOF
     }
 
 
-    static FileNameParts getFileNameParts(String fileToLoad)
-    {
-        return HandlerMappings.getFileNamePartsProcessor().getFileNameParts(fileToLoad);
-    }
 
     //static String[] getFileNameParts(String fileToLoad)
     //{
@@ -370,25 +399,6 @@ public class DOF
     }
 
 
-    /**
-     * If property DOF_DEFS_DIR is defined, then the files are retrieved from that directory, or else the files are
-     * retrieved using ClassLoader.getSystemResourceAsStream
-     *
-     * @param resourceName
-     *
-     * @return
-     */
-    static String getResourceAsString(String resourceName)
-    {
-        if (DOF_DEFS_DIR.length() == 0)
-        {
-            return getResourceAsStringFromClassLoader(resourceName);
-        }
-        else
-        {
-            return getResourceAsStringFromDofDefsDir(resourceName);
-        }
-    }
 
 
     private static String getResourceAsStringFromDofDefsDir(String resourceName)

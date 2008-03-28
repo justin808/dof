@@ -17,9 +17,22 @@ public interface DependentObjectHandler
     /**
      Inserts the object into the DB. No check should done to see if the object already exists, as the get method is
      called before create to do that check. Note that the framework will read any listed dependencies in the fileToLoad
-     and it will recursively create those dependencies first.
+     and it will recursively create those dependencies first.<p/>
 
-     @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}
+     To convert fileToLoad into a FileNamePart, call:<p/>
+     <code>
+     FileNameParts fnp = DOF.getFileNameParts(fileToLoad);
+     </code>
+
+     <p/>
+     To get the contents of the fileToLoad, call:<p/>
+     <code>
+     String s = DOF.getResourceAsString(fileToLoad);
+     </code>
+
+     @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}, or might be of a custom form if there is
+     custom FileNamePartsProcessor implementation specified in file handler_mappings.properties.
+
 
      @return The type of object being created and saved in the DB
      */
