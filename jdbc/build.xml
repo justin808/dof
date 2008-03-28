@@ -21,7 +21,7 @@
 
 
     <property name="db.dir" value="./db"/>
-    <property name="home.path" value="${env.HOMEPATH}"/>
+    <!--<property name="home.path" value="${env.HOMEPATH}"/>-->
 
 
     <!-- Classpath declaration -->
@@ -67,7 +67,7 @@
 
 
     <target name="start.hsqldb">
-        <copy file="etc/sqltool.rc" todir="${home.path}"/>
+        <!--<copy file="etc/sqltool.rc" todir="${home.path}"/>-->
         <mkdir dir="${db.dir}"/>
         <copy file="etc/server.properties" todir="${db.dir}"/>
         <java classname="org.hsqldb.Server" fork="true" dir="${db.dir}">

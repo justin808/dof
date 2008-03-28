@@ -46,9 +46,9 @@ public class MockInvoiceComponent implements InvoiceComponent
     {
         List<Invoice> result = new ArrayList<Invoice>();
         Collection<Invoice> allInvoices = invoiceIdToInvoice.values();
-        for (Iterator iterator = allInvoices.iterator(); iterator.hasNext();)
+        for (Iterator<Invoice> iterator = allInvoices.iterator(); iterator.hasNext();)
         {
-            Invoice invoice = (Invoice) iterator.next();
+            Invoice invoice = iterator.next();
             if (invoice.getCustomer().getId() == customer.getId())
             {
                 result.add(invoice);

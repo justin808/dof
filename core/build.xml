@@ -1,7 +1,10 @@
 <!--The tasks relevant to building the dof.jar start with "dof"
     All other tasks are part of the sample accounting program which demonstrates
     the proper functioning of the DOF, as well as the use of mock objects
-    and a dependency location pattern -->
+    and a dependency location pattern
+
+    NOTE: This file is tested with ANT 1.7.0. This file does NOT work with ant 1.6.2.
+    -->
 
 <project name="DOF_CORE" default="dof.jar" basedir=".">
 
@@ -11,13 +14,16 @@
     <property name="version" value="0.9.4"/>
 
     <!-- Global properties for this build -->
-    <property name="dof.src.java.dir" value="dof_src"/>
+    <property name="whole.release.dir" value=".."/>
+    <property name="dof.src.java.dir" value="./dof_src"/>
     <property name="lib.dir" value="lib"/>
     <property name="class.dir" value="classes"/>
     <property name="build.dir" value="build"/>
-    <property name="release.dir" value="../release"/>
+    <property name="zip.release.dir" value="../release"/>
+    <property name="release.pattern" value="DOF-${version}"/>
+    <property name="release.dir" value="../../${release.pattern}"/>
     <property name="javadoc.dir" value="../javadoc"/>
-    <property name="dof.release.destfile" value="../release/DOF-${version}.zip"/>
+    <property name="dof.release.destfile" value="${zip.release.dir}/DOF-${version}.zip"/>
 
     <!-- Classpath declaration -->
     <path id="project.classpath">
@@ -32,9 +38,11 @@
     <target name="clean" description="Clean the build directory">
         <delete dir="${class.dir}"/>
         <delete dir="${build.dir}"/>
+        <delete dir="${zip.release.dir}"/>
         <delete dir="${release.dir}"/>
         <mkdir dir="${class.dir}"/>
         <mkdir dir="${build.dir}"/>
+        <mkdir dir="${zip.release.dir}"/>
         <mkdir dir="${release.dir}"/>
     </target>
 
@@ -59,22 +67,38 @@
         <javadoc sourcepath="${dof.src.java.dir}" author="true" destdir="${javadoc.dir}"/>
     </target>
 
-    <target name="dof.release" depends="clean, dof.jar, dof.doc">
-        <mkdir dir="../release"/>
-        <zip basedir=".." destfile="${dof.release.destfile}">
+    <target name="dof.copy" >
+        <delete dir="${release.dir}"/>
+        <copy todir="${release.dir}">
+            <fileset dir="${whole.release.dir}">
+                <exclude name="**/database/**"/>
+                <exclude name="**/release/**"/>
+                <exclude name="**/out/**"/>
+                <exclude name="**/classes/**"/>
+                <exclude name="**/*.class"/>
+                <exclude name="**/jpa/**"/>
+                <exclude name="**/hibernate/**"/>
+                <exclude name="**/db/**"/>
+                <exclude name="**/.metadata/**"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="dof.zip" >
+        <zip basedir="${release.dir}/.."
+             destfile="${dof.release.destfile}"
+                includes="${release.pattern}/**">
             <!--<include name="**/*.java"/>-->
             <!--<include name="**/*.zip"/>-->
             <!--<include name="**/*.xml"/>-->
             <!--<include name="**/*.txt"/>-->
             <!--<include name="**/*.TXT"/>-->
             <!--<include name="**/*.HTML"/>-->
-            <exclude name="database/**"/>
-            <exclude name="release/**"/>
-            <exclude name="**/out/**"/>
-            <exclude name="**/classes/**"/>
-            <exclude name="**/*.class"/>
         </zip>
-
     </target>
+
+    <target name="dof.release" depends="clean, dof.jar, dof.doc, dof.copy, dof.zip"/>
+
+
 
 </project>

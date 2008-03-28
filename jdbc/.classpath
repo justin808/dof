@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+    <classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1" />
+    <classpathentry kind="src" path="etc" />
     <classpathentry kind="src" path="junit" />
     <classpathentry kind="src" path="src" />
+    <classpathentry kind="src" path="test_data" />
     <classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/etc" />
     <classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JUnit 44" />
     <classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HSQLDB" />
-    <classpathentry kind="src" path="/core" combineaccessrules="false" />
+    <classpathentry combineaccessrules="false" kind="src" path="/core" />
+    <classpathentry kind="lib" path="lib/hsqldb.jar" />
     <classpathentry kind="output" path="bin" />
 </classpath>
 

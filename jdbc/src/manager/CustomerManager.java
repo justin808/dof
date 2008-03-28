@@ -24,9 +24,9 @@ public class CustomerManager
         // get customers who have an invoice not paid over 30 days old
         // we'll update the any overdue flags to false when a payment is received, so, since time
         // only goes forward, we don't need to handle those
-        for (Iterator iterator = customersWithOutstandingBalances.iterator(); iterator.hasNext();)
+        for (Iterator<Customer> iterator = customersWithOutstandingBalances.iterator(); iterator.hasNext();)
         {
-            Customer customer = (Customer) iterator.next();
+            Customer customer = iterator.next();
             List<Invoice> invoices = customer.getInvoices();
             BigDecimal overDueTotal = BigDecimal.ZERO;
             for (Iterator<Invoice> iterator1 = invoices.iterator(); iterator1.hasNext();)
