@@ -87,6 +87,8 @@ import java.util.regex.*;
  * </pre>
  * For regexp documentation, consult http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html<p/>
  *
+ * Note: For verbose output of when objects are created and deleted, set system property -DDOF_DEBUG=TRUE 
+ *
  * @author Justin Gordon
  * @date January, 2008
  * @see org.doframework.DependentObjectHandler
@@ -235,6 +237,7 @@ public class DOF
 
     static final String DOF_DEFS_DIR = System.getProperty("DOF_DIR", "");
 
+    static final boolean DOF_DEBUG = System.getProperty("DOF_DEBUG", "").equalsIgnoreCase("TRUE");
 
     private static void checkRepIncludeDependencyInitialized()
     {
@@ -279,6 +282,10 @@ public class DOF
             resultObject = dbJUnitHandler.get(pk);
             if (resultObject == null)
             {
+                if (DOF_DEBUG)
+                {
+                    System.out.println("DOF: Loading: " + fileToLoad + ", fileNameParts = " + fileNameParts);
+                }
                 resultObject = dbJUnitHandler.create(fileNameParts, fileToLoad);
             }
             if (resultObject == null)
@@ -325,6 +332,11 @@ public class DOF
         DependentObjectHandler dbJUnitHandler = getHandlerForObject(objectType, fileType);
 
         // delete parent object first
+        if (DOF_DEBUG)
+        {
+            System.out.println("DOF: Deleting: " + fileToLoad + ", fileNameParts = " + fileNameParts);
+        }
+
         boolean deletedParent = dbJUnitHandler.delete(pk);
         if (deletedParent)
         {

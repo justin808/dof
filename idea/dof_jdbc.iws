@@ -16,16 +16,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../jdbc/junit/dof_xml_handler/ProductXmlFactory.java" afterPath="$PROJECT_DIR$/../jdbc/junit/dof_xml_handler/ProductXmlFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../jdbc/junit/dof_xml_handler/CustomerXmlFactory.java" afterPath="$PROJECT_DIR$/../jdbc/junit/dof_xml_handler/CustomerXmlFactory.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/dof_src/org/doframework/DOF.java" afterPath="$PROJECT_DIR$/../core/dof_src/org/doframework/DOF.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/dof_junit/org/doframework/DOFTest.java" afterPath="$PROJECT_DIR$/../core/dof_junit/org/doframework/DOFTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/build.xml" afterPath="$PROJECT_DIR$/../core/build.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/dof_src/org/doframework/DependentObjectHandler.java" afterPath="$PROJECT_DIR$/../core/dof_src/org/doframework/DependentObjectHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../jdbc/junit/dof_xml_handler/InvoiceXmlFactory.java" afterPath="$PROJECT_DIR$/../jdbc/junit/dof_xml_handler/InvoiceXmlFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/etc/handler_mappings.properties" afterPath="$PROJECT_DIR$/../core/etc/handler_mappings.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/dof_src/org/doframework/HandlerMappings.java" afterPath="$PROJECT_DIR$/../core/dof_src/org/doframework/HandlerMappings.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../jdbc/junit/dof_xml_handler/ManufacturerXmlFactory.java" afterPath="$PROJECT_DIR$/../jdbc/junit/dof_xml_handler/ManufacturerXmlFactory.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../core/dof_src/org/doframework/FileNameParts.java" afterPath="$PROJECT_DIR$/../core/dof_src/org/doframework/FileNameParts.java" />
     </list>
     <ignored path="dof_jdbc.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -144,19 +138,37 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf>
-          <file leaf-file-name="DOF.java" pinned="false" current="false" current-in-tab="false">
+          <file leaf-file-name="DOF.java" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/../core/dof_src/org/doframework/DOF.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="281" column="46" selection-start="12521" selection-end="12521" vertical-scroll-proportion="0.34343433">
+                <state line="162" column="67" selection-start="8321" selection-end="8321" vertical-scroll-proportion="0.35690236">
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="DependentObjectHandler.java" pinned="false" current="true" current-in-tab="true">
+          <file leaf-file-name="FileNameParts.java" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/../core/dof_src/org/doframework/FileNameParts.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="23" column="67" selection-start="427" selection-end="427" vertical-scroll-proportion="0.52873564">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="README.TXT" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/../README.TXT">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="23" column="40" selection-start="685" selection-end="685" vertical-scroll-proportion="0.54208755">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="DependentObjectHandler.java" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/../core/dof_src/org/doframework/DependentObjectHandler.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="12" column="37" selection-start="439" selection-end="439" vertical-scroll-proportion="0.25589225">
+                <state line="9" column="0" selection-start="391" selection-end="391" vertical-scroll-proportion="0.21212122">
                   <folding />
                 </state>
               </provider>
@@ -194,17 +206,6 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state line="66" column="18" selection-start="2506" selection-end="2506" vertical-scroll-proportion="0.56228954">
                   <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="HandlerMappings.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/../core/dof_src/org/doframework/HandlerMappings.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="50" column="6" selection-start="1807" selection-end="1807" vertical-scroll-proportion="0.35353535">
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
                 </state>
               </provider>
             </entry>
@@ -262,7 +263,7 @@
           <file leaf-file-name="build.xml" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/../core/build.xml">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="13" column="41" selection-start="608" selection-end="608" vertical-scroll-proportion="0.24082935">
+                <state line="83" column="16" selection-start="3116" selection-end="3116" vertical-scroll-proportion="0.8979266">
                   <folding />
                 </state>
               </provider>
@@ -351,7 +352,7 @@
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkin" />
     <OptionsSetting value="true" id="Checkout" />
-    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="false" id="Update" />
     <OptionsSetting value="true" id="Status" />
     <OptionsSetting value="true" id="Edit" />
     <OptionsSetting value="true" id="Undo Check Out" />
@@ -543,13 +544,14 @@
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="205" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder0" value="0" />
-    <property name="RunManagerConfig.showSettingsBeforeRunnig" value="true" />
+    <property name="RunManagerConfig.showSettingsBeforeRunnig" value="false" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder3" value="3" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder2" value="2" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth2" value="163" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder4" value="4" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth1" value="168" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth0" value="168" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth4" value="843" />
     <property name="GoToClass.includeJavaFiles" value="false" />
@@ -571,18 +573,117 @@
       <recent name="com.doframework" />
     </key>
   </component>
+  <component name="RestoreUpdateTree">
+    <UpdateInfo date="3/28/08 8:19 PM" ActionInfo="_Update">
+      <UpdatedFiles>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Updated from server" />
+          <option name="myStatusName" value="Changed on server" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="CHANGED_ON_SERVER" />
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Updated" />
+            <option name="myStatusName" value="Changed" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="UPDATED" />
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Created" />
+            <option name="myStatusName" value="Created" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="CREATED" />
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Deleted" />
+            <option name="myStatusName" value="Deleted" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="true" />
+            <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Restored" />
+            <option name="myStatusName" value="Will be restored" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="RESTORED" />
+          </FILE-GROUP>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Modified" />
+          <option name="myStatusName" value="Modified" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MODIFIED" />
+          <PATH>$PROJECT_DIR$/../core/build.xml</PATH>
+          <PATH>$PROJECT_DIR$/../core/dof_src/org/doframework/DependentObjectHandler.java</PATH>
+          <PATH>$PROJECT_DIR$/../core/dof_src/org/doframework/DOF.java</PATH>
+          <PATH>$PROJECT_DIR$/../core/dof_src/org/doframework/FileNameParts.java</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Skipped" />
+          <option name="myStatusName" value="Skipped" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="SKIPPED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged with conflicts" />
+          <option name="myStatusName" value="Will be merged with conflicts" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED_WITH_CONFLICTS" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged" />
+          <option name="myStatusName" value="Will be merged" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Not in repository" />
+          <option name="myStatusName" value="Not in repository" />
+          <option name="mySupportsDeletion" value="true" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="UNKNOWN" />
+          <PATH>$PROJECT_DIR$/../jdbc/classes</PATH>
+          <PATH>$PROJECT_DIR$/../jdbc/db</PATH>
+          <PATH>$PROJECT_DIR$/../jdbc/lib/junit-4.4.jar</PATH>
+          <PATH>$PROJECT_DIR$/../core/build</PATH>
+          <PATH>$PROJECT_DIR$/../core/classes</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Locally added" />
+          <option name="myStatusName" value="Locally added" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="LOCALLY_ADDED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Locally removed" />
+          <option name="myStatusName" value="Locally removed" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="LOCALLY_REMOVED" />
+        </FILE-GROUP>
+      </UpdatedFiles>
+    </UpdateInfo>
+  </component>
   <component name="RunManager" selected="JUnit.AllTestSuite">
     <tempConfiguration default="false" name="AllTestSuite" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="jdbc" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="AllTestSuite" />
-      <option name="METHOD_NAME" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="VM_PARAMETERS" value="-DDOF_DEBUG=TRUE" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="ADDITIONAL_CLASS_PATH" />
@@ -782,8 +883,8 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39980355" order="3" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="9" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32991612" order="10" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32907662" order="11" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32907662" order="10" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32907662" order="11" />
       <window_info id="SVN Repositories" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32907662" order="-1" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="6" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
@@ -1021,9 +1122,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../core/dof_src/org/doframework/HandlerMappings.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="6" selection-start="1807" selection-end="1807" vertical-scroll-proportion="0.35353535">
+        <state line="133" column="0" selection-start="4977" selection-end="4977" vertical-scroll-proportion="2.5555556">
           <folding>
             <element signature="imports" expanded="true" />
+            <marker date="1206768664000" expanded="true" signature="181:1798" placeholder="/**...*/" />
+            <marker date="1206768664000" expanded="true" signature="2064:2146" placeholder="/**...*/" />
+            <marker date="1206768664000" expanded="true" signature="2317:3883" placeholder="{...}" />
+            <marker date="1206768664000" expanded="true" signature="3890:4063" placeholder="/**...*/" />
+            <marker date="1206768664000" expanded="true" signature="4130:5045" placeholder="{...}" />
+            <marker date="1206768664000" expanded="true" signature="5135:5669" placeholder="{...}" />
+            <marker date="1206768664000" expanded="true" signature="5722:6644" placeholder="{...}" />
+            <marker date="1206768664000" expanded="true" signature="6650:6697" placeholder="/**...*/" />
           </folding>
         </state>
       </provider>
@@ -1070,13 +1179,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../core/dof_src/org/doframework/DOF.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="281" column="46" selection-start="12521" selection-end="12521" vertical-scroll-proportion="0.34343433">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../core/etc/handler_mappings.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state line="22" column="0" selection-start="990" selection-end="990" vertical-scroll-proportion="0.4888889">
@@ -1084,16 +1186,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../core/build.xml">
+    <entry file="file://$PROJECT_DIR$/../core/dof_src/org/doframework/DependentObjectHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="41" selection-start="608" selection-end="608" vertical-scroll-proportion="0.24082935">
+        <state line="9" column="0" selection-start="391" selection-end="391" vertical-scroll-proportion="0.21212122">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../core/dof_src/org/doframework/DependentObjectHandler.java">
+    <entry file="file://$PROJECT_DIR$/../README.TXT">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="37" selection-start="439" selection-end="439" vertical-scroll-proportion="0.25589225">
+        <state line="23" column="40" selection-start="685" selection-end="685" vertical-scroll-proportion="0.54208755">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../core/dof_src/org/doframework/FileNameParts.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="67" selection-start="427" selection-end="427" vertical-scroll-proportion="0.52873564">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../core/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="83" column="16" selection-start="3116" selection-end="3116" vertical-scroll-proportion="0.8979266">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../core/dof_src/org/doframework/DOF.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="162" column="67" selection-start="8321" selection-end="8321" vertical-scroll-proportion="0.35690236">
           <folding />
         </state>
       </provider>

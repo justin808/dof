@@ -81,6 +81,7 @@
                 <exclude name="**/db/**"/>
                 <exclude name="**/.metadata/**"/>
                 <exclude name="**/*.zip"/>
+                <exclude name="**/*.tmp"/>
             </fileset>
         </copy>
     </target>

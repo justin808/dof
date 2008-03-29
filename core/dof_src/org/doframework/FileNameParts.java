@@ -5,7 +5,6 @@ package org.doframework;
  */
 public class FileNameParts
 {
-
     /**
      * Like "Customer" or "Invoice" or whatever type of object you are saving
      */
@@ -20,4 +19,9 @@ public class FileNameParts
      * Like "xml"
      */
     public String fileType;
+
+    public String toString()
+    {
+        return "{" + objectType + ", " + pk + ", " + fileType + "}";
+    }
 }

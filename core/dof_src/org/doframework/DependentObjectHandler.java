@@ -19,25 +19,19 @@ public interface DependentObjectHandler
      called before create to do that check. Note that the framework will read any listed dependencies in the fileToLoad
      and it will recursively create those dependencies first.<p/>
 
-     To convert fileToLoad into a FileNamePart, call:<p/>
-     <code>
-     FileNameParts fnp = DOF.getFileNameParts(fileToLoad);
-     </code>
-
-     <p/>
      To get the contents of the fileToLoad, call:<p/>
      <code>
      String s = DOF.getResourceAsString(fileToLoad);
      </code>
 
-     @param fileNameParts
-      * @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}, or might be of a custom form if there is
+     @param fileNameParts contains pk, objectType, and fileType
+     @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}, or might be of a custom form if there is
        custom FileNamePartsProcessor implementation specified in file handler_mappings.properties.
-
 
      @return The type of object being created and saved in the DB
      */
     Object create(FileNameParts fileNameParts, String fileToLoad);
+
 
     /**
      Fetches the object, if it exists, with the given PK. Otherwise null is returned.
@@ -47,6 +41,7 @@ public interface DependentObjectHandler
      @return The object created from the db if it existed, or else null
      */
     Object get(String pk);
+
 
     /**
      Delete the object with the given pk. Note that the framework will automatically try to delete the object's

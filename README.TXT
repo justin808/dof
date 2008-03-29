@@ -54,3 +54,4 @@ Release 0.9.6
 * Changed DependentObjectHandler interface so that FileNameParts is passed into create method. This is 
   useful so that you can easily get the primary key, object type, or file type when doing a create.
 * Changed handler_mappings.properties so that it support regular expression matching
+* Added system property DOF_DEBUG to get printouts of when the DOF creates and deletes objects
