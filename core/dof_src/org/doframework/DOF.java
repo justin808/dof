@@ -70,10 +70,22 @@ import java.util.regex.*;
  * It states that a customer.PK.xml file maps to the handler class dof_xml_handler.CustomerXmlFactory Note, the
  * CustomerXmlFactory class must implement interface <b>DependentObjectHandler</b>. Even though fileToLoad uses the
  * period as the delimiter, the primary key may contain periods because the first and last periods are used to find the
- * object type and the file suffix. This also means that object types may NOT contain a period.
+ * object type and the file suffix. This also means that object types may NOT contain a period
+ * (if you are using the default org.doframework.TypePkExtensionFileNamePartsProcessor)
  * <p/>
- * Note: You may specify a custom FileNamePartsProcessor class in case you do not like the form of objectType.PK.fileType.
- * Do this by putting in a property FileNamePartsProcessor=FullClassName in file handler_mappings.properties
+ * You may specify a custom FileNamePartsProcessor class in case you do not like the form of objectType.PK.fileType.
+ * Do this by putting in a property in file handler_mappings.properties
+ * <pre>
+ * FileNamePartsProcessor=FullClassName
+ * </pre>
+ * <p/>
+ * Specify regexp matches like this (note the "RE:" signifies regexp, and it is removed from the expression
+ * <pre>
+ * {regular expression}=class
+ * \\w+\\.xml=dof_xml_handler.GenericXmlFactory
+ * # NOTE: you must use double backslashes to mean a backslash
+ * </pre>
+ * For regexp documentation, consult http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html<p/>
  *
  * @author Justin Gordon
  * @date January, 2008
@@ -82,6 +94,7 @@ import java.util.regex.*;
  */
 public class DOF
 {
+    private static Map<String, DependentObjectHandler> classNameToInstance = new HashMap<String, DependentObjectHandler>();
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     // public API ////////////////////////////////////////////////////////////////////////////////
@@ -266,7 +279,7 @@ public class DOF
             resultObject = dbJUnitHandler.get(pk);
             if (resultObject == null)
             {
-                resultObject = dbJUnitHandler.create(fileToLoad);
+                resultObject = dbJUnitHandler.create(fileNameParts, fileToLoad);
             }
             if (resultObject == null)
             {
@@ -475,9 +488,15 @@ public class DOF
         // todo -- store instance in a map
         try
         {
-            Class<? extends DependentObjectHandler> handlerClass =
-                    (Class<? extends DependentObjectHandler>) Class.forName(className);
-            return handlerClass.newInstance();
+            DependentObjectHandler doh = classNameToInstance.get(className);
+            if (doh == null)
+            {
+                Class<? extends DependentObjectHandler> handlerClass =
+                        (Class<? extends DependentObjectHandler>) Class.forName(className);
+                doh = handlerClass.newInstance();
+                classNameToInstance.put(className, doh);
+            }
+            return doh;
         }
         catch (ClassNotFoundException e)
         {

@@ -65,5 +65,13 @@ public class DOFTest extends TestCase
         System.setProperty("DOF_DIR", oldValue);
     }
 
+    public void testGetClassNameWorkWithRegexp()
+    {
+        String objectType = "ABC";
+        String fileType = "xml";
+        String className = HandlerMappings.getHandlerClassNameForObject(objectType, fileType);
+        assertEquals("dof_xml_handler.GenericXmlFactory", className);
+    }
+
 
 }

@@ -30,13 +30,14 @@ public interface DependentObjectHandler
      String s = DOF.getResourceAsString(fileToLoad);
      </code>
 
-     @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}, or might be of a custom form if there is
-     custom FileNamePartsProcessor implementation specified in file handler_mappings.properties.
+     @param fileNameParts
+      * @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}, or might be of a custom form if there is
+       custom FileNamePartsProcessor implementation specified in file handler_mappings.properties.
 
 
      @return The type of object being created and saved in the DB
      */
-    Object create(String fileToLoad);
+    Object create(FileNameParts fileNameParts, String fileToLoad);
 
     /**
      Fetches the object, if it exists, with the given PK. Otherwise null is returned.

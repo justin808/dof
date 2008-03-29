@@ -61,11 +61,10 @@ public class ProductXmlFactory implements DependentObjectHandler
     /**
      * Insert the object into the DB. No check is done to see if the object already exists.
      *
-     * @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}
-     *
-     * @return The type of object being created and saved in the DB.
+     * @param fileNameParts
+     *@param fileToLoad File name in form: {objectType}.{objectPk}.{fileType} @return The type of object being created and saved in the DB.
      */
-    public Object create(String fileToLoad)
+    public Object create(FileNameParts fileNameParts, String fileToLoad)
     {
         Product product = createProduct(fileToLoad);
         m_productComponent.insert(product);

@@ -11,7 +11,7 @@
     <!-- Name of project and version -->
     <property name="proj.name" value="DependentObjectFramework"/>
     <property name="proj.shortname" value="dof"/>
-    <property name="version" value="0.9.5"/>
+    <property name="version" value="0.9.6"/>
 
     <!-- Global properties for this build -->
     <property name="whole.release.dir" value=".."/>
