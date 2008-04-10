@@ -7,27 +7,27 @@ import junit.framework.*;
  */
 public class DOFTest extends TestCase
 {
-    public void testGetFileNamePartsHandlesBasicName()
+    public void testGetObjectFileInfoHandlesBasicName()
     {
         String fileToLoad = "customer.25.xml";
-        FileNameParts parts = DOF.getFileNameParts(fileToLoad);
-        assertEquals("customer", parts.objectType);
-        assertEquals("25", parts.pk);
-        assertEquals("xml", parts.fileType);
+        ObjectFileInfo ofi = DOF.getObjectFileInfo(fileToLoad);
+        assertEquals("customer", ofi.objectType);
+        assertEquals("25", ofi.pk);
+        assertEquals("xml", ofi.fileType);
     }
 
-    public void testGetFileNamePartsHandlesNameWithManyPeriods()
+    public void testGetObjectFileInfoHandlesNameWithManyPeriods()
     {
         String fileToLoad = "customer.25.2.3.xml";
-        FileNameParts fnp = DOF.getFileNameParts(fileToLoad);
-        assertEquals("customer", fnp.objectType);
-        assertEquals("25.2.3", fnp.pk);
-        assertEquals("xml", fnp.fileType);
+        ObjectFileInfo ofi = DOF.getObjectFileInfo(fileToLoad);
+        assertEquals("customer", ofi.objectType);
+        assertEquals("25.2.3", ofi.pk);
+        assertEquals("xml", ofi.fileType);
     }
 
     public void testGetPropertiesErrorMessageWhenPropertiesFile()
     {
-        if (DOF.DOF_DEFS_DIR.length() == 0)
+        if (DOF.DOF_DIR.length() == 0)
         {
             fail("Please define DOF_DIR when invoking the test runner. Use VM parameter -DDOF_DIR={directory to core/test_data}");
         }
@@ -38,24 +38,24 @@ public class DOFTest extends TestCase
 
     public void testGetFileWhenUnderSubdirectoryUsingDofDefsDir()
     {
-        if (DOF.DOF_DEFS_DIR.length() == 0)
+        if (DOF.DOF_DIR.length() == 0)
         {
             fail("Please define DOF_DIR when invoking the test runner. Use VM parameter -DDOF_DIR={directory to core/test_data}");
         }
         final String filePath = "manufacturers/manufacturer.48.xml";
         final String resourceAsString = DOF.getResourceAsString(filePath);
         assertNotNull(resourceAsString);
-        FileNameParts fnp = DOF.getFileNameParts(filePath);
-        assertEquals("manufacturer", fnp.objectType);
-        assertEquals("48", fnp.pk);
-        assertEquals("xml", fnp.fileType);
+        ObjectFileInfo ofi = DOF.getObjectFileInfo(filePath);
+        assertEquals("manufacturer", ofi.objectType);
+        assertEquals("48", ofi.pk);
+        assertEquals("xml", ofi.fileType);
     }
 
 
     public void testGetFileWhenUnderSubdirectoryUsingClassPath()
     {
         String oldValue = "";
-        if (DOF.DOF_DEFS_DIR.length() > 0)
+        if (DOF.DOF_DIR.length() > 0)
         {
             oldValue = System.setProperty("DOF_DIR", "");
         }

@@ -52,12 +52,11 @@ public class CustomerXmlFactory implements DependentObjectHandler
     /**
      * Insert the object into the DB. No check is done to see if the object already exists.
      *
-     * @param fileNameParts
-     *@param fileToLoad File name in form: {objectType}.{objectPk}.{fileType} @return The type of object being created and saved in the DB.
+     * @param objectFileInfo
      */
-    public Object create(FileNameParts fileNameParts, String fileToLoad)
+    public Object create(ObjectFileInfo objectFileInfo)
     {
-        Customer Customer = createCustomer(fileToLoad);
+        Customer Customer = createCustomer(objectFileInfo.fileToLoad);
 
         customerComponent.insert(Customer);
         return Customer;
@@ -66,13 +65,11 @@ public class CustomerXmlFactory implements DependentObjectHandler
     /**
      * Return the object, if it exists, with the given PK
      *
-     * @param pk The primary key of the object to retrieve
-     *
-     * @return The object created from the db if it existed, or else null
+     * @param objectFileInfo
      */
-    public Object get(String pk)
+    public Object get(ObjectFileInfo objectFileInfo)
     {
-        return customerComponent.getById(Integer.parseInt(pk));
+        return customerComponent.getById(Integer.parseInt(objectFileInfo.pk));
     }
 
     /**
@@ -81,11 +78,12 @@ public class CustomerXmlFactory implements DependentObjectHandler
      * It is critical that this method either check dependencies (products that depend on this
      * record) or depend on getting the sql exception from integrity checks.
      *
-     * @param pk The primary key of the object to delete
+     * @param objectFileInfo
+     * @param objectToDelete
      */
-    public boolean delete(String pk)
+    public boolean delete(ObjectFileInfo objectFileInfo, Object objectToDelete)
     {
-        int id = Integer.parseInt(pk);
+        int id = Integer.parseInt(objectFileInfo.pk);
         Customer customer = customerComponent.getById(id);
         if (customer != null)
         {

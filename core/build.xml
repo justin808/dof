@@ -12,12 +12,16 @@
     <property name="proj.name" value="DependentObjectFramework"/>
     <property name="proj.shortname" value="dof"/>
     <property name="version" value="0.9.6"/>
+    <property name="junit.jar" value="../../junit4.4/junit-4.4.jar"/>
 
     <!-- Global properties for this build -->
     <property name="whole.release.dir" value=".."/>
     <property name="dof.src.java.dir" value="./dof_src"/>
+    <property name="junit.src.dir" value="./dof_junit"/>
     <property name="lib.dir" value="lib"/>
+    <property name="reports.tests" value="reports"/>
     <property name="class.dir" value="classes"/>
+    <property name="junit.class.dir" value="junit_classes"/>
     <property name="build.dir" value="build"/>
     <property name="zip.release.dir" value="../release"/>
     <property name="release.pattern" value="DOF-${version}"/>
@@ -37,6 +41,7 @@
 
     <target name="clean" description="Clean the build directory">
         <delete dir="${class.dir}"/>
+        <delete dir="${junit.class.dir}"/>
         <delete dir="${build.dir}"/>
         <delete dir="${zip.release.dir}"/>
         <delete dir="${release.dir}"/>
@@ -52,12 +57,44 @@
                destdir="${class.dir}"/>
     </target>
 
+    <target name="dof.junit.compile" depends="dof.compile">
+        <mkdir dir="${junit.class.dir}"/>
+        <javac srcdir="${junit.src.dir}"
+               destdir="${junit.class.dir}">
+            <classpath>
+                <pathelement path="${junit.jar}"/>
+                <pathelement path="${class.dir}"/>
+            </classpath>
+        </javac>
+    </target>
+
+
     <target name="dof.jar" depends="dof.compile">
         <mkdir dir="${build.dir}"/>
         <jar destfile="${build.dir}/DOF.jar">
             <fileset dir="${class.dir}"
                      includes="org/doframework/**"/>
         </jar>
+    </target>
+
+    <target name="junit" depends="dof.junit.compile">
+        <delete dir="${reports.tests}"/>
+        <mkdir dir="${reports.tests}"/>
+        <junit haltonfailure="yes">
+            <jvmarg value="-DDOF_DIR=test_data"/>
+            <classpath>
+                <pathelement path="${junit.jar}"/>
+                <pathelement path="${class.dir}"/>
+                <pathelement path="${junit.class.dir}"/>
+                <pathelement path="etc"/>
+            </classpath>
+            <formatter type="plain"/>
+            <batchtest fork="yes" todir="${reports.tests}">
+                <fileset dir="${junit.src.dir}">
+                    <include name="**/*Test*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
     </target>
 
 
@@ -82,6 +119,7 @@
                 <exclude name="**/.metadata/**"/>
                 <exclude name="**/*.zip"/>
                 <exclude name="**/*.tmp"/>
+                <exclude name="**/reports/**"/>
             </fileset>
         </copy>
     </target>
@@ -100,7 +138,5 @@
     </target>
 
     <target name="dof.release" depends="clean, dof.jar, dof.doc, dof.copy, dof.zip"/>
-
-
 
 </project>

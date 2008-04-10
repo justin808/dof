@@ -26,12 +26,12 @@ import java.util.regex.Matcher;
 
  Even though fileToLoad uses the period as the delimiter, the primary key may contain periods because the first and last periods are used to find the
  object type and the file suffix. This also means that object types may NOT contain a period
- (if you are using the default org.doframework.TypePkExtensionFileNamePartsProcessor)
+ (if you are using the default org.doframework.TypePkExtensionObjectFileInfoProcessor)
   <p/>
-  You may specify a custom FileNamePartsProcessor class in case you do not like the form of objectType.PK.fileType.
+  You may specify a custom ObjectFileInfoProcessor class in case you do not like the form of objectType.PK.fileType.
   Do this by putting in a property in file handler_mappings.properties
   <pre>
-  FileNamePartsProcessor=FullClassName
+  ObjectFileInfoProcessor=FullClassName
   </pre>
   <p/>
   Specify regexp matches like this (note the "RE:" signifies regexp, and it is removed from the expression
@@ -51,13 +51,13 @@ import java.util.regex.Matcher;
 class HandlerMappings
 {
     static Properties handlerMappings;
-    private static final String DEFAULT_DOF_FILE_NAME_PARTS_PROCESSOR = "org.doframework.TypePkExtensionFileNamePartsProcessor";
-    private static FileNamePartsProcessor fileNamePartsProcessor;
+    private static final String DEFAULT_OBJECT_FILE_INFO_PROCESSOR = "org.doframework.TypePkExtensionObjectFileInfoProcessor";
+    private static ObjectFileInfoProcessor objectFileInfoProcessor;
 
     /**
-     * This is the property to specify a custom FileNamePartsProcessor
+     * This is the property to specify a custom ObjectFileInfoProcessor
      */
-    private static final String FILE_NAME_PARTS_PROCESSOR_PROPERTY = "FileNamePartsProcessor";
+    private static final String OBJECT_FILE_INFO_PROCESSOR_PROPERTY = "ObjectFileInfoProcessor";
     private static Map<Pattern, String> compiledPatterns;
 
 
@@ -68,9 +68,9 @@ class HandlerMappings
         InputStream handlerMappingsInputStream = ClassLoader.getSystemResourceAsStream(PROPERTIES_FILE_NAME);
         if (handlerMappingsInputStream == null)
         {
-            if (DOF.DOF_DEFS_DIR.length() > 0)
+            if (DOF.DOF_DIR.length() > 0)
             {
-                String resourceAbsolutePath = DOF.getResourceAbsolutePath(PROPERTIES_FILE_NAME);
+                String resourceAbsolutePath = DOF.getAbsolutePath(PROPERTIES_FILE_NAME);
                 File file = new File(resourceAbsolutePath);
                 try
                 {
@@ -104,21 +104,21 @@ class HandlerMappings
 
     /**
      * Get the file name parts processor class
-     * @return The fully qualified class name that implements the interface org.doframework.FileNamePartsProcessor
+     * @return The fully qualified class name that implements the interface org.doframework.ObjectFileInfoProcessor
      */
-    static FileNamePartsProcessor getFileNamePartsProcessor()
+    static ObjectFileInfoProcessor getObjectFileInfoProcessor()
     {
-        if (fileNamePartsProcessor == null)
+        if (objectFileInfoProcessor == null)
         {
-            String c = (String) handlerMappings.get(FILE_NAME_PARTS_PROCESSOR_PROPERTY);
+            String c = (String) handlerMappings.get(OBJECT_FILE_INFO_PROCESSOR_PROPERTY);
             if (c == null || c.length() == 0)
             {
-                c = DEFAULT_DOF_FILE_NAME_PARTS_PROCESSOR;
+                c = DEFAULT_OBJECT_FILE_INFO_PROCESSOR;
             }
             try
             {
-                Class fileNamePartsProcessorClass = Class.forName(c);
-                fileNamePartsProcessor = (FileNamePartsProcessor) fileNamePartsProcessorClass.newInstance();
+                Class objectFileInfoProcessorClass = Class.forName(c);
+                objectFileInfoProcessor = (ObjectFileInfoProcessor) objectFileInfoProcessorClass.newInstance();
             }
             catch (ClassNotFoundException e)
             {
@@ -133,7 +133,7 @@ class HandlerMappings
                 throw new RuntimeException(e);
             }
         }
-        return fileNamePartsProcessor;
+        return objectFileInfoProcessor;
     }
 
 

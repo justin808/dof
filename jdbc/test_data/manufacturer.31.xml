@@ -1,0 +1,6 @@
+<!-- Example of not crashing with circular dependency-->
+<!--@require("product.31.xml"-->
+<manufacturer>
+    <id>31</id>
+    <name>Gatorade Drinks</name>
+</manufacturer>

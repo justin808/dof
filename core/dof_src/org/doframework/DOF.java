@@ -20,18 +20,20 @@ import java.util.regex.*;
  * <p/>
  * 1. An appropriate handler class for each object type. The handler class implements the interface
  * DepedendentObjectHandler and needs to be specfied in a file called handler_mappings.properties that exists somewhere
- * in the classpath or at directory specified as VM property DOF_DIR.
+ * in the classpath or at directory specified as system property <b>DOF_DIR</b>.
  *
  * This class knows how to create, get, and delete objects of a given type and given a format for the
  * description files. Note, the description files can be of any form because the test writer is responsible for writing
- * the code that processes the description files.<p> 2. A data file containing information to create the object,
- * including the specification of any object dependencies. For example a "product" record might specify what
- * manufacturer record is required. In order to be located by the framework, all DOF data files must exist in the
- * classpath, or they must be under a directory pass as a parameter "DOF_DIR".
+ * the code that processes the description files.<p>
+ *
+ * 2. For each object, a data file containing information to create each object, including the specification of any
+ * object dependencies. For example a "product" record might specify what manufacturer record is required. In order to
+ * be located by the framework, all DOF data files must exist in the classpath, or they must be under a directory passed
+ * as a system parameter "DOF_DIR".
  * <p/>
- * There are only 2 main methods to use: <b>require</b>(fileToLoad) and <b>delete</b>(fileToLoad).<p>
+ * There are only 2 methods that JUnit tests will call: <b>require</b>(fileToLoad) and <b>delete</b>(fileToLoad).<p>
  * <p/>
- * The fileToLoad encodes the object type, the object primary key, and the file type.
+ * The fileToLoad encodes the object type, the object primary key, and the file type, and it may specify a subdirectory.
  * <p/>
  * Example:
  * <pre>
@@ -57,8 +59,9 @@ import java.util.regex.*;
  * &lt;manufacturer_id&gt;35&lt;/manufacturer_id&gt;
  * &lt;/product&gt;
  * </pre>
+ * <b>Configuration</b><p/>
  * The user of the DOF is responsible for having a file named "handler_mappings.properties" located in the classpath or
- * at directory specified as VM property DOF_DIR.
+ * at directory specified as VM system property DOF_DIR.
  * The format of the properties file is:
  * <p/>
  * <code>objectType.fileSuffix=DependentObjectHandlerImplementationClassName</code>
@@ -70,34 +73,30 @@ import java.util.regex.*;
  * It states that a customer.PK.xml file maps to the handler class dof_xml_handler.CustomerXmlFactory Note, the
  * CustomerXmlFactory class must implement interface <b>DependentObjectHandler</b>. Even though fileToLoad uses the
  * period as the delimiter, the primary key may contain periods because the first and last periods are used to find the
- * object type and the file suffix. This also means that object types may NOT contain a period
- * (if you are using the default org.doframework.TypePkExtensionFileNamePartsProcessor)
+ * object type and the file suffix. This also means that object types may NOT contain a period.
  * <p/>
- * You may specify a custom FileNamePartsProcessor class in case you do not like the form of objectType.PK.fileType.
- * Do this by putting in a property in file handler_mappings.properties
- * <pre>
- * FileNamePartsProcessor=FullClassName
- * </pre>
- * <p/>
- * Specify regexp matches like this (note the "RE:" signifies regexp, and it is removed from the expression
+ * You may specify regexp matches like this. Regexps to be recognized as such will contain at least one '*', '?', or '+'.
  * <pre>
  * {regular expression}=class
  * \\w+\\.xml=dof_xml_handler.GenericXmlFactory
  * # NOTE: you must use double backslashes to mean a backslash
  * </pre>
- * For regexp documentation, consult http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html<p/>
- *
- * Note: For verbose output of when objects are created and deleted, set system property -DDOF_DEBUG=TRUE 
+ * For regexp documentation, consult the javadoc for java.util.regexp.Pattern<p/>
+
+ * In case you do not like the form of "objectType.PK.fileType", you may specify a custom ObjectFileInfoProcessor class
+ * by putting in this property in file handler_mappings.properties
+ * <pre>
+ * ObjectFileInfoProcessor=FullClassName
+ * </pre>
+ * Note: For verbose output of when objects are created and deleted, set system property <b>-DDOF_DEBUG=TRUE</b>
  *
  * @author Justin Gordon
  * @date January, 2008
- * @see org.doframework.DependentObjectHandler
- * @see org.doframework.FileNamePartsProcessor
+ * @see DependentObjectHandler
+ * @see ObjectFileInfoProcessor
  */
 public class DOF
 {
-    private static Map<String, DependentObjectHandler> classNameToInstance = new HashMap<String, DependentObjectHandler>();
-
     //////////////////////////////////////////////////////////////////////////////////////////////
     // public API ////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,9 +151,10 @@ public class DOF
      * @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}
      *
      * @return true if requested object deleted successfully, false if object could not be deleted, maybe because
-     *         another object depends upon it. Note, the return value from deleting dependency objectsfor the requested
+     *         another object depends upon it. Note, the return value from deleting dependency objects for the requested
      *         object is discarded. For example, if you request an invoice to be deleted, the return value only reflects
      *         if that requested invoice was deleted, and not if the parent customer record of that invoice is deleted.
+     *         If the object does not exist, then theis method returns true, indicating that object was previously deleted.
      */
     public static boolean delete(String fileToLoad)
     {
@@ -193,15 +193,17 @@ public class DOF
 
 
     /**
-     * Used to take the fileToLoad and to convert it into the FileNameParts
+     * Used to take the fileToLoad and to convert it into the ObjectFileInfo
      *
      * @param fileToLoad, which may contain a leading path
      *
-     * @return The FileNameParts containing the object type, pk, and file type
+     * @return The ObjectFileInfo containing the object type, pk, and file type
      */
-    public static FileNameParts getFileNameParts(String fileToLoad)
+    public static ObjectFileInfo getObjectFileInfo(String fileToLoad)
     {
-        return HandlerMappings.getFileNamePartsProcessor().getFileNameParts(fileToLoad);
+        ObjectFileInfo ofi = HandlerMappings.getObjectFileInfoProcessor().getObjectFileInfo(fileToLoad);
+        ofi.fileToLoad = fileToLoad;
+        return ofi;
     }
 
 
@@ -215,7 +217,7 @@ public class DOF
      */
     public static String getResourceAsString(String resourceName)
     {
-        if (DOF_DEFS_DIR.length() == 0)
+        if (DOF_DIR.length() == 0)
         {
             return getResourceAsStringFromClassLoader(resourceName);
         }
@@ -224,9 +226,37 @@ public class DOF
             return getResourceAsStringFromDofDefsDir(resourceName);
         }
     }
+
+
+    /**
+     * Used to get a fileToLoad's absolute path if you are setting system property DOF_DIR
+     * to place the object files
+     * @param fileToLoad
+     * @return The absolute path to the resource with which is DOF_DIR plus File.separator + resourceName
+     */
+    public static String getAbsolutePath(String fileToLoad)
+    {
+        String resourceAbsolutePath = DOF_DIR + File.separator + fileToLoad;
+        return resourceAbsolutePath;
+    }
+
+    /**
+     * Set this to true to print messages to System.out when objects are loaded or deleted
+     * from the database. This property can also be set by setting VM System Property:<p/>
+     * -DDOF_DEBUG=TRUE
+     *
+     * @param b
+     */
+    public static void setDofDebug(boolean b)
+    {
+        dofDebug = b;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////
     // private members and methods ///////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static Map<String, DependentObjectHandler> classNameToInstance = new HashMap<String, DependentObjectHandler>();
 
     /**
      * we keep a cache of the loaded objects to avoid searching the DB every time.
@@ -235,9 +265,9 @@ public class DOF
 
     private static Pattern repIncludeDependency;
 
-    static final String DOF_DEFS_DIR = System.getProperty("DOF_DIR", "");
+    static final String DOF_DIR = System.getProperty("DOF_DIR", "");
 
-    static final boolean DOF_DEBUG = System.getProperty("DOF_DEBUG", "").equalsIgnoreCase("TRUE");
+    static boolean dofDebug = System.getProperty("DOF_DEBUG", "").equalsIgnoreCase("TRUE");
 
     private static void checkRepIncludeDependencyInitialized()
     {
@@ -269,24 +299,24 @@ public class DOF
         if (resultObject == null)
         {
             // Get handler class for object
-            FileNameParts fileNameParts = getFileNameParts(fileToLoad);
-            String objectType = fileNameParts.objectType;
-            String pk = fileNameParts.pk;
-            String fileType = fileNameParts.fileType.toLowerCase();
+            ObjectFileInfo objectFileInfo = getObjectFileInfo(fileToLoad);
+            String objectType = objectFileInfo.objectType;
+            String pk = objectFileInfo.pk;
+            String fileType = objectFileInfo.fileType.toLowerCase();
 
             DependentObjectHandler dbJUnitHandler = getHandlerForObject(objectType, fileType);
 
             loadDependencies(fileToLoad);
 
             // Now check if object exists in DB
-            resultObject = dbJUnitHandler.get(pk);
+            resultObject = dbJUnitHandler.get(objectFileInfo);
             if (resultObject == null)
             {
-                if (DOF_DEBUG)
+                if (dofDebug)
                 {
-                    System.out.println("DOF: Loading: " + fileToLoad + ", fileNameParts = " + fileNameParts);
+                    System.out.println("DOF: Loading: ObjectFileInfo = " + objectFileInfo);
                 }
-                resultObject = dbJUnitHandler.create(fileNameParts, fileToLoad);
+                resultObject = dbJUnitHandler.create(objectFileInfo);
             }
             if (resultObject == null)
             {
@@ -300,19 +330,6 @@ public class DOF
 
 
 
-    //static String[] getFileNameParts(String fileToLoad)
-    //{
-    //    final String period = ".";
-    //    int firstPeriodIndex = fileToLoad.indexOf(period);
-    //    int lastPeriodIndex = fileToLoad.lastIndexOf(period);
-    //    String[] fileNameParts = new String[3];
-    //    fileNameParts[0] = fileToLoad.substring(0, firstPeriodIndex);
-    //    fileNameParts[1] = fileToLoad.substring(firstPeriodIndex + 1, lastPeriodIndex);
-    //    fileNameParts[2] = fileToLoad.substring(lastPeriodIndex + 1);
-    //    return fileNameParts;
-    //}
-
-
     /**
      * @param fileToLoad
      * @param processedDeletions
@@ -324,20 +341,28 @@ public class DOF
      */
     private static boolean deleteObjectWorker(String fileToLoad, Set<String> processedDeletions)
     {
-        FileNameParts fileNameParts = getFileNameParts(fileToLoad);
-        String objectType = fileNameParts.objectType;
-        String pk = fileNameParts.pk;
-        String fileType = fileNameParts.fileType.toLowerCase();
+        ObjectFileInfo objectFileInfo = getObjectFileInfo(fileToLoad);
+        String objectType = objectFileInfo.objectType;
+        String fileType = objectFileInfo.fileType.toLowerCase();
 
-        DependentObjectHandler dbJUnitHandler = getHandlerForObject(objectType, fileType);
+        DependentObjectHandler doh = getHandlerForObject(objectType, fileType);
 
         // delete parent object first
-        if (DOF_DEBUG)
+        boolean deletedParent;
+        Object objectToDelete = doh.get(objectFileInfo);
+        if (objectToDelete != null)
         {
-            System.out.println("DOF: Deleting: " + fileToLoad + ", fileNameParts = " + fileNameParts);
+            deletedParent = doh.delete(objectFileInfo, objectToDelete);
+        }
+        else
+        {
+            deletedParent = true; // b/c already deleted
+        }
+        if (dofDebug)
+        {
+            System.out.println("DOF: Deleting: ObjectFileInfo = " + objectFileInfo + ", deleted = " + deletedParent);
         }
 
-        boolean deletedParent = dbJUnitHandler.delete(pk);
         if (deletedParent)
         {
             processedDeletions.add(fileToLoad);
@@ -392,6 +417,12 @@ public class DOF
         for (Iterator<String> iterator = dependencies.iterator(); iterator.hasNext();)
         {
             String requiredPath = iterator.next();
+            if (requiredPath.equals(fileName))
+            {
+                System.out.println("WARNING: You listed a file a file as a dependency of itself. Please see: " + fileName);
+                continue;
+            }
+
             if (!pathToLoadedObject.containsKey(requiredPath))
             {
                 requireWorker(requiredPath);
@@ -428,18 +459,11 @@ public class DOF
 
     private static String getResourceAsStringFromDofDefsDir(String resourceName)
     {
-        final String resourceAbsolutePath = getResourceAbsolutePath(resourceName);
+        final String resourceAbsolutePath = getAbsolutePath(resourceName);
         InputStreamReader isr = getInputStreamReaderForPath(resourceAbsolutePath);
 
         StringBuffer sb = readContentsOfInputStream(isr);
         return sb.toString();
-    }
-
-
-    static String getResourceAbsolutePath(String resourceName)
-    {
-        String resourceAbsolutePath = DOF_DEFS_DIR + File.separator + resourceName;
-        return resourceAbsolutePath;
     }
 
 
@@ -497,7 +521,10 @@ public class DOF
     private static DependentObjectHandler getHandlerForObject(String objectType, String fileType)
     {
         String className = HandlerMappings.getHandlerClassNameForObject(objectType, fileType);
-        // todo -- store instance in a map
+        if (className == null)
+        {
+            throw new RuntimeException("Could not find class name for objectType: " + objectType + ", fileType = " + fileType);
+        }
         try
         {
             DependentObjectHandler doh = classNameToInstance.get(className);

@@ -114,12 +114,11 @@ public class InvoiceXmlFactory implements DependentObjectHandler
     /**
      * Insert the object into the DB. No check is done to see if the object already exists.
      *
-     * @param fileNameParts
-     *@param fileToLoad File name in form: {objectType}.{objectPk}.{fileType} @return The type of object being created and saved in the DB.
+     * @param objectFileInfo
      */
-    public Object create(FileNameParts fileNameParts, String fileToLoad)
+    public Object create(ObjectFileInfo objectFileInfo)
     {
-        Invoice invoice = createInvoice(fileToLoad);
+        Invoice invoice = createInvoice(objectFileInfo.fileToLoad);
         invoiceComponent.insert(invoice);
         return invoice;
     }
@@ -127,23 +126,22 @@ public class InvoiceXmlFactory implements DependentObjectHandler
     /**
      * Return the object, if it exists, with the given PK
      *
-     * @param pk The primary key of the object to retrieve
-     *
-     * @return The object created from the db if it existed, or else null
+     * @param objectFileInfo
      */
-    public Object get(String pk)
+    public Object get(ObjectFileInfo objectFileInfo)
     {
-        return invoiceComponent.getById(Integer.parseInt(pk));
+        return invoiceComponent.getById(Integer.parseInt(objectFileInfo.pk));
     }
 
     /**
      * Delete the object with the given pk
      *
-     * @param pk The primary key of the object to delete
+     * @param objectFileInfo
+     * @param objectToDelete
      */
-    public boolean delete(String pk)
+    public boolean delete(ObjectFileInfo objectFileInfo, Object objectToDelete)
     {
-        Invoice Invoice = (Invoice) get(pk);
+        Invoice Invoice = (Invoice) get(objectFileInfo);
         if (Invoice != null)
         {
             return invoiceComponent.delete(Invoice);

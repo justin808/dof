@@ -24,23 +24,21 @@ public interface DependentObjectHandler
      String s = DOF.getResourceAsString(fileToLoad);
      </code>
 
-     @param fileNameParts contains pk, objectType, and fileType
-     @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}, or might be of a custom form if there is
-       custom FileNamePartsProcessor implementation specified in file handler_mappings.properties.
+     @param objectFileInfo contains pk, objectType, fileType, and fileToLoad
 
      @return The type of object being created and saved in the DB
      */
-    Object create(FileNameParts fileNameParts, String fileToLoad);
+    Object create(ObjectFileInfo objectFileInfo);
 
 
     /**
      Fetches the object, if it exists, with the given PK. Otherwise null is returned.
 
-     @param pk The primary key of the object to retrieve
+     @param objectFileInfo contains pk, objectType, fileType, and fileToLoad
 
      @return The object created from the db if it existed, or else null
      */
-    Object get(String pk);
+    Object get(ObjectFileInfo objectFileInfo);
 
 
     /**
@@ -49,9 +47,13 @@ public interface DependentObjectHandler
      return false if there are any existing dependencies upon this object. For example, if this is a request to delete a
      customer record and invoices depend upon this customer record, it must simply return false.
 
-     @param pk The primary key of the object to delete
+     This method is passed the objectToDelete as a convenience as many systems will use that object
+     as part of the deletion code.
+
+     @param objectFileInfo contains pk, objectType, fileType, and fileToLoad
+     @param objectToDelete Object requested for deletion, never null
 
      @return true if requested object is deleted.
      */
-    boolean delete(String pk);
+    boolean delete(ObjectFileInfo objectFileInfo, Object objectToDelete);
 }

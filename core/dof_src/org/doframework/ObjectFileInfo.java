@@ -3,7 +3,7 @@ package org.doframework;
 /**
  * This class is a struct to represent the different key parts of the file name
  */
-public class FileNameParts
+public class ObjectFileInfo
 {
     /**
      * Like "Customer" or "Invoice" or whatever type of object you are saving
@@ -20,8 +20,14 @@ public class FileNameParts
      */
     public String fileType;
 
+    /**
+     * Like "customers/Customer.15.xml"
+     */
+    public String fileToLoad;
+
+
     public String toString()
     {
-        return "{" + objectType + ", " + pk + ", " + fileType + "}";
+        return "{" + fileToLoad + ", " + objectType + ", " + pk + ", " + fileType + "}";
     }
 }

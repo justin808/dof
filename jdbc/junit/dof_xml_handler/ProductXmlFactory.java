@@ -61,12 +61,11 @@ public class ProductXmlFactory implements DependentObjectHandler
     /**
      * Insert the object into the DB. No check is done to see if the object already exists.
      *
-     * @param fileNameParts
-     *@param fileToLoad File name in form: {objectType}.{objectPk}.{fileType} @return The type of object being created and saved in the DB.
+     * @param objectFileInfo
      */
-    public Object create(FileNameParts fileNameParts, String fileToLoad)
+    public Object create(ObjectFileInfo objectFileInfo)
     {
-        Product product = createProduct(fileToLoad);
+        Product product = createProduct(objectFileInfo.fileToLoad);
         m_productComponent.insert(product);
         return product;
     }
@@ -74,23 +73,22 @@ public class ProductXmlFactory implements DependentObjectHandler
     /**
      * Return the object, if it exists, with the given PK
      *
-     * @param id The primary key of the object to retrieve
-     *
-     * @return The object created from the db if it existed, or else null
+     * @param objectFileInfo
      */
-    public Object get(String id)
+    public Object get(ObjectFileInfo objectFileInfo)
     {
-        return m_productComponent.getById(Integer.parseInt(id));
+        return m_productComponent.getById(Integer.parseInt(objectFileInfo.pk));
     }
 
     /**
      * Delete the object with the given pk
      *
-     * @param id The primary key of the object to delete
+     * @param objectFileInfo
+     * @param objectToDelete
      */
-    public boolean delete(String id)
+    public boolean delete(ObjectFileInfo objectFileInfo, Object objectToDelete)
     {
-        Product product = m_productComponent.getById(Integer.parseInt(id));
+        Product product = m_productComponent.getById(Integer.parseInt(objectFileInfo.pk));
         if (product != null)
         {
             return m_productComponent.delete(product);

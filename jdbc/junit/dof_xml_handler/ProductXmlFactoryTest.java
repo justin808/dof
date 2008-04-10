@@ -80,31 +80,44 @@ public class ProductXmlFactoryTest extends TestCase
 
     public void testRequireProductReturnsProduct()
     {
-        DOF.delete("product.14.xml");
+        String productFile14 = "product.14.xml";
+        DOF.delete(productFile14);
         DOF.delete("product.15.xml");
-        DOF.delete("manufacturer.37.xml");
+        String fileToLoadManufacturer37 = "manufacturer.37.xml";
+        DOF.delete(fileToLoadManufacturer37);
         ProductXmlFactory productXmlFactory = new ProductXmlFactory();
-        assertNull(productXmlFactory.get("14"));
+        ObjectFileInfo objectFileInfoProduct14 = DOF.getObjectFileInfo(productFile14);
+        assertNull(productXmlFactory.get(objectFileInfoProduct14));
         ManufacturerXmlFactory manufacturerXmlFactory = new ManufacturerXmlFactory();
-        assertNull(manufacturerXmlFactory.get("37"));
+        assertNull(manufacturerXmlFactory.get(DOF.getObjectFileInfo(fileToLoadManufacturer37)));
 
         // Make sure that product and manufacturer are deleted
 
-        Product p = (Product) DOF.require("product.14.xml");
+        Product p = (Product) DOF.require(productFile14);
         assertNotNull(p);
         verifyProduct14(p);
     }
 
     public void testRecursiveDelete()
     {
-        DOF.require("product.30.xml");
-        DOF.delete("product.30.xml"); // should delete manufacturer 30
+        String fileToLoadProduct30 = "product.30.xml";
+        DOF.require(fileToLoadProduct30);
+        DOF.delete(fileToLoadProduct30); // should delete manufacturer 30
 
         ProductXmlFactory productXmlFactory = new ProductXmlFactory();
-        assertNull(productXmlFactory.get("30"));
+        ObjectFileInfo ofi = DOF.getObjectFileInfo(fileToLoadProduct30);
+        assertNull(productXmlFactory.get(ofi));
         ManufacturerXmlFactory manufacturerXmlFactory = new ManufacturerXmlFactory();
-        assertNull(manufacturerXmlFactory.get("30"));
+        assertNull(manufacturerXmlFactory.get(DOF.getObjectFileInfo("manufacturer.30.xml")));
+    }
 
+    public void testParseFileProductSelfReferencing()
+    {
+        String fileToLoad = "product.31.xml";
+        boolean deletedProduct31 = DOF.delete(fileToLoad);
+        assertTrue(deletedProduct31);
+        Product p = (Product) DOF.require(fileToLoad);
+        assertEquals("Gatorade", p.getName());
     }
 
 

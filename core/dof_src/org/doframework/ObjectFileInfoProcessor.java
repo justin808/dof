@@ -1,13 +1,13 @@
 package org.doframework;
 
 /**
- * Strategy class to convert break file name into org.doframework.FileNameParts,
+ * Strategy class to convert break file name into org.doframework.ObjectFileInfo,
  * which has the object type, the pk, and the extension
  */
-public interface FileNamePartsProcessor
+public interface ObjectFileInfoProcessor
 {
     /**
-     * Take the file name (will include any relative path information) and return the FileNameParts.
+     * Take the file name (will include any relative path information) and return the ObjectFileInfo.
      * Note, you may want to strip out all the characters up to File.separator with code like
      * <pre>
      int lastPathSeparator = fileToLoad.lastIndexOf(File.pathSeparatorChar);
@@ -18,7 +18,7 @@ public interface FileNamePartsProcessor
      *
      * </pre>
      * @param fileToLoad The file name to parse
-     * @return org.doframework.FileNameParts given the file to Load
+     * @return org.doframework.ObjectFileInfo given the file to Load
      */
-    FileNameParts getFileNameParts(String fileToLoad);
+    ObjectFileInfo getObjectFileInfo(String fileToLoad);
 }
