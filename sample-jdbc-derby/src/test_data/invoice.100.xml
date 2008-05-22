@@ -1,0 +1,34 @@
+<!-- list of dependencies for invoice number 100 -->
+        <!-- @require("customer.25.xml") -->
+        <!-- @require("product.13.xml") -->
+        <!-- @require("product.14.xml") -->
+        <!-- @require("product.15.xml") -->
+<invoice>
+    <id>100</id>
+    <customer_id>25</customer_id>
+    <invoice_date>2007-05-15</invoice_date>
+    <subtotal>116.83</subtotal>
+    <tax_rate>4.133</tax_rate>
+    <tax>4.83</tax>
+    <total>121.66</total>
+    <pending_balance>116.83</pending_balance>
+    <line_items>
+        <line_item>
+            <qty>5</qty>
+            <product_id>13</product_id>
+            <price>8.99</price>
+        </line_item>
+        <line_item>
+            <qty>8</qty>
+            <product_id>14</product_id>
+            <price>4.99</price>
+        </line_item>
+        <line_item>
+            <qty>4</qty>
+            <product_id>15</product_id>
+            <price>7.99</price>
+        </line_item>
+    </line_items>
+
+
+</invoice>
