@@ -1,0 +1,106 @@
+<!--The build coordinates the calling of all the builds of the various
+    things in DOF (e.g. dof.jar and the samples).
+
+    NOTE: This file is tested with ANT 1.7.0. This file does NOT work with ant 1.6.2.
+    -->
+
+<project name="DOF Build" default="dist" basedir=".">
+
+	<!-- Variables to DOF's components (e.g. core and samples) -->
+	<property name="DOF.core.dir" value="${basedir}/../core" />
+	<property name="DOF.sample.jdbc-derby.dir" value="${basedir}/../sample-jdbc-derby" />
+	<property name="DOF.sample.jdbc-hsql.dir" value="${basedir}/../sample-jdbc-hsql" />
+	<!-- Variables setting paths to build scripts of DOF's components -->
+	<property name="DOF.core.buildfile" value="${DOF.core.dir}/build.xml" />
+	<property name="DOF.sample.jdbc-derby.buildfile" value="${DOF.sample.jdbc-derby.dir}/build.xml" />
+	<property name="DOF.sample.jdbc-hsql.buildfile" value="${DOF.sample.jdbc-hsql.dir}/build.xml" />
+	
+	<!-- Common build variables -->
+    <property name="version.number" value="0.9.6"/>
+	
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	
+	<property name="build.common.lib" value="${basedir}/lib"/>
+	
+	<property name="findbugs.home" value="${build.common.lib}/findbugs-1.3.3" />
+	<property name="findbugs.failonerror" value="true" />
+	<property name="findbugs.reportlevel" value="medium" />
+	
+	<property name="lib.common.junit.jar" value="${lib.dir}/junit-4.4/junit-4.4.jar" />
+	
+	<target name="clean"
+		  description="This calls the clean of all DOF sub-build items">
+		<!-- Call the other ANT build scripts to do a clean -->
+		<echo level="info"
+			  message="Calling clean target in ${DOF.core.buildfile}" />
+		<ant antfile="${DOF.core.buildfile}"
+			 target="clean"
+			 inheritall="false">
+			<property name="build.dir" value="${build.dir}/core" />
+			<property name="dist.dir" value="${dist.dir}/core" />
+		</ant>
+		<echo level="info"
+			  message="Finished calling clean target in ${DOF.core.buildfile}" />
+		<echo level="info"
+			  message="Calling clean target in ${DOF.sample.jdbc-derby.buildfile}" />
+		<ant antfile="${DOF.sample.jdbc-derby.buildfile}"
+			 target="clean"
+			 inheritall="false">
+			<property name="dist.dir" value="${dist.dir}/sample-jdbc-derby" />
+		</ant>
+		<echo level="info"
+			  message="Finished calling clean target in ${DOF.sample.jdbc-derby.buildfile}" />
+		<!-- Get ride of any of the previous build temporary or distributable artifacts -->
+		<echo level="info"
+			  message="Attempting to delete previous build directories" />
+		<delete failonerror="false">
+			<fileset dir="${build.dir}" />
+			<fileset dir="${dist.dir}" />
+		</delete>
+		<echo level="info"
+			  message="Finished deleting previous build directories" />
+	</target>
+	
+	<target name="dist" depends="init">
+		<!-- Call the other ANT build scripts to do a dist -->
+		<echo level="info"
+			  message="Calling dist target in ${DOF.core.buildfile}" />
+		<ant antfile="${DOF.core.buildfile}"
+			 target="dist"
+			 inheritall="false">
+			<property name="build.number" value="${build.number}" />
+			<property name="version.number" value="${version.number}" />
+			<property name="build.dir" value="${build.dir}/core" />
+			<property name="dist.dir" value="${dist.dir}" />
+			<property name="lib.common.junit.jar" value="${lib.common.junit.jar}" />
+		</ant>
+		<echo level="info"
+			  message="Finished calling dist target in ${DOF.core.buildfile}" />
+		<echo level="info"
+			  message="Calling dist target in ${DOF.sample.jdbc-derby.buildfile}" />
+		<ant antfile="${DOF.sample.jdbc-derby.buildfile}"
+			 target="dist"
+			 inheritall="false">
+			<property name="build.number" value="${build.number}" />
+			<property name="version.number" value="${version.number}" />
+			<property name="build.dir" value="${build.dir}/sample-jdbc-derby" />
+			<property name="dist.dir" value="${dist.dir}" />
+		</ant>
+		<echo level="info"
+			  message="Finished calling dist target in ${DOF.sample.jdbc-derby.buildfile}" />
+	</target>
+	
+	<target name="init"
+	        description="This target does any initialization that is needed by the build.">
+		<echo level="info"
+			  message="Initializing Build" />
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${dist.dir}" />
+		<!-- Pull out the build number so we can pass it to the other build tasks. -->
+		<buildnumber />
+		<echo level="info"
+			  message="Finished initializing Build" />
+	</target>
+</project>
