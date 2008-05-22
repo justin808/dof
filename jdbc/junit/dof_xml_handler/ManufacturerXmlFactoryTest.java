@@ -23,8 +23,7 @@ public class ManufacturerXmlFactoryTest extends TestCase
     public void testParseFile()
     {
         String testFile = "manufacturer.35.xml";
-        ManufacturerXmlFactory mxf = new ManufacturerXmlFactory();
-        Manufacturer m = mxf.createManufacturer(testFile);
+        Manufacturer m = (Manufacturer) DOF.require(testFile);
         assertEquals(35, m.getId());
         assertEquals("Starbucks", m.getName());
     }
@@ -39,7 +38,7 @@ public class ManufacturerXmlFactoryTest extends TestCase
         String sql = "select count(*) from manufacturer where id = 38";
         String testFile = "manufacturer.38.xml";
         ManufacturerXmlFactory mxf = new ManufacturerXmlFactory();
-        Manufacturer m = mxf.createManufacturer(testFile);
+        Manufacturer m = (Manufacturer) DOF.require(testFile);
 
         // first delete just in case it exists
         manufacturerComponent.delete(m);

@@ -14,7 +14,7 @@ import java.math.*;
 import java.util.*;
 
 
-public class InvoiceXmlFactory implements DependentObjectHandler
+public class InvoiceXmlFactory implements DependentObjectHandler, ScratchPkProvider
 {
 
     InvoiceComponent invoiceComponent = GlobalContext.getComponentFactory().getInvoiceComponent();
@@ -23,19 +23,16 @@ public class InvoiceXmlFactory implements DependentObjectHandler
     ProductComponent productComponent = GlobalContext.getComponentFactory().getProductComponent();
 
     /**
-     * @param xmlDescriptionFile
-     *
+     * @param inputStream
      * @return a Manufacturer object with corresponding name and id
      */
-    Invoice createInvoice(String xmlDescriptionFile)
+    Invoice createInvoice(InputStream inputStream)
     {
-        InputStream is = ClassLoader.getSystemResourceAsStream(xmlDescriptionFile);
-
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try
         {
             DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-            Document document = documentBuilder.parse(is);
+            Document document = documentBuilder.parse(inputStream);
             XPathFactory pathFactory = XPathFactory.newInstance();
             XPath xPath = pathFactory.newXPath();
             Element item = document.getDocumentElement();
@@ -97,10 +94,11 @@ public class InvoiceXmlFactory implements DependentObjectHandler
                     throw new RuntimeException("Product with id " + productId + " does not exist!");
                 }
 
-                LineItem lineItem = new LineItem(qty, product, price);
+                LineItem lineItem = new LineItem(qty, product, price, invoice);
                 lineItems.add(lineItem);
             }
             invoice.setLineItems(lineItems);
+            invoice.setNew(false);
 
 
             return invoice;
@@ -118,7 +116,7 @@ public class InvoiceXmlFactory implements DependentObjectHandler
      */
     public Object create(ObjectFileInfo objectFileInfo)
     {
-        Invoice invoice = createInvoice(objectFileInfo.fileToLoad);
+        Invoice invoice = createInvoice(objectFileInfo.getFileContentsAsInputStream());
         invoiceComponent.insert(invoice);
         return invoice;
     }
@@ -130,7 +128,7 @@ public class InvoiceXmlFactory implements DependentObjectHandler
      */
     public Object get(ObjectFileInfo objectFileInfo)
     {
-        return invoiceComponent.getById(Integer.parseInt(objectFileInfo.pk));
+        return invoiceComponent.getById(Integer.parseInt(objectFileInfo.getPk()));
     }
 
     /**
@@ -150,5 +148,15 @@ public class InvoiceXmlFactory implements DependentObjectHandler
         {
             return false;
         }
+    }
+
+    /**
+     * Implement this provide a scratch primary key.
+     */
+    public String getScratchPk()
+    {
+        String big = System.currentTimeMillis() + "";
+        String rightDigits = big.substring(big.length() -8 );
+        return rightDigits;
     }
 }

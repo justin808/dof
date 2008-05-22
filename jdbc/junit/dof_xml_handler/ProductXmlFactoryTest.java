@@ -6,6 +6,7 @@ import global.*;
 import junit.framework.*;
 
 import java.math.*;
+import java.io.InputStream;
 
 import org.doframework.*;
 
@@ -28,8 +29,7 @@ public class ProductXmlFactoryTest extends TestCase
         DOF.require("manufacturer.37.xml");
 
         String testFile = "product.14.xml";
-        ProductXmlFactory pxf = new ProductXmlFactory();
-        Product p = pxf.createProduct(testFile);
+        Product p = (Product) DOF.require(testFile);
         verifyProduct14(p);
     }
 
@@ -58,7 +58,8 @@ public class ProductXmlFactoryTest extends TestCase
         Product productFile = null;
         try
         {
-            productFile = pxf.createProduct(testFile);
+            InputStream is = ClassLoader.getSystemResourceAsStream(testFile);
+            productFile = pxf.createProduct(is);
             fail("Expected exception b/c no manufacturer 30");
         }
         catch (Exception e)

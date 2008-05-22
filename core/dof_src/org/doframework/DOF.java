@@ -134,7 +134,13 @@ public class DOF
      */
     public static Object require(String fileToLoad)
     {
-        return requireWorker(fileToLoad);
+        return requireWorker(fileToLoad, false);
+    }
+
+
+    public static Object createScratchObject(String fileToLoad)
+    {
+        return requireWorker(fileToLoad, true);
     }
 
 
@@ -202,7 +208,7 @@ public class DOF
     public static ObjectFileInfo getObjectFileInfo(String fileToLoad)
     {
         ObjectFileInfo ofi = HandlerMappings.getObjectFileInfoProcessor().getObjectFileInfo(fileToLoad);
-        ofi.fileToLoad = fileToLoad;
+        ofi.setFileToLoad(fileToLoad);
         return ofi;
     }
 
@@ -215,7 +221,7 @@ public class DOF
      *
      * @return
      */
-    public static String getResourceAsString(String resourceName)
+    static String getResourceAsString(String resourceName)
     {
         if (DOF_DIR.length() == 0)
         {
@@ -290,33 +296,47 @@ public class DOF
 
     /**
      * @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}
+     * @param isScratchObject
      */
 
-    private static Object requireWorker(String fileToLoad)
+    private static Object requireWorker(String fileToLoad, boolean isScratchObject)
     {
         // First check local cache of loaded files
-        Object resultObject = pathToLoadedObject.get(fileToLoad);
+        Object resultObject = null;
+        if (!isScratchObject)
+        {
+            pathToLoadedObject.get(fileToLoad);
+        }
         if (resultObject == null)
         {
             // Get handler class for object
             ObjectFileInfo objectFileInfo = getObjectFileInfo(fileToLoad);
-            String objectType = objectFileInfo.objectType;
-            String pk = objectFileInfo.pk;
-            String fileType = objectFileInfo.fileType.toLowerCase();
+            String objectType = objectFileInfo.getObjectType();
+            String pk = objectFileInfo.getPk();
+            String fileType = objectFileInfo.getFileType().toLowerCase();
 
-            DependentObjectHandler dbJUnitHandler = getHandlerForObject(objectType, fileType);
+            DependentObjectHandler dependentObjectHandler = getHandlerForObject(objectType, fileType);
 
-            loadDependencies(fileToLoad);
+            if (!isScratchObject)
+            {
+                // Now check if object exists in DB
+                resultObject = dependentObjectHandler.get(objectFileInfo);
+            }
 
-            // Now check if object exists in DB
-            resultObject = dbJUnitHandler.get(objectFileInfo);
             if (resultObject == null)
             {
+                loadDependencies(fileToLoad);
                 if (dofDebug)
                 {
                     System.out.println("DOF: Loading: ObjectFileInfo = " + objectFileInfo);
                 }
-                resultObject = dbJUnitHandler.create(objectFileInfo);
+
+                if (isScratchObject)
+                {
+                    objectFileInfo.setScratchMode(true);
+                }
+                
+                resultObject = dependentObjectHandler.create(objectFileInfo);
             }
             if (resultObject == null)
             {
@@ -342,8 +362,8 @@ public class DOF
     private static boolean deleteObjectWorker(String fileToLoad, Set<String> processedDeletions)
     {
         ObjectFileInfo objectFileInfo = getObjectFileInfo(fileToLoad);
-        String objectType = objectFileInfo.objectType;
-        String fileType = objectFileInfo.fileType.toLowerCase();
+        String objectType = objectFileInfo.getObjectType();
+        String fileType = objectFileInfo.getFileType().toLowerCase();
 
         DependentObjectHandler doh = getHandlerForObject(objectType, fileType);
 
@@ -425,7 +445,7 @@ public class DOF
 
             if (!pathToLoadedObject.containsKey(requiredPath))
             {
-                requireWorker(requiredPath);
+                requireWorker(requiredPath, false);
             }
             //else
             //{
@@ -518,7 +538,7 @@ public class DOF
     }
 
 
-    private static DependentObjectHandler getHandlerForObject(String objectType, String fileType)
+    static DependentObjectHandler getHandlerForObject(String objectType, String fileType)
     {
         String className = HandlerMappings.getHandlerClassNameForObject(objectType, fileType);
         if (className == null)

@@ -19,12 +19,19 @@ public interface DependentObjectHandler
      called before create to do that check. Note that the framework will read any listed dependencies in the fileToLoad
      and it will recursively create those dependencies first.<p/>
 
-     To get the contents of the fileToLoad, call:<p/>
+     To get the contents to process, either call:<p/>
      <code>
-     String s = DOF.getResourceAsString(fileToLoad);
+     String contents = objectFileInfo.getFileContentsAsString();
+     </code>
+     or
+     <code>
+     InputStream is = objectFileInfo.getFileContentsAsInputStream();
      </code>
 
-     @param objectFileInfo contains pk, objectType, fileType, and fileToLoad
+     It is critical that you create methods do not try to directly get resources, because
+     with scratch objects, the primary key is swapped out.
+
+     @param objectFileInfo contains the pk, file contents, objectType, fileType
 
      @return The type of object being created and saved in the DB
      */
@@ -33,6 +40,8 @@ public interface DependentObjectHandler
 
     /**
      Fetches the object, if it exists, with the given PK. Otherwise null is returned.
+     <p/>
+     Use objectFileInfo.getPk() to get the primary key of the object to fetch.
 
      @param objectFileInfo contains pk, objectType, fileType, and fileToLoad
 
@@ -45,7 +54,9 @@ public interface DependentObjectHandler
      Delete the object with the given pk. Note that the framework will automatically try to delete the object's
      dependencies as well in a breadth first manner. It is CRITICAL that this method not delete the requested object and
      return false if there are any existing dependencies upon this object. For example, if this is a request to delete a
-     customer record and invoices depend upon this customer record, it must simply return false.
+     customer record and invoices depend upon this customer record, it must simply return false.<p/>
+
+     Use objectFileInfo.getPk() to get the primary key of the object to fetch.<p/>
 
      This method is passed the objectToDelete as a convenience as many systems will use that object
      as part of the deletion code.

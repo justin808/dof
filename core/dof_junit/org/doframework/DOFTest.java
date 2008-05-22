@@ -11,18 +11,18 @@ public class DOFTest extends TestCase
     {
         String fileToLoad = "customer.25.xml";
         ObjectFileInfo ofi = DOF.getObjectFileInfo(fileToLoad);
-        assertEquals("customer", ofi.objectType);
-        assertEquals("25", ofi.pk);
-        assertEquals("xml", ofi.fileType);
+        assertEquals("customer", ofi.getObjectType());
+        assertEquals("25", ofi.getPk());
+        assertEquals("xml", ofi.getFileType());
     }
 
     public void testGetObjectFileInfoHandlesNameWithManyPeriods()
     {
         String fileToLoad = "customer.25.2.3.xml";
         ObjectFileInfo ofi = DOF.getObjectFileInfo(fileToLoad);
-        assertEquals("customer", ofi.objectType);
-        assertEquals("25.2.3", ofi.pk);
-        assertEquals("xml", ofi.fileType);
+        assertEquals("customer", ofi.getObjectType());
+        assertEquals("25.2.3", ofi.getPk());
+        assertEquals("xml", ofi.getFileType());
     }
 
     public void testGetPropertiesErrorMessageWhenPropertiesFile()
@@ -46,9 +46,9 @@ public class DOFTest extends TestCase
         final String resourceAsString = DOF.getResourceAsString(filePath);
         assertNotNull(resourceAsString);
         ObjectFileInfo ofi = DOF.getObjectFileInfo(filePath);
-        assertEquals("manufacturer", ofi.objectType);
-        assertEquals("48", ofi.pk);
-        assertEquals("xml", ofi.fileType);
+        assertEquals("manufacturer", ofi.getObjectType());
+        assertEquals("48", ofi.getPk());
+        assertEquals("xml", ofi.getFileType());
     }
 
 
@@ -73,5 +73,5 @@ public class DOFTest extends TestCase
         assertEquals("dof_xml_handler.GenericXmlFactory", className);
     }
 
-
+    
 }

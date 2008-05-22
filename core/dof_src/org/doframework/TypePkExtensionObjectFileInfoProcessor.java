@@ -26,14 +26,14 @@ public class TypePkExtensionObjectFileInfoProcessor implements ObjectFileInfoPro
             } // else there was no path separator
         }
 
-        ObjectFileInfo objectFileInfo = new ObjectFileInfo();
         final String period = ".";
         int firstPeriodIndex = fileToLoad.indexOf(period);
         int lastPeriodIndex = fileToLoad.lastIndexOf(period);
 
-        objectFileInfo.objectType = fileToLoad.substring(0, firstPeriodIndex);
-        objectFileInfo.pk = fileToLoad.substring(firstPeriodIndex + 1, lastPeriodIndex);
-        objectFileInfo.fileType = fileToLoad.substring(lastPeriodIndex + 1);
+        String objectType = fileToLoad.substring(0, firstPeriodIndex);
+        String pk = fileToLoad.substring(firstPeriodIndex + 1, lastPeriodIndex);
+        String fileType = fileToLoad.substring(lastPeriodIndex + 1);
+        ObjectFileInfo objectFileInfo = new ObjectFileInfo(objectType, pk, fileType);
 
         return objectFileInfo;
     }

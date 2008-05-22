@@ -18,19 +18,16 @@ public class ManufacturerXmlFactory implements DependentObjectHandler
 
 
     /**
-     * @param xmlDescriptionFile
-     *
+     * @param inputStream
      * @return a Manufacturer object with corresponding name and id
      */
-    public Manufacturer createManufacturer(String xmlDescriptionFile)
+    public Manufacturer createManufacturer(InputStream inputStream)
     {
-        InputStream is = ClassLoader.getSystemResourceAsStream(xmlDescriptionFile);
-
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try
         {
             DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-            Document document = documentBuilder.parse(is);
+            Document document = documentBuilder.parse(inputStream);
             XPathFactory pathFactory = XPathFactory.newInstance();
             XPath xPath = pathFactory.newXPath();
             Element item = document.getDocumentElement();
@@ -52,7 +49,7 @@ public class ManufacturerXmlFactory implements DependentObjectHandler
      */
     public Object create(ObjectFileInfo objectFileInfo)
     {
-        Manufacturer manufacturer = createManufacturer(objectFileInfo.fileToLoad);
+        Manufacturer manufacturer = createManufacturer(objectFileInfo.getFileContentsAsInputStream());
 
         manufacturerComponent.insert(manufacturer);
         return manufacturer;
@@ -65,7 +62,7 @@ public class ManufacturerXmlFactory implements DependentObjectHandler
      */
     public Object get(ObjectFileInfo objectFileInfo)
     {
-        return manufacturerComponent.get(objectFileInfo.pk);
+        return manufacturerComponent.get(objectFileInfo.getPk());
     }
 
     /**
@@ -79,7 +76,7 @@ public class ManufacturerXmlFactory implements DependentObjectHandler
      */
     public boolean delete(ObjectFileInfo objectFileInfo, Object objectToDelete)
     {
-        Manufacturer manufacturer = manufacturerComponent.get(objectFileInfo.pk);
+        Manufacturer manufacturer = manufacturerComponent.get(objectFileInfo.getPk());
         if (manufacturer != null)
         {
             return manufacturerComponent.delete(manufacturer);

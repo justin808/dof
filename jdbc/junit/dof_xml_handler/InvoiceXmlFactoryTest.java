@@ -9,6 +9,8 @@ import java.math.*;
 import java.util.*;
 
 import org.doframework.*;
+import jdbc_component.JdbcBaseComponent;
+import jdbc_component.JdbcDbUtil;
 
 /**
  * User: gordonju Date: Jan 13, 2008 Time: 10:53:59 PM
@@ -54,16 +56,18 @@ public class InvoiceXmlFactoryTest extends TestCase
 
     public void testNewInvoiceSubtotal()
     {
-        // Get objects needed for test
-        Customer johnSmith = (Customer) DOF.require("customer.25.xml");
+        Invoice invoice = (Invoice) DOF.createScratchObject("invoice.scratch.xml");
+////
+////        // Get objects needed for test
+////        Customer johnSmith = (Customer) DOF.require("customer.25.xml");
         Product coffee = (Product) DOF.require("product.13.xml");
         Product tea = (Product) DOF.require("product.14.xml");
-
+////
         BigDecimal THREE = new BigDecimal("3");
         BigDecimal TWO = new BigDecimal("2");
-
-        Invoice invoice = new Invoice();
-        invoice.setCustomer(johnSmith);
+////
+////        Invoice invoice = new Invoice();
+//        invoice.setCustomer(johnSmith);
         invoice.addLineItem(THREE, coffee, coffee.getPrice());
         invoice.addLineItem(TWO, tea, tea.getPrice());
 
@@ -77,5 +81,62 @@ public class InvoiceXmlFactoryTest extends TestCase
                 GlobalContext.getComponentFactory().getInvoiceComponent().getById(invoice.getId());
         assertEquals(invoice.getSubTotal(), invoiceFromDb.getSubTotal());
     }
+
+
+    public void testNewInvoiceSubtotalWithScratch()
+    {
+        // Get objects needed for test
+        //        Customer johnSmith = (Customer) DOF.require("customer.25.xml");
+        //        Product coffee = (Product) DOF.require("product.13.xml");
+        //        Product tea = (Product) DOF.require("product.14.xml");
+        //
+        //        BigDecimal THREE = new BigDecimal("3");
+        //        BigDecimal TWO = new BigDecimal("2");
+
+        // Dependencies set up by the template file
+
+        Invoice invoice = (Invoice) DOF.createScratchObject("invoice.scratch.xml");
+
+        List<LineItem> lineItems = invoice.getLineItems();
+        BigDecimal originalTotal = new BigDecimal(0);
+        for (Iterator<LineItem> lineItemIterator = lineItems.iterator(); lineItemIterator.hasNext();)
+        {
+            LineItem lineItem = lineItemIterator.next();
+            originalTotal = originalTotal.add(lineItem.getQuantity().multiply(lineItem.getPrice()));
+        }
+
+
+        assertEquals(originalTotal, invoice.getSubTotal());
+
+        // Add one item to lineOne
+        LineItem lineOne = lineItems.get(0);
+        BigDecimal oldQty = lineOne.getQuantity();
+        lineOne.setQuantity(oldQty.add(new BigDecimal(1)));
+
+        assertEquals(originalTotal.add(lineOne.getPrice()), invoice.getSubTotal());
+
+
+        // Test persistence
+        invoice.persist();
+        Invoice invoiceFromDb = GlobalContext.getComponentFactory().getInvoiceComponent().getById(invoice.getId());
+        assertEquals(invoice.getSubTotal(), invoiceFromDb.getSubTotal());
+
+
+    }
+
+    public void testNewInvoiceSubtotalWithScratchRunNTimes()
+    {
+        int countInvoicesBefore = JdbcDbUtil.executeSingleIntQuery("select count(*) from invoice");
+        int iterations = 3;
+        for (int i = 0; i < iterations; i++)
+        {
+            testNewInvoiceSubtotalWithScratch();
+        }
+        int countInvoicesAfter = JdbcDbUtil.executeSingleIntQuery("select count(*) from invoice");
+        assertEquals(countInvoicesBefore + iterations, countInvoicesAfter);
+
+
+    }
+
 
 }

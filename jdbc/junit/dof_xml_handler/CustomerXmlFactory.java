@@ -18,19 +18,16 @@ public class CustomerXmlFactory implements DependentObjectHandler
 
 
     /**
-     * @param xmlDescriptionFile File describing the customer record
-     *
+     * @param inputStream
      * @return a Customer object with corresponding name and id
      */
-    public Customer createCustomer(String xmlDescriptionFile)
+    public Customer createCustomer(InputStream inputStream)
     {
-        InputStream is = ClassLoader.getSystemResourceAsStream(xmlDescriptionFile);
-
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try
         {
             DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-            Document document = documentBuilder.parse(is);
+            Document document = documentBuilder.parse(inputStream);
             XPathFactory pathFactory = XPathFactory.newInstance();
             XPath xPath = pathFactory.newXPath();
             Element item = document.getDocumentElement();
@@ -56,7 +53,7 @@ public class CustomerXmlFactory implements DependentObjectHandler
      */
     public Object create(ObjectFileInfo objectFileInfo)
     {
-        Customer Customer = createCustomer(objectFileInfo.fileToLoad);
+        Customer Customer = createCustomer(objectFileInfo.getFileContentsAsInputStream());
 
         customerComponent.insert(Customer);
         return Customer;
@@ -69,7 +66,7 @@ public class CustomerXmlFactory implements DependentObjectHandler
      */
     public Object get(ObjectFileInfo objectFileInfo)
     {
-        return customerComponent.getById(Integer.parseInt(objectFileInfo.pk));
+        return customerComponent.getById(Integer.parseInt(objectFileInfo.getPk()));
     }
 
     /**
@@ -83,7 +80,7 @@ public class CustomerXmlFactory implements DependentObjectHandler
      */
     public boolean delete(ObjectFileInfo objectFileInfo, Object objectToDelete)
     {
-        int id = Integer.parseInt(objectFileInfo.pk);
+        int id = Integer.parseInt(objectFileInfo.getPk());
         Customer customer = customerComponent.getById(id);
         if (customer != null)
         {

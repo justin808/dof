@@ -29,31 +29,38 @@ public class JdbcInvoiceComponent extends JdbcBaseComponent implements InvoiceCo
             Date invoiceDate = JdbcDbUtil.parseDate(rows[0][2]);
             BigDecimal amount = new BigDecimal(rows[0][3]);
             BigDecimal pendingBalance = new BigDecimal(rows[0][4]);
-            List<LineItem> lineItems = getLineItems(id);
             Invoice invoice = new Invoice(id);
             invoice.setCustomer(customer);
             invoice.setInvoiceDate(invoiceDate);
-            invoice.setSubTotal(amount);
             invoice.setPendingBalance(pendingBalance);
+            List<LineItem> lineItems = getLineItems(invoice);
             invoice.setLineItems(lineItems);
+            // Sanity check
+            if (!amount.equals(invoice.getSubTotal()))
+            {
+                throw new RuntimeException("Invoice stored subtotal "
+                                           + amount
+                                           + " does not equal calculated "
+                                           + invoice.getSubTotal());
+            }
             return invoice;
         }
     }
 
-    private List<LineItem> getLineItems(int id)
+    private List<LineItem> getLineItems(Invoice invoice)
     {
         String sql =
-                "select * from line_item where invoice_id = " + id + " order by line_number";
+                "select * from line_item where invoice_id = " + invoice.getId() + " order by line_number";
         String[][] rows = JdbcDbUtil.executeMultiColumnQuery(sql);
         List<LineItem> lineItems = new ArrayList<LineItem>(rows.length);
         for (int i = 0; i < rows.length; i++)
         {
             String[] row = rows[i];
-            int productId = Integer.parseInt(row[4]);
+            int productId = Integer.parseInt(row[3]);
             Product product = GlobalContext.getComponentFactory().getProductComponent().getById(productId);
-            BigDecimal qty = new BigDecimal(row[3]);
-            BigDecimal price = new BigDecimal(row[5]);
-            LineItem lineItem = new LineItem(qty, product, price);
+            BigDecimal qty = new BigDecimal(row[2]);
+            BigDecimal price = new BigDecimal(row[4]);
+            LineItem lineItem = new LineItem(qty, product, price, invoice);
             lineItems.add(lineItem);
         }
         return lineItems;
@@ -70,6 +77,33 @@ public class JdbcInvoiceComponent extends JdbcBaseComponent implements InvoiceCo
                 + invoice.getSubTotal() + "', '"
                 + invoice.getPendingBalance() + "')";
         JdbcDbUtil.update(sql);
+
+        createLineItems(invoice);
+
+    }
+
+    private void createLineItems(Invoice invoice)
+    {
+        List<LineItem> lineItems = invoice.getLineItems();
+        int lineNumber = 0;
+        for (Iterator<LineItem> lineItemIterator = lineItems.iterator(); lineItemIterator.hasNext();)
+        {
+            LineItem lineItem = lineItemIterator.next();
+            String sql =
+                    "insert into line_item(invoice_id, line_number, qty, product_id, price) values ("
+                    + invoice.getId()
+                    + ", "
+                    + lineNumber
+                    + ", "
+                    + lineItem.getQuantity()
+                    + ", "
+                    + lineItem.getProduct().getId()
+                    + ", "
+                    + lineItem.getPrice()
+                    + ")";
+            JdbcDbUtil.update(sql);
+            lineNumber++;
+        }
     }
 
     public void update(Invoice invoice) throws DuplicateRecordException
@@ -78,7 +112,17 @@ public class JdbcInvoiceComponent extends JdbcBaseComponent implements InvoiceCo
                 "update invoice " +
                 "set amount = '" + invoice.getSubTotal() + "', pending_balance = '" +
                 invoice.getPendingBalance() + "' where id = " + invoice.getId();
+        
         JdbcDbUtil.update(sql);
+        deleteLineItems(invoice);
+
+        createLineItems(invoice);
+    }
+
+    private void deleteLineItems(Invoice invoice)
+    {
+        String sqlDeleteLineItems  = "delete from line_item where invoice_id = " + invoice.getId();
+        JdbcDbUtil.update(sqlDeleteLineItems);
     }
 
     public boolean delete(Invoice invoice)

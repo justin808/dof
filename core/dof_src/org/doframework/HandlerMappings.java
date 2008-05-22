@@ -110,11 +110,8 @@ class HandlerMappings
     {
         if (objectFileInfoProcessor == null)
         {
-            String c = (String) handlerMappings.get(OBJECT_FILE_INFO_PROCESSOR_PROPERTY);
-            if (c == null || c.length() == 0)
-            {
-                c = DEFAULT_OBJECT_FILE_INFO_PROCESSOR;
-            }
+            String c = handlerMappings.getProperty(OBJECT_FILE_INFO_PROCESSOR_PROPERTY,
+                                                   DEFAULT_OBJECT_FILE_INFO_PROCESSOR);
             try
             {
                 Class objectFileInfoProcessorClass = Class.forName(c);
@@ -157,7 +154,6 @@ class HandlerMappings
             }
         }
         return null;
-
     }
 
     private static void initCompiledPatterns()
@@ -187,6 +183,18 @@ class HandlerMappings
             }
         }
     }
+
+
+    static String getPatternForScratchPK()
+    {
+        return handlerMappings.getProperty("ScratchPrimaryKey", "{{SPK}}");
+    }
+
+    static String getDefaultScratchPrimaryKeyProviderClassName()
+    {
+        return handlerMappings.getProperty("DefaultScratchPrimaryKeyProvider");
+    }
+
 
     /**
      No need for public constructor

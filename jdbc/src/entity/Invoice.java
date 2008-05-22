@@ -141,17 +141,18 @@ public class Invoice
     public void setLineItems(List<LineItem> lineItems)
     {
         this.lineItems = lineItems;
+        updateSubtotal();
     }
 
     public LineItem addLineItem(BigDecimal quantity, Product product, BigDecimal price)
     {
-        LineItem lineItem = new LineItem(quantity, product, price);
+        LineItem lineItem = new LineItem(quantity, product, price, this);
         lineItems.add(lineItem);
-        updateSubtotal();
+        //updateSubtotal();
         return lineItem;
     }
 
-    private void updateSubtotal()
+    void updateSubtotal()
     {
         BigDecimal subtotal = new BigDecimal(0);
         for (LineItem lineItem: lineItems)

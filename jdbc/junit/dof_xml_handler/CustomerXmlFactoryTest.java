@@ -2,6 +2,7 @@ package dof_xml_handler;
 
 import entity.*;
 import junit.framework.*;
+import org.doframework.DOF;
 
 /**
  * User: gordonju Date: Jan 13, 2008 Time: 4:17:22 PM
@@ -23,8 +24,7 @@ public class CustomerXmlFactoryTest extends TestCase
     public void testParsing()
     {
         String testFile = "customer.25.xml";
-        CustomerXmlFactory mxf = new CustomerXmlFactory();
-        Customer customer = mxf.createCustomer(testFile);
+        Customer customer = (Customer) DOF.require(testFile);
         assertEquals(25, customer.getId());
         assertEquals("John Smith", customer.getName());
     }

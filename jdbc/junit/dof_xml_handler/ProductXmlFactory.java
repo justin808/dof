@@ -18,19 +18,16 @@ public class ProductXmlFactory implements DependentObjectHandler
     ProductComponent m_productComponent = GlobalContext.getComponentFactory().getProductComponent();
 
     /**
-     * @param xmlDescriptionFile xml file describing the product
-     *
+     * @param inputStream
      * @return a Manufacturer object with corresponding name and id
      */
-    Product createProduct(String xmlDescriptionFile)
+    Product createProduct(InputStream inputStream)
     {
-        InputStream is = ClassLoader.getSystemResourceAsStream(xmlDescriptionFile);
-
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try
         {
             DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-            Document document = documentBuilder.parse(is);
+            Document document = documentBuilder.parse(inputStream);
             XPathFactory pathFactory = XPathFactory.newInstance();
             XPath xPath = pathFactory.newXPath();
             Element item = document.getDocumentElement();
@@ -65,7 +62,7 @@ public class ProductXmlFactory implements DependentObjectHandler
      */
     public Object create(ObjectFileInfo objectFileInfo)
     {
-        Product product = createProduct(objectFileInfo.fileToLoad);
+        Product product = createProduct(objectFileInfo.getFileContentsAsInputStream());
         m_productComponent.insert(product);
         return product;
     }
@@ -77,7 +74,7 @@ public class ProductXmlFactory implements DependentObjectHandler
      */
     public Object get(ObjectFileInfo objectFileInfo)
     {
-        return m_productComponent.getById(Integer.parseInt(objectFileInfo.pk));
+        return m_productComponent.getById(Integer.parseInt(objectFileInfo.getPk()));
     }
 
     /**
@@ -88,7 +85,7 @@ public class ProductXmlFactory implements DependentObjectHandler
      */
     public boolean delete(ObjectFileInfo objectFileInfo, Object objectToDelete)
     {
-        Product product = m_productComponent.getById(Integer.parseInt(objectFileInfo.pk));
+        Product product = m_productComponent.getById(Integer.parseInt(objectFileInfo.getPk()));
         if (product != null)
         {
             return m_productComponent.delete(product);
