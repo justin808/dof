@@ -3,6 +3,9 @@ Dependent Object Framework (DOF)
 http://sourceforge.net/projects/dof/
 Description: http://www.junit.org/node/308
              http://www.justingordon.org
+Google Group: http://groups.google.com/group/dependent-object-framework
+
+
 
 In a nutshell, with this framework,
 1. It's OK and EASY to run JUnit tests against the database
@@ -28,7 +31,7 @@ This release contains:
 * hibernate: hibernate support not yet implemented (anybody interested in helping me?)
 
 Miscellaneous:
-* You must use ant 1.7.0 or higher
+* You must use ant 1.7.0 or higher to build the release
 
 
 
@@ -51,7 +54,23 @@ Release 0.9.5
   naming convention.
 
 Release 0.9.6
-* Changed DependentObjectHandler interface so that FileNameParts is passed into create method. This is 
-  useful so that you can easily get the primary key, object type, or file type when doing a create.
 * Changed handler_mappings.properties so that it support regular expression matching
+* Renamed FileNameParts to ObjectFileInfo
+* Changed DependentObjectHandler interface so that ObjectFileInfo is passed into create method, rather than
+  the pk or fileToLoad. This is useful so that you can easily get the primary key, object type, or file type
+  when doing a create, get, or delete, and all of these pieces may be necessary when doing regexp matches.
 * Added system property DOF_DEBUG to get printouts of when the DOF creates and deletes objects
+* Added method DOF.setDofDebug(boolean b) to turn this on programmatically
+* Passing in objectToDelete to DependentObjectHandler.delete() and only calling this method if objectToDelete 
+  is not null. Method returns DOF.deleteObject returns true if the object does not exist
+
+
+Release 0.9.7
+* Now supports clear "scratch" objects that have unique primary keys for modifications in tests compared
+  to "reference" objects, which were all the objects that the DOF was previously handling.
+* IMPORTANT CHANGES FOR PREVIOUS USERS FOR SUPPORT OF SCRATCH OBJECTS:
+* Changed ObjectFileInfo class to now require the use of a constructor rather than having public access
+  to the members. You'll get a compile error if you have a custom implementor of ObjectFileInfoProcessor
+* In order for implementation of DependentObjectHandler to work properly with scratch objects, you MUST
+  ONLY get the file contents by calling either ObjectFileInfo.getFileContentsAsString() or 
+  ObjectFileInfo.getFileContentsAsInputStream()
