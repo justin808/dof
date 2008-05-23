@@ -172,6 +172,11 @@ public class Customer
         isNew = aNew;
     }
     
+    /**
+     * This lets us do equal tests on the objects
+     * 
+     * @overwrite
+     */
     public boolean equals(Object objectToTest) {
     	boolean returnValue = false;
     	
@@ -190,5 +195,17 @@ public class Customer
     	}
     	
     	return returnValue;
+    }
+    
+    /**
+     * This returns a hashcode for the customer object.
+     * 
+     * @overwrite
+     */
+    public int hashCode() {
+        // This method is required because our class overwrites equals(Object)
+        int returnValue = this.toString().hashCode();
+        
+        return returnValue;
     }
 }
