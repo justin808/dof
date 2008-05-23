@@ -94,10 +94,25 @@ class HandlerMappings
         try
         {
             handlerMappings.load(handlerMappingsInputStream);
+            // The load method leaves the stream open.  The close
+            // statement for this stream is done in the finally block
+            // this way the stream is always closed.
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
+        }
+        finally
+        {
+            // Make sure the input stream is always closed.
+            try
+            {
+                handlerMappingsInputStream.close();
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 
