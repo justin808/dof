@@ -66,17 +66,20 @@ public class DOFSamplesJdbcCustomerFactoryImplTest extends JdbcFactoryImplTest {
      * This tests the deleting of a customer.
      * @Test
      */
-    public void testDOFSampleDeleteCustomer25()
+    public void testDOFSampleDeleteCustomer05()
     {
-    	// Make sure we have our customer 25
-    	Customer dofCustomer = (Customer) DOF.require("customer.25.xml");
+    	// Make sure we have our customer 05
+    	Customer dofCustomer = (Customer) DOF.createScratchObject("customer.05.xml");
+    	
+    	// Get the customer's ID so we can try to look it up later.
+    	int customerId = dofCustomer.getId();
     	
     	// Now delete the customer.
     	CustomerFactory factory = getCustomerFactory();
     	factory.delete(dofCustomer);
 
     	// Now try to relookup the customer.
-    	Customer dbCustomer = factory.getById(25);
+    	Customer dbCustomer = factory.getById(customerId);
     	
     	// If the delete happened the dbCustomer will be null.
     	assertNull(dbCustomer);

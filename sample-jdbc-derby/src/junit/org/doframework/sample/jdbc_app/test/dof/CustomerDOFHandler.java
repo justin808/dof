@@ -9,6 +9,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.doframework.DependentObjectHandler;
 import org.doframework.ObjectFileInfo;
+import org.doframework.ScratchPkProvider;
 import org.doframework.sample.jdbc_app.GlobalContext;
 import org.doframework.sample.jdbc_app.entity.Customer;
 import org.doframework.sample.jdbc_app.factory.CustomerFactory;
@@ -17,7 +18,7 @@ import org.w3c.dom.Element;
 
 
 
-public class CustomerDOFHandler implements DependentObjectHandler
+public class CustomerDOFHandler implements DependentObjectHandler, ScratchPkProvider
 {
 
     CustomerFactory customerFactory =
@@ -101,6 +102,13 @@ public class CustomerDOFHandler implements DependentObjectHandler
             return false;
         }
 
+    }
+
+    public String getScratchPk()
+    {
+        String big = System.currentTimeMillis() + "";
+        String rightDigits = big.substring(big.length() -8 );
+        return rightDigits;
     }
 
 }
