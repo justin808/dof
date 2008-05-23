@@ -48,6 +48,7 @@ public class ObjectFileInfo
     private String fileContents;
     private static ScratchPkProvider defaultScratchPrimaryKeyProvider;
 
+    static
     {
         String defaultScratchPrimaryKeyProviderClassName = HandlerMappings.getDefaultScratchPrimaryKeyProviderClassName();
         if (defaultScratchPrimaryKeyProviderClassName != null &&
