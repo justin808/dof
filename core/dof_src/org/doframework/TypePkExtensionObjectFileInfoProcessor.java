@@ -33,8 +33,7 @@ public class TypePkExtensionObjectFileInfoProcessor implements ObjectFileInfoPro
         String objectType = fileToLoad.substring(0, firstPeriodIndex);
         String pk = fileToLoad.substring(firstPeriodIndex + 1, lastPeriodIndex);
         String fileType = fileToLoad.substring(lastPeriodIndex + 1);
-        ObjectFileInfo objectFileInfo = new ObjectFileInfo(objectType, pk, fileType);
 
-        return objectFileInfo;
+        return new ObjectFileInfo(objectType, pk, fileType);
     }
 }

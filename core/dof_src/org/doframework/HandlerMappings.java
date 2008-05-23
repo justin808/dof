@@ -78,14 +78,14 @@ class HandlerMappings
                 }
                 catch (FileNotFoundException e)
                 {
-                    throw new RuntimeException("You must put '" + PROPERTIES_FILE_NAME + "'" +
+                    throw new RuntimeException("You must put '" + PROPERTIES_FILE_NAME + '\'' +
                                                " in the classpath or under directory defined by system property " +
                                                "DOF_DIR: " + file.getAbsolutePath());
                 }
             }
             else
             {
-                throw new RuntimeException("You must put '" + PROPERTIES_FILE_NAME + "'" +
+                throw new RuntimeException("You must put '" + PROPERTIES_FILE_NAME + '\'' +
                                            " in the classpath or under directory defined by system property " +
                                            "DOF_DIR.");
 
@@ -151,7 +151,7 @@ class HandlerMappings
 
     static String getHandlerClassNameForObject(String objectType, String fileType)
     {
-        String key = objectType + "." + fileType;
+        String key = objectType + '.' + fileType;
         String exactMatch = (String) handlerMappings.get(key);
         if (exactMatch != null)
         {

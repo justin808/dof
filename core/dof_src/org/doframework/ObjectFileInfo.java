@@ -75,13 +75,9 @@ public class ObjectFileInfo
         this.fileType = fileType;
     }
 
-    public ObjectFileInfo()
-    {
-    }
-
     public String toString()
     {
-        return "{" + getFileToLoad() + ", " + getObjectType() + ", " + getPk() + ", " + getFileType() + "}";
+        return '{' + getFileToLoad() + ", " + getObjectType() + ", " + getPk() + ", " + getFileType() + '}';
     }
 
     /**
@@ -144,8 +140,7 @@ public class ObjectFileInfo
 
     public InputStream getFileContentsAsInputStream()
     {
-        InputStream result = new ByteArrayInputStream(getFileContentsAsString().getBytes());
-        return result;
+        return new ByteArrayInputStream(getFileContentsAsString().getBytes());
     }
 
 

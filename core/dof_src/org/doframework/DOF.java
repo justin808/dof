@@ -242,8 +242,7 @@ public class DOF
      */
     public static String getAbsolutePath(String fileToLoad)
     {
-        String resourceAbsolutePath = DOF_DIR + File.separator + fileToLoad;
-        return resourceAbsolutePath;
+        return DOF_DIR + File.separator + fileToLoad;
     }
 
     /**
@@ -262,12 +261,12 @@ public class DOF
     // private members and methods ///////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static Map<String, DependentObjectHandler> classNameToInstance = new HashMap<String, DependentObjectHandler>();
+    private static final Map<String, DependentObjectHandler> classNameToInstance = new HashMap<String, DependentObjectHandler>();
 
     /**
      * we keep a cache of the loaded objects to avoid searching the DB every time.
      */
-    private static Map<String, Object> pathToLoadedObject = new HashMap<String, Object>();
+    private static final Map<String, Object> pathToLoadedObject = new HashMap<String, Object>();
 
     private static Pattern repIncludeDependency;
 
@@ -305,7 +304,7 @@ public class DOF
         Object resultObject = null;
         if (!isScratchObject)
         {
-            pathToLoadedObject.get(fileToLoad);
+            resultObject = pathToLoadedObject.get(fileToLoad);
         }
         if (resultObject == null)
         {
@@ -494,7 +493,7 @@ public class DOF
         {
             throw new RuntimeException("File not found: " + file.getAbsolutePath());
         }
-        BufferedInputStream bis = null;
+        BufferedInputStream bis;
         try
         {
             bis = new BufferedInputStream(new FileInputStream(file));
@@ -503,8 +502,7 @@ public class DOF
         {
             throw new RuntimeException(e);
         }
-        InputStreamReader isr = new InputStreamReader(bis);
-        return isr;
+        return new InputStreamReader(bis);
     }
 
 
@@ -518,7 +516,7 @@ public class DOF
         {
             while ((line = br.readLine()) != null)
             {
-                sb.append(line + "\n");
+                sb.append(line).append('\n');
             }
         }
         catch (IOException e)
