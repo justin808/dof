@@ -148,7 +148,7 @@ public class Invoice
     {
         LineItem lineItem = new LineItem(quantity, product, price, this);
         lineItems.add(lineItem);
-        //updateSubtotal();
+        updateSubtotal();
         return lineItem;
     }
 

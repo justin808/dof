@@ -127,9 +127,10 @@ public class JdbcInvoiceComponent extends JdbcBaseComponent implements InvoiceCo
 
     public boolean delete(Invoice invoice)
     {
-        String sql =
-                "delete from invoice where id = " + invoice.getId();
+        String sql = "delete from line_item where invoice_id = " + invoice.getId();
         int rowCount = JdbcDbUtil.update(sql);
+        sql = "delete from invoice where id = " + invoice.getId();
+        rowCount = JdbcDbUtil.update(sql);
         return rowCount > 0;
     }
 
