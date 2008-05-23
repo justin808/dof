@@ -51,6 +51,7 @@ public class JdbcDbUtil
             // otherwise there will be an unclean shutdown
             // when program ends
             st.execute("SHUTDOWN");
+            st.close();
             getConnection().close();    // if there are no other open connection
             setConnection(null);
         }
