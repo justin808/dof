@@ -50,7 +50,8 @@ public class ObjectFileInfo
 
     {
         String defaultScratchPrimaryKeyProviderClassName = HandlerMappings.getDefaultScratchPrimaryKeyProviderClassName();
-        if (defaultScratchPrimaryKeyProviderClassName != null)
+        if (defaultScratchPrimaryKeyProviderClassName != null &&
+                defaultScratchPrimaryKeyProviderClassName.length() > 0)
         {
             try
             {
