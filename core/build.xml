@@ -1,142 +1,163 @@
-<!--The tasks relevant to building the dof.jar start with "dof"
-    All other tasks are part of the sample accounting program which demonstrates
-    the proper functioning of the DOF, as well as the use of mock objects
-    and a dependency location pattern
+<!--
+	This build oversees the construction and packaging of DOF's core library
+	which is dof-n.n.jar.
+	
+	This build can be run seperately, but it is recommended that you have this build
+	be called from DOF's main build script in ../build
 
     NOTE: This file is tested with ANT 1.7.0. This file does NOT work with ant 1.6.2.
     -->
 
-<project name="DOF_CORE" default="dof.jar" basedir=".">
+<project name="DOF_CORE" default="dist" basedir=".">
 
-    <!-- Name of project and version -->
-    <property name="proj.name" value="DependentObjectFramework"/>
-    <property name="proj.shortname" value="dof"/>
-    <property name="version" value="0.9.6"/>
-    <property name="junit.jar" value="../../junit4.4/junit-4.4.jar"/>
+	<!-- Declaration of non-core ANT tasks -->
+	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+
+
+	<!-- These Global properties/variables are inherited by DOF's master build
+	     however, they are included here in case a developer wants to run just
+	     this build -->
+    <property name="version.number" value="private-version"/>
+	<property name="findbugs.home" value="/Applications/findbugs-1.3.3" />
+	<property name="findbugs.failonerror" value="true" />
+	<property name="findbugs.reportlevel" value="medium" />
+    <property name="junit.jar" value="${basedir}/../build/lib/junit-4.4/junit-4.4.jar"/>
 
     <!-- Global properties for this build -->
-    <property name="whole.release.dir" value=".."/>
-    <property name="dof.src.java.dir" value="./dof_src"/>
-    <property name="junit.src.dir" value="./dof_junit"/>
-    <property name="lib.dir" value="lib"/>
-    <property name="reports.tests" value="reports"/>
-    <property name="class.dir" value="classes"/>
-    <property name="junit.class.dir" value="junit_classes"/>
-    <property name="build.dir" value="build"/>
-    <property name="zip.release.dir" value="../release"/>
-    <property name="release.pattern" value="DOF-${version}"/>
-    <property name="release.dir" value="../../${release.pattern}"/>
-    <property name="javadoc.dir" value="../javadoc"/>
-    <property name="dof.release.destfile" value="${zip.release.dir}/DOF-${version}.zip"/>
-
-    <!-- Classpath declaration -->
-    <path id="project.classpath">
-        <fileset dir="${lib.dir}">
-            <include name="**/*.jar"/>
-            <include name="**/*.zip"/>
-        </fileset>
-    </path>
+    <property name="dof.src.java.dir" value="${basedir}/dof_src"/>
+    <property name="dof.src.junit.dir" value="${basedir}/dof_junit"/>
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="build.class.dir" value="${build.dir}/classes"/>
+    <property name="build.junit.class.dir" value="${build.dir}/junit_classes"/>
+    <property name="build.tests.reports.dir" value="${build.dir}/reports"/>
+    <property name="build.javadoc.dir" value="${build.dir}/javadoc"/>
+	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="dist.dof.jar" value="${dist.dir}/dof-${version.number}.jar" />
+	<property name="dist.dof.javadoc.zip" value="${dist.dir}/dof-javadoc-${version.number}.zip" />
+	<property name="dist.dof.src.zip" value="${dist.dir}/dof-src-${version.number}.zip" />
 
 
 
     <target name="clean" description="Clean the build directory">
-        <delete dir="${class.dir}"/>
-        <delete dir="${junit.class.dir}"/>
+    	<!-- Just delete the build directory this will get all the
+    	     subdirectories (e.g. classes, junit, javadoc -->
         <delete dir="${build.dir}"/>
-        <delete dir="${zip.release.dir}"/>
-        <delete dir="${release.dir}"/>
-        <mkdir dir="${class.dir}"/>
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${zip.release.dir}"/>
-        <mkdir dir="${release.dir}"/>
+    	<delete dir="${dist.dir}" />
     </target>
 
-    <target name="dof.compile">
-        <mkdir dir="${class.dir}"/>
+    <target name="compile" depends="init">
         <javac srcdir="${dof.src.java.dir}"
-               destdir="${class.dir}"/>
+               destdir="${build.class.dir}"/>
     </target>
 
-    <target name="dof.junit.compile" depends="dof.compile">
-        <mkdir dir="${junit.class.dir}"/>
-        <javac srcdir="${junit.src.dir}"
-               destdir="${junit.class.dir}">
+	<!-- See the junit target for information on the unless clause
+	 	 of this target -->
+    <target name="compile.junit"
+    		depends="compile"
+    		unless="junit.do.not.run">
+        <javac srcdir="${dof.src.junit.dir}"
+               destdir="${build.junit.class.dir}">
             <classpath>
                 <pathelement path="${junit.jar}"/>
-                <pathelement path="${class.dir}"/>
+                <pathelement path="${build.class.dir}"/>
             </classpath>
         </javac>
     </target>
 
 
-    <target name="dof.jar" depends="dof.compile">
-        <mkdir dir="${build.dir}"/>
-        <jar destfile="${build.dir}/DOF.jar">
-            <fileset dir="${class.dir}"
-                     includes="org/doframework/**"/>
-        </jar>
-    </target>
 
-    <target name="junit" depends="dof.junit.compile">
-        <delete dir="${reports.tests}"/>
-        <mkdir dir="${reports.tests}"/>
+	<target name="dof.test.init">
+        <delete dir="${build.tests.reports.dir}"/>
+        <mkdir dir="${build.tests.reports.dir}"/>
+	</target>
+
+	<!-- JUnit can take a little time to run, so the unless clause with the
+		 junit.do.not.run property allows developers to be able to switch off
+		 running JUnit by declaring a property.  A developer would set the
+		 junit.do.not.run property by either a command line or IDE support 
+		 (they shouldn't modify the build.xml to turn off junit). -->
+    <target name="junit"
+    		depends="dof.test.init, compile.junit"
+    		unless="junit.do.not.run">
+    	<echo level="info"
+    		  message="About to execute DOF JUnit tests." />
         <junit haltonfailure="yes">
-            <jvmarg value="-DDOF_DIR=test_data"/>
+            <jvmarg value="-DDOF_DIR=${basedir}/test_data"/>
             <classpath>
                 <pathelement path="${junit.jar}"/>
-                <pathelement path="${class.dir}"/>
-                <pathelement path="${junit.class.dir}"/>
-                <pathelement path="etc"/>
+                <pathelement path="${build.class.dir}"/>
+                <pathelement path="${build.junit.class.dir}"/>
+                <pathelement path="${basedir}/etc"/>
             </classpath>
             <formatter type="plain"/>
-            <batchtest fork="yes" todir="${reports.tests}">
-                <fileset dir="${junit.src.dir}">
+            <batchtest fork="yes" todir="${build.tests.reports.dir}">
+                <fileset dir="${dof.src.junit.dir}">
                     <include name="**/*Test*.java"/>
                 </fileset>
             </batchtest>
         </junit>
+    	<echo level="info"
+    		  message="Finished executing DOF JUnit tests." />
     </target>
 
+	<!-- Findbugs can take a long time to run, so the unless clause with the
+		 findbugs.do.not.run property allows developers to be able to switch off
+		 running Findbugs by declaring a property.  A developer would set the
+		 findbugs.do.not.run property by either a command line or IDE support 
+		 (they shouldn't modify the build.xml to turn off findbugs). -->
+	<target name="findbugs"
+		 	depends="compile, dof.test.init"
+			unless="findbugs.do.not.run"
+		    description="This target will run static code analysis on the DOF
+		    	         code to look for bugs in the code.">
+	    <findbugs home="${findbugs.home}"
+	              output="html"
+	              outputFile="${build.tests.reports.dir}/dof-findbugs.html"
+	    		  reportlevel="${findbugs.reportlevel}"
+	    		  workhard="true"
+	    		  failonerror="${findbugs.failonerror}">
+	      <sourcePath path="${dof.src.java.dir}" />
+	      <class location="${build.class.dir}" />
+	    </findbugs>
+	  </target>
 
-    <target name="dof.doc">
-        <delete dir="${javadoc.dir}"/>
-        <mkdir dir="${javadoc.dir}"/>
-        <javadoc sourcepath="${dof.src.java.dir}" author="true" destdir="${javadoc.dir}"/>
+
+    <target name="dof.javadoc"
+    	    description="This creates the DOF JavaDoc.">
+        <javadoc sourcepath="${dof.src.java.dir}"
+    			 author="true"
+        		 destdir="${build.javadoc.dir}" />
     </target>
 
-    <target name="dof.copy" >
-        <delete dir="${release.dir}"/>
-        <copy todir="${release.dir}">
-            <fileset dir="${whole.release.dir}">
-                <exclude name="**/database/**"/>
-                <exclude name="**/release/**"/>
-                <exclude name="**/out/**"/>
-                <exclude name="**/classes/**"/>
-                <exclude name="**/*.class"/>
-                <exclude name="**/jpa/**"/>
-                <exclude name="**/hibernate/**"/>
-                <exclude name="**/db/**"/>
-                <exclude name="**/.metadata/**"/>
-                <exclude name="**/*.zip"/>
-                <exclude name="**/*.tmp"/>
-                <exclude name="**/reports/**"/>
-            </fileset>
-        </copy>
+	<target name="dof.test" depends="junit, findbugs" />
+
+    <target name="dist"
+    		depends="compile, dof.test, dof.javadoc"
+    		description="This target packages all DOF resources into the downloadable 
+    					 distributable versions (e.g. jar and zips files)">   
+    	<jar destfile="${dist.dof.jar}">
+            <fileset dir="${build.class.dir}"
+                     includes="org/doframework/**"/>
+        </jar>
+    	<zip basedir="${build.javadoc.dir}"
+    		  destfile="${dist.dof.javadoc.zip}" />
+    	<zip basedir="${dof.src.java.dir}"
+    		 destfile="${dist.dof.src.zip}">
+    		<exclude name="**/*.iml" />
+    	</zip>
+    	<!-- Now put the unit tests in the src zip this is done in 2 steps
+    	     because I did know how to do it in 1 step. -->
+    	<zip basedir="${dof.src.junit.dir}"
+    		 destfile="${dist.dof.src.zip}"
+    		 update="true" />
     </target>
 
-    <target name="dof.zip" >
-        <zip basedir="${release.dir}/.."
-             destfile="${dof.release.destfile}"
-                includes="${release.pattern}/**">
-            <!--<include name="**/*.java"/>-->
-            <!--<include name="**/*.zip"/>-->
-            <!--<include name="**/*.xml"/>-->
-            <!--<include name="**/*.txt"/>-->
-            <!--<include name="**/*.TXT"/>-->
-            <!--<include name="**/*.HTML"/>-->
-        </zip>
-    </target>
-
-    <target name="dof.release" depends="clean, dof.jar, dof.doc, dof.copy, dof.zip"/>
-
+	<target name="init"
+		    description="This target does the initialization required for a build.">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.class.dir}"/>
+        <mkdir dir="${build.junit.class.dir}"/>
+        <mkdir dir="${build.javadoc.dir}"/>
+		<mkdir dir="${dist.dir}" />
+	</target>
 </project>
