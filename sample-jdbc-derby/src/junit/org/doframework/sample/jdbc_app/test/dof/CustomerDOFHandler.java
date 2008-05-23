@@ -26,19 +26,17 @@ public class CustomerDOFHandler implements DependentObjectHandler, ScratchPkProv
 
 
     /**
-     * @param xmlDescriptionFile File describing the customer record
+     * @param inputStream describing the customer record
      *
      * @return a Customer object with corresponding name and id
      */
-    public Customer createCustomer(String xmlDescriptionFile)
+    public Customer createCustomer(InputStream inputStream)
     {
-        InputStream is = ClassLoader.getSystemResourceAsStream(xmlDescriptionFile);
-
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try
         {
             DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-            Document document = documentBuilder.parse(is);
+            Document document = documentBuilder.parse(inputStream);
             XPathFactory pathFactory = XPathFactory.newInstance();
             XPath xPath = pathFactory.newXPath();
             Element item = document.getDocumentElement();
@@ -64,7 +62,7 @@ public class CustomerDOFHandler implements DependentObjectHandler, ScratchPkProv
      */
     public Object create(ObjectFileInfo objectFileInfo)
     {
-        Customer Customer = createCustomer(objectFileInfo.getFileToLoad());
+        Customer Customer = createCustomer(objectFileInfo.getFileContentsAsInputStream());
 
         customerFactory.insert(Customer);
         return Customer;
