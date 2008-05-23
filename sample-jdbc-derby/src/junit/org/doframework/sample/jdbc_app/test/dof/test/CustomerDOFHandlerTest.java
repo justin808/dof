@@ -1,5 +1,7 @@
 package org.doframework.sample.jdbc_app.test.dof.test;
 
+import java.io.InputStream;
+
 import junit.framework.TestCase;
 
 import org.doframework.sample.jdbc_app.entity.Customer;
@@ -20,8 +22,11 @@ public class CustomerDOFHandlerTest extends TestCase
     public void testParsing()
     {
         String testFile = "customer.25.xml";
+        InputStream is = ClassLoader.getSystemResourceAsStream(testFile);
+        
         CustomerDOFHandler mxf = new CustomerDOFHandler();
-        Customer customer = mxf.createCustomer(testFile);
+        Customer customer = mxf.createCustomer(is);
+        
         assertEquals(25, customer.getId());
         assertEquals("John Smith", customer.getName());
     }
