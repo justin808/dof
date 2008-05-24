@@ -6,6 +6,10 @@
 
 <project name="DOF Build" default="dist" basedir=".">
 
+	<!-- Build properties that have been externalized for easy updates, without
+	     requiring the build.xml to be changed --> 
+	<property file="${basedir}/build.properties" />
+	
 	<!-- Variables to DOF's components (e.g. core and samples) -->
 	<property name="DOF.core.dir" value="${basedir}/../core" />
 	<property name="DOF.sample.jdbc-derby.dir" value="${basedir}/../sample-jdbc-derby" />
@@ -15,9 +19,7 @@
 	<property name="DOF.sample.jdbc-derby.buildfile" value="${DOF.sample.jdbc-derby.dir}/build.xml" />
 	<property name="DOF.sample.jdbc-hsql.buildfile" value="${DOF.sample.jdbc-hsql.dir}/build.xml" />
 	
-	<!-- Common build variables -->
-    <property name="version.number" value="0.9.6"/>
-	
+	<!-- Common build variables -->	
 	<property name="build.dir" value="${basedir}/build" />
 	<property name="dist.dir" value="${basedir}/dist" />
 	<property name="lib.dir" value="${basedir}/lib" />
