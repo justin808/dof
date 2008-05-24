@@ -4,7 +4,7 @@
         <!-- @require("product.14.xml") -->
         <!-- @require("product.15.xml") -->
 <invoice>
-    <id>{{SPK}}</id>
+    <id>{{pk}}</id>
     <customer_id>25</customer_id>
     <invoice_date>2007-05-15</invoice_date>
     <subtotal>116.83</subtotal>

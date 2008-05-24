@@ -60,6 +60,8 @@ class HandlerMappings
     private static final String OBJECT_FILE_INFO_PROCESSOR_PROPERTY = "ObjectFileInfoProcessor";
     private static Map<Pattern, String> compiledPatterns;
 
+    private static Pattern SCRATCH_PK_PATTERN;
+
 
     static
     {
@@ -200,9 +202,24 @@ class HandlerMappings
     }
 
 
-    static String getPatternForScratchPK()
+    /**
+     * Return the pattern for matching the scratch PK. This is a regexp
+     * and must contain one grouping.
+     *
+     * @return the regexp for matching the scratch pk
+     */
+    static Pattern getRegexpPatternForScratchPK()
     {
-        return handlerMappings.getProperty("ScratchPrimaryKey", "{{SPK}}");
+        if (SCRATCH_PK_PATTERN == null)
+        {
+            String s = handlerMappings.getProperty("ScratchPrimaryKeyPattern", "\\{\\{pk(\\:(\\w+))?\\}\\}");
+            if (DOF.dofDebug)
+            {
+                System.out.println("ScratchPrimaryKeyPattern=" + s);
+            }
+            SCRATCH_PK_PATTERN = Pattern.compile(s);
+        }
+        return SCRATCH_PK_PATTERN;
     }
 
     static String getDefaultScratchPrimaryKeyProviderClassName()

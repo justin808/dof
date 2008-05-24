@@ -1,12 +1,13 @@
 <!--Sample of creating a scratch invoice that depends on a scratch customer-->
 <!--Scratch customer could be needed because the customer stores the sum of invoices created-->
 <!-- list of dependencies for invoice number 100 -->
+        <!--@createScratchObject("customer.scratch.xml", "scratchCustomerPk")-->
         <!-- @require("product.13.xml") -->
         <!-- @require("product.14.xml") -->
         <!-- @require("product.15.xml") -->
 <invoice>
-    <id>{{scratch_pk}}</id>
-    <customer_id>{{@createScratch("customer.scratch.xml")}}</customer_id>
+    <id>{{pk}}</id>
+    <customer_id>{{pk:scratchCustomerPk}}</customer_id>
     <invoice_date>2007-05-15</invoice_date>
     <subtotal>116.83</subtotal>
     <tax_rate>4.133</tax_rate>

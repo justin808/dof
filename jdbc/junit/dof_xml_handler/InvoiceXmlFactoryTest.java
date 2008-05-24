@@ -9,7 +9,6 @@ import java.math.*;
 import java.util.*;
 
 import org.doframework.*;
-import jdbc_component.JdbcBaseComponent;
 import jdbc_component.JdbcDbUtil;
 
 /**
@@ -139,5 +138,25 @@ public class InvoiceXmlFactoryTest extends TestCase
 
     }
 
+
+    /**
+     * Test out using a scratch customer
+     */
+    public void testInvoiceWithScratchCustomer()
+    {
+        Invoice invoice1 = (Invoice) DOF.createScratchObject("invoice.scratchWithScratchCustomer.xml");
+        System.out.println("invoice1 = " + invoice1);
+        
+        Map<String, String> scratchTagToPk = new HashMap<String, String>();
+        scratchTagToPk.put("scratchCustomerPk", invoice1.getCustomer().getId() + "");
+
+        Invoice invoice2 = (Invoice) DOF.createScratchObject("invoice.scratchWithScratchCustomer.xml", scratchTagToPk);
+        System.out.println("invoice2 = " + invoice2);
+        assertEquals(invoice1.getCustomer().getId(), invoice2.getCustomer().getId());
+
+        assertTrue(invoice2.getId() > invoice1.getId());
+
+
+    }
 
 }

@@ -2,6 +2,9 @@ package org.doframework;
 
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.Map;
 
 /**
  * This class offers information so that a DependentObjectHandler knows how to create an object, either a
@@ -46,26 +49,7 @@ public class ObjectFileInfo
     private String originalPk;
 
     private String fileContents;
-    private static ScratchPkProvider defaultScratchPrimaryKeyProvider;
-
-    static
-    {
-        String defaultScratchPrimaryKeyProviderClassName = HandlerMappings.getDefaultScratchPrimaryKeyProviderClassName();
-        if (defaultScratchPrimaryKeyProviderClassName != null &&
-                defaultScratchPrimaryKeyProviderClassName.length() > 0)
-        {
-            try
-            {
-                Class<? extends ScratchPkProvider> scratchClass =
-                        (Class<? extends ScratchPkProvider>) Class.forName(defaultScratchPrimaryKeyProviderClassName);
-                defaultScratchPrimaryKeyProvider = scratchClass.newInstance();
-            }
-            catch (Throwable e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+    private Map<String, String> scratchReferenceToPk;
 
     public ObjectFileInfo(String objectType, String pk, String fileType)
     {
@@ -78,6 +62,11 @@ public class ObjectFileInfo
     public String toString()
     {
         return '{' + getFileToLoad() + ", " + getObjectType() + ", " + getPk() + ", " + getFileType() + '}';
+    }
+
+    String getKeyForHashing()
+    {
+        return getFileType() + ":" + getPk();
     }
 
     /**
@@ -94,13 +83,14 @@ public class ObjectFileInfo
             String originalFileContents = DOF.getResourceAsString(getFileToLoad());
             if (isScratchMode())
             {
-                fileContents = swapOutPkWithScratchValue(originalFileContents);
+                fileContents = swapOutPksWithScratchValues(originalFileContents);
             }
             else
             {
                 fileContents = originalFileContents;
             }
         }
+        System.out.println("\n\n\nfileContents = " + fileContents);
         return fileContents;
     }
 
@@ -109,34 +99,57 @@ public class ObjectFileInfo
      * @param originalFileContents
      * @return The original file contents with the scratch PK
      */
-    private String swapOutPkWithScratchValue(String originalFileContents)
+    private String swapOutPksWithScratchValues(String originalFileContents)
     {
-        String patternForScratchPK = HandlerMappings.getPatternForScratchPK();
-        DependentObjectHandler dofHandler = DOF.getHandlerForObject(objectType, fileType);
-        String scratchPk;
-        if (dofHandler instanceof ScratchPkProvider)
+        Pattern patternForScratchPK = HandlerMappings.getRegexpPatternForScratchPK();
+        Matcher matcher = patternForScratchPK.matcher(originalFileContents);
+        StringBuffer replacedText = new StringBuffer(originalFileContents.length());
+        int pos = 0;
+        while (pos < originalFileContents.length() && matcher.find(pos))
         {
-            scratchPk = ((ScratchPkProvider)dofHandler).getScratchPk();
+            // First copy the text between matches
+            replacedText.append(originalFileContents.substring(pos, matcher.start()));
+
+            // Now find the right scratch pk, could be either the main pk or a mapped one
+            String scratchPk;
+
+            // Default way to get a new scratch pk
+            if (matcher.groupCount() == 0) // no tag specified
+            {
+                scratchPk = pk;
+            }
+            else if (matcher.groupCount() == 1) // invalid pattern
+            {
+                throw new RuntimeException("Replacing scratch tags with values: Illegal group count of 1. "
+                                           + "You must have a group count of 2. Found: " + matcher.group());
+            }
+            else // else we have a scratch tag reference
+            {
+                if (matcher.group(1) == null)
+                {
+                    scratchPk = pk;
+                }
+                else
+                {
+                    String scratchTag = matcher.group(2);
+                    scratchPk = scratchReferenceToPk.get(scratchTag);
+                    if (scratchPk == null) // there was no reference, so quit
+                    {
+                        throw new RuntimeException("Replacing scratch tags with values: Could not find a value for " +
+                                                   "scratchTag = " + scratchTag + ". This value must either be set using " +
+                                                   "@createScratchObject(file, scratchTag) or can be passed into the " +
+                                                   "DOF.createScratchObject() command.");
+                    }
+                }
+                replacedText.append(scratchPk);
+                pos = matcher.end();
+            }
         }
-        else if (defaultScratchPrimaryKeyProvider != null)
-        {
-            scratchPk = defaultScratchPrimaryKeyProvider.getScratchPk();
-        }
-        else
-        {
-            scratchPk = System.currentTimeMillis() + "";
-        }
-        // Non regexp replacement!
-        pk = scratchPk;
-        if (originalFileContents.indexOf(patternForScratchPK) == -1)
-        {
-            throw new RuntimeException("Error trying to fill in scratch primary key: Could not find pattern "
-                                       + patternForScratchPK
-                                       + " inside of file "
-                                       + originalFileContents);
-        }
-        return originalFileContents.replace(patternForScratchPK, scratchPk);
+        replacedText.append(originalFileContents.substring(pos));
+
+        return replacedText.toString();
     }
+
 
     public InputStream getFileContentsAsInputStream()
     {
@@ -174,6 +187,11 @@ public class ObjectFileInfo
         return pk;
     }
 
+    void setPk(String pk)
+    {
+        this.pk = pk; 
+    }
+
     public String getFileType()
     {
         return fileType;
@@ -195,5 +213,15 @@ public class ObjectFileInfo
     public void setFileToLoad(String fileToLoad)
     {
         this.fileToLoad = fileToLoad;
+    }
+
+    Map<String, String> getScratchReferenceToPk()
+    {
+        return scratchReferenceToPk;
+    }
+
+    void setScratchReferenceToPk(Map<String, String> scratchReferenceToPk)
+    {
+        this.scratchReferenceToPk = scratchReferenceToPk;
     }
 }
