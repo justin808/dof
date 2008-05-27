@@ -3,7 +3,8 @@ package org.doframework;
 import junit.framework.*;
 
 /**
- User: gordonju Date: Feb 1, 2008 Time: 10:09:28 PM
+ IMPT: You need this VM Param set before running this test
+    -DDOF_DIR=/home/gordonju/dev/DOF/core/dof
  */
 public class DOFTest extends TestCase
 {
@@ -31,7 +32,7 @@ public class DOFTest extends TestCase
         {
             fail("Please define DOF_DIR when invoking the test runner. Use VM parameter -DDOF_DIR={directory to core/test_data}");
         }
-        final String resourceAsString = DOF.getResourceAsString("product.40.xml");
+        final String resourceAsString = DOF.getResourceAsString("test_data/product.40.xml");
         assertNotNull(resourceAsString);
     }
 
@@ -40,9 +41,9 @@ public class DOFTest extends TestCase
     {
         if (DOF.DOF_DIR.length() == 0)
         {
-            fail("Please define DOF_DIR when invoking the test runner. Use VM parameter -DDOF_DIR={directory to core/test_data}");
+            fail("Please define DOF_DIR when invoking the test runner. Use VM parameter -DDOF_DIR={directory to core/dof/test_data}");
         }
-        final String filePath = "manufacturers/manufacturer.48.xml";
+        final String filePath = "test_data/manufacturers/manufacturer.48.xml";
         final String resourceAsString = DOF.getResourceAsString(filePath);
         assertNotNull(resourceAsString);
         ObjectFileInfo ofi = DOF.getObjectFileInfo(filePath);
@@ -59,7 +60,7 @@ public class DOFTest extends TestCase
         {
             oldValue = System.setProperty("DOF_DIR", "");
         }
-        final String filePath = "manufacturers/manufacturer.48.xml";
+        final String filePath = "test_data/manufacturers/manufacturer.48.xml";
         final String resourceAsString = DOF.getResourceAsString(filePath);
         assertNotNull(resourceAsString);
         System.setProperty("DOF_DIR", oldValue);

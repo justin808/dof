@@ -1,7 +1,7 @@
 <!--
 	This build oversees the construction and packaging of DOF's core library
 	which is dof-n.n.jar.
-	
+
 	This build can be run seperately, but it is recommended that you have this build
 	be called from DOF's main build script in ../build
 
@@ -74,7 +74,7 @@
 	<!-- JUnit can take a little time to run, so the unless clause with the
 		 junit.do.not.run property allows developers to be able to switch off
 		 running JUnit by declaring a property.  A developer would set the
-		 junit.do.not.run property by either a command line or IDE support 
+		 junit.do.not.run property by either a command line or IDE support
 		 (they shouldn't modify the build.xml to turn off junit). -->
     <target name="junit"
     		depends="dof.test.init, compile.junit"
@@ -82,12 +82,12 @@
     	<echo level="info"
     		  message="About to execute DOF JUnit tests." />
         <junit haltonfailure="yes">
-            <jvmarg value="-DDOF_DIR=${basedir}/test_data"/>
+            <jvmarg value="-DDOF_DIR=${basedir}/dof"/>
             <classpath>
                 <pathelement path="${junit.jar}"/>
                 <pathelement path="${build.class.dir}"/>
                 <pathelement path="${build.junit.class.dir}"/>
-                <pathelement path="${basedir}/etc"/>
+                <pathelement path="${basedir}/dof"/>
             </classpath>
             <formatter type="plain"/>
             <batchtest fork="yes" todir="${build.tests.reports.dir}">
@@ -103,7 +103,7 @@
 	<!-- Findbugs can take a long time to run, so the unless clause with the
 		 findbugs.do.not.run property allows developers to be able to switch off
 		 running Findbugs by declaring a property.  A developer would set the
-		 findbugs.do.not.run property by either a command line or IDE support 
+		 findbugs.do.not.run property by either a command line or IDE support
 		 (they shouldn't modify the build.xml to turn off findbugs). -->
 	<target name="findbugs"
 		 	depends="compile, dof.test.init"
@@ -133,8 +133,8 @@
 
     <target name="dist"
     		depends="compile, dof.test, dof.javadoc"
-    		description="This target packages all DOF resources into the downloadable 
-    					 distributable versions (e.g. jar and zips files)">   
+    		description="This target packages all DOF resources into the downloadable
+    					 distributable versions (e.g. jar and zips files)">
     	<jar destfile="${dist.dof.jar}">
             <fileset dir="${build.class.dir}"
                      includes="org/doframework/**"/>
