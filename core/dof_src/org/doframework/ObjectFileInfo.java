@@ -66,7 +66,7 @@ public class ObjectFileInfo
 
     String getKeyForHashing()
     {
-        return getFileType() + ":" + getPk();
+        return getObjectType() + ":" + getPk();
     }
 
     /**
@@ -81,16 +81,12 @@ public class ObjectFileInfo
         if (fileContents == null)
         {
             String originalFileContents = DOF.getResourceAsString(getFileToLoad());
-            if (isScratchMode())
-            {
-                fileContents = swapOutPksWithScratchValues(originalFileContents);
-            }
-            else
-            {
-                fileContents = originalFileContents;
-            }
+            fileContents = swapOutPksWithScratchValues(originalFileContents);
         }
-        System.out.println("\n\n\nfileContents = " + fileContents);
+        if (DOF.dofPrintDescriptionFiles)
+        {
+            System.out.println("\n\n\nfileContents = " + fileContents);
+        }
         return fileContents;
     }
 
@@ -135,10 +131,17 @@ public class ObjectFileInfo
                     scratchPk = scratchReferenceToPk.get(scratchTag);
                     if (scratchPk == null) // there was no reference, so quit
                     {
-                        throw new RuntimeException("Replacing scratch tags with values: Could not find a value for " +
-                                                   "scratchTag = " + scratchTag + ". This value must either be set using " +
-                                                   "@createScratchObject(file, scratchTag) or can be passed into the " +
-                                                   "DOF.createScratchObject() command.");
+                        if (scratchTag.equals(originalPk))
+                        {
+                            scratchPk = pk;
+                        }
+                        else
+                        {
+                            throw new RuntimeException("Replacing scratch tags with values: Could not find a value for " +
+                                                       "scratchTag = " + scratchTag + ". This value must either be set using " +
+                                                       "@createScratchObject(file, scratchTag) or can be passed into the " +
+                                                       "DOF.createScratchObject() command.");
+                        }
                     }
                 }
                 replacedText.append(scratchPk);

@@ -19,7 +19,7 @@ import java.util.regex.*;
  * 1. Reference Objects: Some objects are the same for repeated runs of a single test. These objects can be cached.
  * 2. Scratch Objects: These are objects that you want unique primary keys so that modification to the objects do not
  * affect other tests.
- *
+  *
  * The Dependent Object Framework allows the test writer to specify what objects are required for a test. The test
  * writer provides:
  * <p/>
@@ -141,8 +141,12 @@ public class DOF
      * </code><p> Even though fileToLoad uses the period as the delimiter, the primary key may contain periods because
      * the first and last periods are used to find the object type and the file suffix. This also means that object
      * types may NOT contain a period.
+     * <p/>
+     * Note, the difference between require() and createScratchObject() is that require() expects that the PK of the
+     * object must match exactly what is encoded in the fileToLoad. createScratchObject() can be used to in the same
+     * manner as require, but by passing in value for the primary key. See createScratchObject() for more details.
      *
-     * @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType}
+     * @param fileToLoad File name in form: {objectType}.{objectPk}.{fileType} or a customized version of this
      *
      * @param scratchReferenceToPk
      * @return The Object requested
@@ -155,6 +159,11 @@ public class DOF
         return requireWorker(so, false, scratchReferenceToPk);
     }
 
+    /**
+     * Same as calling require iwhtout any mappings of scratchTags to pk values
+     * @param fileToLoad
+     * @return
+     */
     public static Object require(String fileToLoad)
     {
         return require(fileToLoad, new HashMap<String, String>());
@@ -162,10 +171,37 @@ public class DOF
 
 
     /**
+     * This works similarly to require() except for one major thing. The primary key when using require() is encoded
+     * in the fileToLoad name. When using createScratchObject, the primaryKey is either: <pre>
+     * 1. Created using a your handler class for this object type if that handler implements ScratchPkProvider
+     * 2. Using the default ScratchPkProvider specified in file handler_mappings.properties
+     * 3. Using the system default of System.currentTimeMillis() + ""
+     *</pre>
+     *
+     * The primary key is listed in the template file as <b>{{pk}}</b> and that string gets replaced when you call
+     * ObjectFileInfo.getFileContentsAsString() or ObjectFileInfo.getFileContentsAsInputStream(). Optionally, you
+     * can specify <b>{{pk.fileToLoadPK}}</b> where fileToLoadPk is the part of the file name that is the PK when using require().
+     * This allows scratch files to be used either as pure scratch objects with a brand new key, or you can pass
+     * in a key when calling this method.<p/>
+     *
+     * You can specify a Map<scratchReference, primaryKey>. This allows you to specify a map with fileToLoadPk --> thePkYouDesire.
+     * If you do that, thePkYouDesire is uses. If you don't specify the map or don't putin the value fileToLoadPk,
+     * then a new PK is generated.<p/>
+     *
+     * All object definition files can specify dependencies as scratch objects. There are 2 parts to this. Suppose you
+     * are creating an invoice and want to depend on a scratch customer:<pre>
+     * 1. List out a the dependency creation with this pattern in a comment: @createScratchObject("customer.scratch.xml", "scratchCustomerPk")
+     * 2. In the place of the customer id, put in {{pk:scratchCustomerPk}}
+     * </pre>
+     * Here's what happens. The DOF reads the invoice file and sees the dependency on a scratch customer. The scratch
+     * customer is created, and the resulting primary key is substituted in the place of {{pk:scratchCustomerPk}<p/>
+     *
+     * Suppose that you had the scratchCustomerPk already. Then you could pass the mapping of that tag to its pk in
+     * the Map parameter.
      *
      * @param fileToLoad
-     * @param scratchReferenceToPk
-     * @return
+     * @param scratchReferenceToPk Map<scratchReference, primaryKey>
+     * @return The object created by the command, or possibly fetched
      */
     public static Object createScratchObject(String fileToLoad, Map<String, String> scratchReferenceToPk)
     {
@@ -348,17 +384,28 @@ public class DOF
     {
         // First check local cache of loaded files
         //isScratchObject = true;
-        Object resultObject = null;
+        Object resultObject;
         ObjectFileInfo objectFileInfo = getObjectFileInfo(fileToLoadAndScratchTag.fileToLoad);
-        final boolean hasScratchTag = fileToLoadAndScratchTag.scratchTag != null && fileToLoadAndScratchTag.scratchTag.length() > 0;
-        String scratchPk = scratchReferenceToPk.get(fileToLoadAndScratchTag.scratchTag);
-        if (scratchPk != null)
+        boolean hasScratchTag = false;
+        boolean lookupByPrimaryKey = !isScratchObject; // some scratch objects will have a PK
+        String scratchPk = null;
+        if (isScratchObject)
         {
-            // Check if object exists in DB
-            objectFileInfo.setPk(scratchPk);
+            hasScratchTag = fileToLoadAndScratchTag.scratchTag != null && fileToLoadAndScratchTag.scratchTag.length() > 0;
+            scratchPk = hasScratchTag ? scratchReferenceToPk.get(fileToLoadAndScratchTag.scratchTag): null;
+            if (scratchPk == null && !hasScratchTag)
+            {
+                scratchPk = scratchReferenceToPk.get(objectFileInfo.getPk());
+            }
+            if (scratchPk != null)
+            {
+                // Check if object exists in DB
+                objectFileInfo.setPk(scratchPk);
+                lookupByPrimaryKey = true;
+            }
         }
 
-        resultObject = objectTypePkToLoadedObject.get(objectFileInfo.getKeyForHashing());
+        resultObject = lookupByPrimaryKey ? objectTypePkToLoadedObject.get(objectFileInfo.getKeyForHashing()) : null;
         if (resultObject == null)
         {
             // Get handler class for object
@@ -368,9 +415,9 @@ public class DOF
 
             DependentObjectHandler dependentObjectHandler = getHandlerForObject(objectType, fileType);
 
-            if (!isScratchObject)
+            // Now check if object exists in DB
+            if (lookupByPrimaryKey)
             {
-                // Now check if object exists in DB
                 resultObject = dependentObjectHandler.get(objectFileInfo);
             }
 
@@ -382,7 +429,8 @@ public class DOF
 
                 if (dofDebug)
                 {
-                    System.out.println("DOF: Loading: ObjectFileInfo = " + objectFileInfo);
+                    System.out.println("DOF: Loading" + (isScratchObject ? " Scratch Object" : "")
+                                       + ": ObjectFileInfo = " + objectFileInfo);
                 }
 
                 if (isScratchObject)
@@ -444,6 +492,7 @@ public class DOF
      */
     private static boolean deleteObjectWorker(String fileToLoad, Set<String> processedDeletions)
     {
+//        System.out.println("DOF.deleteObjectWorker, fileToLoad = " + fileToLoad + ", objectTypePk = " + objectTypePkToLoadedObject);
         ObjectFileInfo objectFileInfo = getObjectFileInfo(fileToLoad);
         String objectType = objectFileInfo.getObjectType();
         String fileType = objectFileInfo.getFileType().toLowerCase();
@@ -471,7 +520,8 @@ public class DOF
             processedDeletions.add(fileToLoad);
         }
 
-        objectTypePkToLoadedObject.remove(fileToLoad);
+//        System.out.println("DOF.deleteObjectWorker removing fileToLoad = " + fileToLoad);
+        objectTypePkToLoadedObject.remove(objectFileInfo.getKeyForHashing());
 
         // then delete the dependencies
         deleteDependencies(fileToLoad, processedDeletions);
@@ -526,7 +576,7 @@ public class DOF
                 continue;
             }
 
-            if (!objectTypePkToLoadedObject.containsKey(requiredPath))
+            if (!objectTypePkToLoadedObject.containsKey(getObjectFileInfo(requiredPath).getKeyForHashing()))
             {
                 FileToLoadAndScratchTag so = new FileToLoadAndScratchTag();
                 so.fileToLoad = requiredPath;
@@ -561,7 +611,7 @@ public class DOF
                 continue;
             }
 
-            if (!objectTypePkToLoadedObject.containsKey(requiredPath))
+            if (!objectTypePkToLoadedObject.containsKey(getObjectFileInfo(requiredPath).getKeyForHashing()))
             {
                 requireWorker(fileToLoadAndScratchTag, true, scratchReferenceToPk);
             }

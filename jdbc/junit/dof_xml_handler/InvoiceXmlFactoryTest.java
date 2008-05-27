@@ -145,18 +145,78 @@ public class InvoiceXmlFactoryTest extends TestCase
     public void testInvoiceWithScratchCustomer()
     {
         Invoice invoice1 = (Invoice) DOF.createScratchObject("invoice.scratchWithScratchCustomer.xml");
-        System.out.println("invoice1 = " + invoice1);
-        
+
         Map<String, String> scratchTagToPk = new HashMap<String, String>();
         scratchTagToPk.put("scratchCustomerPk", invoice1.getCustomer().getId() + "");
 
         Invoice invoice2 = (Invoice) DOF.createScratchObject("invoice.scratchWithScratchCustomer.xml", scratchTagToPk);
-        System.out.println("invoice2 = " + invoice2);
         assertEquals(invoice1.getCustomer().getId(), invoice2.getCustomer().getId());
 
         assertTrue(invoice2.getId() > invoice1.getId());
+    }
 
 
+    /**
+     * Test out using a scratch customer
+     */
+    public void testNonScratchInvoiceWithScratchCustomer()
+    {
+        DOF.delete("invoice.101.xml");
+        Invoice invoice1 = (Invoice) DOF.require("invoice.101.xml");
+        Invoice invoiceAgain = (Invoice) DOF.require("invoice.101.xml");
+        assertSame(invoice1, invoiceAgain);
+        assertTrue(invoice1.getCustomer().getId() > 10000);
+    }
+
+    /**
+     * Test out using a scratch customer
+     */
+    public void testNonScratchInvoiceWithScratchCustomerWithFileCacheCleared()
+    {
+        DOF.delete("invoice.101.xml");
+        System.out.println("require first time");
+        Invoice invoice1 = (Invoice) DOF.require("invoice.101.xml");
+        System.out.println("Clearing cache");
+        DOF.clearFileCache();
+        System.out.println("require again");
+        Invoice invoiceAgain = (Invoice) DOF.require("invoice.101.xml");
+        assertNotSame(invoice1, invoiceAgain);
+        assertEquals(invoice1.getId(), invoiceAgain.getId());
+        assertEquals(invoice1.getCustomer().getId(), invoiceAgain.getCustomer().getId());
+    }
+
+    /**
+     * Test out using a scratch customer
+     */
+    public void testNonScratchInvoiceWithScratchCustomerGetsNewCustomer()
+    {
+        DOF.delete("invoice.101.xml");
+        Invoice invoice1 = (Invoice) DOF.require("invoice.101.xml");
+        int firstCustomerId = invoice1.getCustomer().getId();
+        DOF.delete("invoice.101.xml");
+        Invoice invoice2 = (Invoice) DOF.require("invoice.101.xml");
+        assertNotSame(firstCustomerId, invoice2.getCustomer().getId());
+    }
+
+    /**
+     * Test out using a scratch customer
+     */
+    public void testTemplateInvoiceCreatesInvoice103()
+    {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("template", "103");
+        Invoice invoice1 = (Invoice) DOF.createScratchObject("invoice.template.xml", map);
+        assertEquals(103, invoice1.getId());
+    }
+
+
+    /**
+     * Test out using a scratch customer
+     */
+    public void testTemplateInvoiceCreatesInvoiceWithScratchPk()
+    {
+        Invoice invoice1 = (Invoice) DOF.createScratchObject("invoice.template.xml");
+        assertTrue(invoice1.getId() > 1000);
     }
 
 }
