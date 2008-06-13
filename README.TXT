@@ -66,7 +66,7 @@ Release 0.9.6
 
 
 Release 0.9.7
-* Now supports clear "scratch" objects that have unique primary keys for modifications in tests compared
+* Now supports "scratch" objects that have unique primary keys for modifications in tests compared
   to "reference" objects, which were all the objects that the DOF was previously handling.
 * IMPORTANT CHANGES FOR PREVIOUS USERS FOR SUPPORT OF SCRATCH OBJECTS:
 * Changed ObjectFileInfo class to now require the use of a constructor rather than having public access
@@ -74,3 +74,24 @@ Release 0.9.7
 * In order for implementation of DependentObjectHandler to work properly with scratch objects, you MUST
   ONLY get the file contents by calling either ObjectFileInfo.getFileContentsAsString() or 
   ObjectFileInfo.getFileContentsAsInputStream()
+* Scratch objects can optionally have a scratch tag (name associated with a scratch PK). This allows 3 features:
+  * Allows recursive creation of scratch objects. For example, a scratch invoice can depend on a scratch customer. 
+    The scratch tag matches up the creation of the scratch customer with the placement of the scratch customer's 
+    pk in the invoice description file.
+  * Allows the passing in of a Map<scratchTag, pk> which allows a test method to generate a scratch object, and then
+    this scratch pk can be used again. For example, a test can create a scratch invoice which creates a 
+    scratch customer, and then the same test can create another scratch invoice using the same customer. See the 
+    samples in InvoiceXmlFactoryTest.java.
+  * Allows the passing of the pk key to use into a scratch file. Thus, the scratch file acts as a template. For
+    example, if the scratch file is named invoice.scratchPk.xml, and the pk is specified as {{pk:scratchPk}}, and a
+    map is specified scratchPk-->1011, then the value 1011 is substituted into the file.
+
+
+File descriptions:
+DOF-0.9.7.zip:Full workspace snapshot which you can start hsqldb and run some JUnit tests demonstrating features.
+dof-0.9.7.jar: Jar to include in your own project
+dof-javadoc-0.9.7.zip: Javadoc of the DOF
+dof-src-0.9.7.zip: Source of the DOF,without example program.
+
+Please, please sign up for the announcement list:
+http://groups.google.com/group/dependent-object-framework
