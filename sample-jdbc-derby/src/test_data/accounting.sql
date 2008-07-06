@@ -16,7 +16,7 @@ create table customer (
     is_overdue char(1)
 );
 
-
+create sequence customer_sequence start with 1000;
 
 
 create table invoice(
@@ -27,7 +27,7 @@ create table invoice(
     pending_balance decimal(12,2)
 );
 
-
+create sequence invoice_sequence start with 1000;
 
 
 
@@ -38,7 +38,7 @@ create table payment(
     payment_date timestamp
 );
 
-
+create sequence payment_sequence start with 1000;
 
 
 create table manufacturer
@@ -47,7 +47,7 @@ id int,
 name varchar(100),
 primary key(id)
 );
-
+create sequence manufacturer_sequence start with 1000;
 
 
 
@@ -61,7 +61,7 @@ primary key(id),
 foreign key(manufacturer_id) references manufacturer
 );
 
-
+create sequence product_sequence start with 1000;
 
 
 create table line_item

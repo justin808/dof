@@ -18,7 +18,9 @@ public class JdbcDbUtil
     {
         try
         {
-            Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+//            TODO: Remove this line and the line below.
+//            Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+            Class.forName("org.hsqldb.jdbcDriver");
         }
         catch (ClassNotFoundException e)
         {
@@ -35,7 +37,9 @@ public class JdbcDbUtil
     {
         if (connection == null)
         {
-            connection = DriverManager.getConnection("jdbc:derby:build/dof-sample;create=true");
+//            TODO: Remove this line and the line below.
+//            connection = DriverManager.getConnection("jdbc:derby:build/dof-sample;create=true");
+            connection = DriverManager.getConnection("jdbc:hsqldb:buid/dof-sample;ifexists=false");
         }
         return connection;
     }
