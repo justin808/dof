@@ -27,17 +27,17 @@ Instructions to Run Sample App / Test Cases in Eclipse
 
 Key Aspects of This Sample
 -------------------------------------------------------
-0) Not all test cases have been written - we could write more test cases.
+1) Not all test cases have been written - we could write more test cases.
    Things also need to be documented so people can read about the code's
    intent.
 
-1) The sample app is not using any persistence framework (e.g. no Hibernate,
+2) The sample app is not using any persistence framework (e.g. no Hibernate,
    EJBs or anything else).  This  home grown persistence framework is here
    because we know lots of old applications have their own homegrown stuff.
    The DOF development crew support you using persistence frameworks, we
    just have not created a sample yet or tested DOF with a persistence framework.
 
-2) The sample application project has three "source" folders.  They are:
+3) The sample application project has three "source" folders.  They are:
 		src/sample_app - This contains our sample application and the applications
 						 home grown persistence framework.
 		src/junit	   - This contains the junit tests for our sample application.
@@ -46,16 +46,16 @@ Key Aspects of This Sample
 		src/test_data  - This contains the DOF XML files that contain our test data.
 						 This also contains our DDL creation script.
 
-2) As mentioned above, some of the JUnit Tests verify this sample application's DOF 
+4) As mentioned above, some of the JUnit Tests verify this sample application's DOF 
    handlers. Hey, we're following Test Driven Development baby!!!
 
-3) The other JUnit tests either test our sample application's custom persistence 
-   framework or our verify it or the tests test our sample application's functionality.
+5) The other JUnit tests either test our sample application's custom persistence 
+   framework to verify it or the tests test our sample application's functionality.
    
-3) Notice how the sample app's DOF XML Handlers use the sample app's home
+6) Notice how the sample app's DOF XML Handlers use the sample app's home
    grown persistence framework.
 
-4) We kept the application really simple so you could focus on the DOF 
+7) We kept the application really simple so you could focus on the DOF 
    implication aspects.
 
-5) After reviewing this sample you should see how easy and simple DOF is to use!!!
+8) After reviewing this sample you should see how easy and simple DOF is to use!!!
