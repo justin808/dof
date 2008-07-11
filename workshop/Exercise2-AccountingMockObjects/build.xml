@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="build" name="Exercise 2 - Mock Objects">
+	
+	<!-- Import the Rational Team Concert custom Ant Tasks -->
+	<taskdef name="junitLogPublisher"
+	         classname="com.ibm.team.build.ant.task.JUnitLogPublisherTask" />
+	<taskdef name="startBuildActivity"
+	         classname="com.ibm.team.build.ant.task.StartBuildActivityTask" />
+	<taskdef name="completeBuildActivity"
+	         classname="com.ibm.team.build.ant.task.CompleteBuildActivityTask" />
+	
+	<!-- Properties for this build script -->
+	<property name="build.base.dir" value="${basedir}/build" />
+	<property name="build.dir" value="${build.base.dir}/AccountingMockObjects" />
+	<property name="build.junit.dir" value="${build.base.dir}/junit" />
+	<property name="build.junit.reports" value="${build.base.dir}/reports/junit" />
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="src.junit.dir" value="${basedir}/junit" />
+	<property name="lib.junit" value="${basedir}/lib/junit-4.4.jar" />
+	
+    <path id="AccountingMockObjects.classpath">
+        <pathelement location="${build.dir}"/>
+    </path>
+	
+    <target name="init">
+        <mkdir dir="${build.dir}" />
+    	<mkdir dir="${build.junit.dir}" />
+    	<mkdir dir="${build.junit.reports}" />
+    </target>
+	
+    <target name="clean">
+        <delete dir="${build.base.dir}" />
+    </target>
+	
+    <target name="build"
+    		depends="init">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true"
+        	   debuglevel="${debuglevel}"
+        	   destdir="${build.dir}">
+            <src path="${src.dir}"/>
+            <classpath refid="AccountingMockObjects.classpath"/>
+        </javac>
+    </target>
+	
+    <target name="build.junit"
+    		depends="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true"
+        	   debuglevel="${debuglevel}"
+        	   destdir="${build.junit.dir}">
+            <src path="${src.junit.dir}"/>
+            <classpath refid="AccountingMockObjects.classpath"/>
+        	<classpath>
+        		<pathelement location="${lib.junit}" />
+        	</classpath>
+        </javac>
+    </target>
+	
+	<target name="junit"
+			depends="build, build.junit">
+		<junit fork="false">
+			<test name="org.doframework.sample.jdbc_app.entity.AccountingTestSuite"
+				  todir="${build.junit.reports}"
+				  outfile="result">
+				<formatter type="xml" />
+			</test>
+			<classpath>
+				<pathelement location="${build.junit.dir}"/>
+				<pathelement location="${build.dir}"/>
+				<pathelement location="${lib.junit}" />
+			</classpath>
+    	</junit>			
+		<junitLogPublisher repositoryaddress="${repositoryAddress}"
+						   userid="${buildengine.userId}"
+						   password="${buildengine.password}"
+						   buildresultuuid="${buildResultUUID}"
+						   filepath="${build.junit.reports}/result.xml" />
+	</target>
+</project>
