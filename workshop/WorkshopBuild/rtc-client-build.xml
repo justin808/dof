@@ -1,0 +1,247 @@
+<!--
+
+This sample build demonstrates an ant build that is run standalone without
+the Jazz Build Engine). 
+
+IMPORTANT: Do not use this example with the jazz build engine. This
+example demonstrates a standalone ant build notifying jazz of build
+start/complete. If used with the jazz build engine, both will attempt
+to notify jazz and there will be duplicate builds.  
+
+To use this build file:
+
+1. Create a new build definition in Jazz, using the Generic template.
+
+2. Create a new build engine in Jazz.
+
+3. Update the userId and password properties in this build file to specify a valid
+user and password for your Jazz repository. Search for ADMIN below.
+
+4. When invoking this file, specify the defintion and engine ids.
+
+Example invocation:
+
+ant -f build.xml -lib c:\jazz\buildsystem\buildtoolkit -DrepositoryAddress=http://server/jazz -DbuildDefinitionId=sample -DbuildEngineId=standalone 
+
+-->
+
+<project name="sample" default="all" basedir=".">
+
+	<!-- You should not use ADMIN, but instead
+	     define a special build user. -->
+	<property name="userId" value="ADMIN" />
+	<property name="password" value="ADMIN" />
+	<property name="build.log" value="${basedir}/build.log" />
+	
+	<target name="all" depends="checkEnv">
+		<!-- Notify jazz that a build is starting. To use this task
+			 you must have already defined a build definition and
+			 a build engine registration in the jazz repository. -->
+		<startTeamBuild buildDefinitionId="${buildDefinitionId}"
+		                engineId="${buildEngineId}"
+		                label="B${label}"
+		                autoComplete="false"
+		                resultUUIDProperty="buildResultUUID"
+		                repositoryAddress="${repositoryAddress}"
+		                userId="${userId}"
+		                password="${password}" />
+
+
+		<!-- Use record to create a log file. -->
+		<record name="${build.log}" action="start"/>
+
+		
+		<!-- Invoke the main build steps. -->
+		<antcall target="runBuild"/>
+		
+        <record name="${build.log}" action="stop"/>
+		<logPublisher filePath="${build.log}"
+		              label="Build log"
+		              buildResultUUID="${buildResultUUID}"
+		              repositoryAddress="${repositoryAddress}"
+		              userId="${userId}"
+		              password="${password}"/>
+		
+		
+		<!-- Notify jazz that the build is complete. -->
+		<completeTeamBuild status="OK"
+		                   buildResultUUID="${buildResultUUID}"
+		                   repositoryAddress="${repositoryAddress}"
+		                   userId="${userId}"
+		                   password="${password}"
+		                   verbose="true" />
+	</target>
+
+
+	<target name="runBuild"
+	        depends="setBuildLabel">
+
+		<!-- Build/JUnit Exercise1 -->
+		<!-- Update the build progress in Jazz by starting a new build activity. -->
+		<startBuildActivity activityIdProperty="junitExercise1"
+		                    label="Building/Testing Exercise 1..."
+		                    buildResultUUID="${buildResultUUID}"
+		                    repositoryAddress="${repositoryAddress}"
+		                    userId="${userId}"
+		                    password="${password}" />
+		<ant antfile="${basedir}/../Exercise1-ChangeMachine/build.xml"
+			 target="junit"
+			 inheritall="false">
+			<property name="buildResultUUID" value="${buildResultUUID}" />
+			<property name="buildengine.userId" value="${userId}" />
+			<property name="buildengine.password" value="${password}" />
+		</ant>
+		<!-- Complete the Jazz build activity. -->
+		<completeBuildActivity activityId="${junitExercise1}"
+		                       buildResultUUID="${buildResultUUID}"
+		                       repositoryAddress="${repositoryAddress}"
+		                       userId="${userId}"
+		                       password="${password}" />
+
+		<!-- Build/JUnit Exercise2 -->
+		<!-- Update the build progress in Jazz by starting a new build activity. -->
+		<startBuildActivity activityIdProperty="junitExercise2"
+		                    label="Building/Testing Exercise 2..."
+		                    buildResultUUID="${buildResultUUID}"
+		                    repositoryAddress="${repositoryAddress}"
+		                    userId="${userId}"
+		                    password="${password}" />
+		<ant antfile="${basedir}/../Exercise2-AccountingMockObjects/build.xml"
+			 target="junit"
+			 inheritall="false">
+			<property name="buildResultUUID" value="${buildResultUUID}" />
+			<property name="buildengine.userId" value="${userId}" />
+			<property name="buildengine.password" value="${password}" />
+		</ant>
+		<!-- Complete the Jazz build activity. -->
+		<completeBuildActivity activityId="${junitExercise1}"
+		                       buildResultUUID="${buildResultUUID}"
+		                       repositoryAddress="${repositoryAddress}"
+		                       userId="${userId}"
+		                       password="${password}" />
+		
+
+		<!-- Build/JUnit Exercise3 -->
+		<!-- Update the build progress in Jazz by starting a new build activity. -->
+		<startBuildActivity activityIdProperty="junitExercise3"
+		                    label="Building/Testing Exercise 3..."
+		                    buildResultUUID="${buildResultUUID}"
+		                    repositoryAddress="${repositoryAddress}"
+		                    userId="${userId}"
+		                    password="${password}" />
+		<ant antfile="${basedir}/../Exercise3-AccountingDOF/build.xml"
+			 target="junit"
+			 inheritall="false">
+			<property name="buildResultUUID" value="${buildResultUUID}" />
+			<property name="buildengine.userId" value="${userId}" />
+			<property name="buildengine.password" value="${password}" />
+		</ant>
+		<!-- Complete the Jazz build activity. -->
+		<completeBuildActivity activityId="${junitExercise3}"
+		                       buildResultUUID="${buildResultUUID}"
+		                       repositoryAddress="${repositoryAddress}"
+		                       userId="${userId}"
+		                       password="${password}" />
+		
+		<echo message="Build ${buildDefinitionId} completed." />
+
+	</target>
+
+
+	<target name="setBuildLabel">
+		<tstamp>
+			<format property="label" pattern="yyyyMMdd-HHmm" />
+		</tstamp>
+
+		<buildResultPublisher label="Private: ${label}"
+		                      buildResultUUID="${buildResultUUID}"
+		                      repositoryAddress="${repositoryAddress}"
+		                      userId="${userId}"
+		                      password="${password}" />
+	</target>
+
+	<target name="checkEnv">
+		<fail message="The repositoryAddress property must be defined."
+		      unless="repositoryAddress" />
+		<echo message="Using repositoryAddress = ${repositoryAddress}" />
+
+		<fail message="The buildDefinitionId property must be defined."
+		      unless="buildDefinitionId" />
+		<echo message="Using buildDefinitionId = ${buildDefinitionId}" />
+
+		<fail message="The buildEngineId property must be defined."
+		      unless="buildEngineId" />
+		<echo message="Using buildEngineId = ${buildEngineId}" />
+
+		      	
+		<fail message="The userId property must be defined."
+		      unless="userId" />
+		<echo message="Using userId = ${userId}" />
+
+		<fail message="The password property must be defined."
+		      unless="password" />
+		<!-- Don't echo the password. -->
+	</target>
+
+
+
+
+	<!-- These task definitions make the Jazz ant tasks available to this build file.
+	     In order to find these classnames at run time, ant must be invoked with:
+	
+		     -lib <buildsystem-location>/buildtoolkit
+	 -->
+
+	<taskdef name="startTeamBuild"
+	         classname="com.ibm.team.build.ant.task.StartBuildTask" />
+
+	<taskdef name="completeTeamBuild"
+	         classname="com.ibm.team.build.ant.task.CompleteBuildTask" />
+
+	<taskdef name="logPublisher"
+	         classname="com.ibm.team.build.ant.task.LogPublisherTask" />
+
+	<taskdef name="artifactFilePublisher"
+	         classname="com.ibm.team.build.ant.task.ArtifactFilePublisherTask" />
+
+	<taskdef name="artifactLinkPublisher"
+	         classname="com.ibm.team.build.ant.task.ArtifactLinkPublisherTask" />
+
+	<taskdef name="buildResultPublisher"
+	         classname="com.ibm.team.build.ant.task.BuildResultPublisherTask" />
+
+	<taskdef name="filePublisher"
+	         classname="com.ibm.team.build.ant.task.FilePublisherTask" />
+
+	<taskdef name="jdtCompileLogPublisher"
+	         classname="com.ibm.team.build.ant.task.JdtCompileLogPublisherTask" />
+
+	<taskdef name="junitLogPublisher"
+	         classname="com.ibm.team.build.ant.task.JUnitLogPublisherTask" />
+
+	<taskdef name="linkPublisher"
+	         classname="com.ibm.team.build.ant.task.LinkPublisherTask" />
+
+	<taskdef name="logPublisher"
+	         classname="com.ibm.team.build.ant.task.LogPublisherTask" />
+
+	<taskdef name="teamAccept"
+	         classname="com.ibm.team.build.ant.task.TeamAcceptTask">
+	</taskdef>
+
+	<taskdef name="teamFetch"
+	         classname="com.ibm.team.build.ant.task.TeamFetchTask">
+	</taskdef>
+
+	<taskdef name="workItemPublisher"
+	         classname="com.ibm.team.build.ant.task.WorkItemPublisherTask">
+	</taskdef>
+
+	<taskdef name="startBuildActivity"
+	         classname="com.ibm.team.build.ant.task.StartBuildActivityTask" />
+
+	<taskdef name="completeBuildActivity"
+	         classname="com.ibm.team.build.ant.task.CompleteBuildActivityTask" />
+
+
+</project>

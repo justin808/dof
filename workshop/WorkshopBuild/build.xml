@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="build" name="TDD Lab Exercise Build">
+	
+	<!-- Import the Rational Team Concert custom Ant Tasks -->
+	<taskdef name="junitLogPublisher"
+	         classname="com.ibm.team.build.ant.task.JUnitLogPublisherTask" />
+	<taskdef name="startBuildActivity"
+	         classname="com.ibm.team.build.ant.task.StartBuildActivityTask" />
+	<taskdef name="completeBuildActivity"
+	         classname="com.ibm.team.build.ant.task.CompleteBuildActivityTask" />
+	
+	<property name="ChangeMachine.build.xml" value="${basedir}/../ChangeMachine/build.xml" />
+
+	<target name="clean">
+		<startBuildActivity label="" />
+		<ant antfile="${ChangeMachine.build.xml}"
+			 target="clean"
+			 inheritall="false">
+		</ant>
+	</target>
+	
+	<target name="build">
+		<ant antfile="${ChangeMachine.build.xml}"
+			 target="build"
+			 inheritall="false">
+		</ant>
+	</target>
+	
+	<target name="junit"
+			depends="build">
+		<ant antfile="${ChangeMachine.build.xml}"
+			 target="junit"
+			 inheritall="false">
+		</ant>
+	</target>
+</project>
