@@ -1,0 +1,61 @@
+<!--The tasks relevant to building the dof.jar start with "dof"
+    All other tasks are part of the sample accounting program which demonstrates
+    the proper functioning of the DOF, as well as the use of mock objects
+    and a dependency location pattern -->
+
+<project name="AccountingDOF" default="start.db.gui" basedir=".">
+
+    <!-- Name of project and version -->
+
+    <!-- Global properties for this build -->
+    <property name="SDWest" value="C:/SDWest-139"/>
+    <property name="dof.src.java.dir" value="dof_src"/>
+    <property name="proj.name" value="Exercise3-AccountingDOF"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="production.class.dir" value="out/production/${proj.name}"/>
+    <property name="etc.class.dir" value="etc"/>
+    <property name="junit.class.dir" value="out/test/${proj.name}"/>
+    <property environment="env"/>
+    <property name="home.path" value="${env.HOMEPATH}"/>
+    <property name="db.dir" value="${SDWest}/db"/>
+
+    <!-- Classpath declaration -->
+    <path id="lib.classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+
+    <target name="start.hsqldb">
+        <copy file="bin/sqltool.rc" todir="${home.path}"/>
+        <mkdir dir="${db.dir}"/>
+        <copy file="bin/server.properties" todir="${db.dir}"/>
+        <java classname="org.hsqldb.Server" fork="true" dir="${db.dir}">
+            <classpath>
+                <path refid="lib.classpath"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="start.db.gui">
+        <java classname="org.hsqldb.util.DatabaseManager" fork="true">
+            <classpath>
+                <path refid="lib.classpath"/>
+            </classpath>
+        </java>
+    </target>
+
+
+    <target name="create.schema">
+        <java classname="org.justingordon.persistence.jdbc_persistence.CreateSchema" fork="true">
+            <classpath>
+                <path refid="lib.classpath"/>
+                <pathelement location="${production.class.dir}"/>
+                <pathelement location="${etc.class.dir}"/>
+            </classpath>
+        </java>
+    </target>
+
+
+</project>
