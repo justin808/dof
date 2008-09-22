@@ -1,38 +1,19 @@
 package org.doframework;
 
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
+import java.util.regex.*;
 
 /**
  * This class offers information so that a DependentObjectHandler knows how to create an object, either a
- * "reference" object or a "scratch" object.<p/>
- *
- * 
- *
+ * "reference" object or a "scratch" object from a file.<p/>
  */
-public class ObjectFileInfo
+public class ObjectFileInfo extends ObjectInfo
 {
     /**
      * Like "Customer" or "Invoice" or whatever type of object you are saving
      */
     private String objectType;
-
-    /**
-     * The primary key of the object to create.
-     * Note, in the case of a request to create a "scratch" object, the pk will not be representative of what
-     * is in the file. Instead, you need to substitute the provided PK with the one you've provided in the file.
-     *
-     * If you use the utilitye method DOF.
-     */
-    private String pk;
-
-    /**
-     * Like "xml"
-     */
-    private String fileType;
 
     /**
      * Like "customers/Customer.15.xml". Note, the fileToLoad indicates the PK for reference objects. For
@@ -44,7 +25,8 @@ public class ObjectFileInfo
 
 
     /**
-     * This is the original PK -- which differs from the "PK" in scratch mode
+     * This is the original PK -- which differs from the "PK" in scratch mode. I.e., this value reflects the file name,
+     * and the "pk" part of that file name
      */
     private String originalPk;
 
@@ -53,10 +35,9 @@ public class ObjectFileInfo
 
     public ObjectFileInfo(String objectType, String pk, String fileType)
     {
+        super(fileType, pk);
         this.objectType = objectType;
         this.originalPk = pk;
-        this.pk = pk; // this will change if a scratch object
-        this.fileType = fileType;
     }
 
     public String toString()
@@ -64,9 +45,13 @@ public class ObjectFileInfo
         return '{' + getFileToLoad() + ", " + getObjectType() + ", " + getPk() + ", " + getFileType() + '}';
     }
 
+
+    /**
+     * @return objectType + ":" + pk
+     */
     String getKeyForHashing()
     {
-        return getObjectType() + ":" + getPk();
+        return DOFObjectCache.getKeyForHashing(DOFGlobalSettings.getInstance().getClassForObjectTypeFileType(getObjectType(), getFileType()) , getPk());
     }
 
     /**
@@ -97,7 +82,7 @@ public class ObjectFileInfo
      */
     private String swapOutPksWithScratchValues(String originalFileContents)
     {
-        Pattern patternForScratchPK = HandlerMappings.getRegexpPatternForScratchPK();
+        Pattern patternForScratchPK = DOFGlobalSettings.getInstance().getRegexpPatternForScratchPK();
         Matcher matcher = patternForScratchPK.matcher(originalFileContents);
         StringBuffer replacedText = new StringBuffer(originalFileContents.length());
         int pos = 0;
@@ -127,19 +112,19 @@ public class ObjectFileInfo
                 }
                 else
                 {
-                    String scratchTag = matcher.group(2);
-                    scratchPk = scratchReferenceToPk.get(scratchTag);
+                    String scratchReference = matcher.group(2);
+                    scratchPk = scratchReferenceToPk.get(scratchReference);
                     if (scratchPk == null) // there was no reference, so quit
                     {
-                        if (scratchTag.equals(originalPk))
+                        if (scratchReference.equals(originalPk))
                         {
                             scratchPk = pk;
                         }
                         else
                         {
                             throw new RuntimeException("Replacing scratch tags with values: Could not find a value for " +
-                                                       "scratchTag = " + scratchTag + ". This value must either be set using " +
-                                                       "@createScratchObject(file, scratchTag) or can be passed into the " +
+                                                       "scratchReference = " + scratchReference + ". This value must either be set using " +
+                                                       "@createScratchObject(file, scratchReference) or can be passed into the " +
                                                        "DOF.createScratchObject() command.");
                         }
                     }
@@ -185,20 +170,6 @@ public class ObjectFileInfo
         return objectType;
     }
 
-    public String getPk()
-    {
-        return pk;
-    }
-
-    void setPk(String pk)
-    {
-        this.pk = pk; 
-    }
-
-    public String getFileType()
-    {
-        return fileType;
-    }
 
     /**
      * This is the passed in path of the file to load. Note, you MUST NOT

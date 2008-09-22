@@ -11,7 +11,7 @@
 <project name="DOF_CORE" default="dist" basedir=".">
 
 	<!-- Declaration of non-core ANT tasks -->
-	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+	<!--<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>-->
 
 
 	<!-- These Global properties/variables are inherited by DOF's master build
@@ -110,15 +110,15 @@
 			unless="findbugs.do.not.run"
 		    description="This target will run static code analysis on the DOF
 		    	         code to look for bugs in the code.">
-	    <findbugs home="${findbugs.home}"
-	              output="html"
-	              outputFile="${build.tests.reports.dir}/dof-findbugs.html"
-	    		  reportlevel="${findbugs.reportlevel}"
-	    		  workhard="true"
-	    		  failonerror="${findbugs.failonerror}">
-	      <sourcePath path="${dof.src.java.dir}" />
-	      <class location="${build.class.dir}" />
-	    </findbugs>
+	    <!--<findbugs home="${findbugs.home}"-->
+	              <!--output="html"-->
+	              <!--outputFile="${build.tests.reports.dir}/dof-findbugs.html"-->
+	    		  <!--reportlevel="${findbugs.reportlevel}"-->
+	    		  <!--workhard="true"-->
+	    		  <!--failonerror="${findbugs.failonerror}">-->
+	      <!--<sourcePath path="${dof.src.java.dir}" />-->
+	      <!--<class location="${build.class.dir}" />-->
+	    <!--</findbugs>-->
 	  </target>
 
 
