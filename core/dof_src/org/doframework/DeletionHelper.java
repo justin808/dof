@@ -1,7 +1,7 @@
 package org.doframework;
 
 
-import java.util.List;
+import java.util.*;
 
 /**
  *
