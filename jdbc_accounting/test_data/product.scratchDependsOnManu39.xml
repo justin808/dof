@@ -1,0 +1,8 @@
+<!--Important that this we have two products that depend on anufacturer 21 b/c testing delete-->
+<!-- @require("manufacturer.39.xml") -->
+<product>
+    <id>{{pk}}</id>
+    <name>Gatorade Rain</name>
+    <price>4</price>
+    <manufacturer_id>39</manufacturer_id>
+</product>

@@ -1,0 +1,7 @@
+<!-- @require("manufacturer.39.xml") -->
+<product>
+    <id>31</id>
+    <name>Diet Snapple</name>
+    <price>4</price>
+    <manufacturer_id>39</manufacturer_id>
+</product>

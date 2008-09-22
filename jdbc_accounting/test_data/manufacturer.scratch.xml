@@ -1,0 +1,5 @@
+<!--Important that this only product 20 depends on manufacturer 20 b/c testing delete-->
+<manufacturer>
+    <id>{{pk}}</id>
+    <name>Scratch Manu</name>
+</manufacturer>

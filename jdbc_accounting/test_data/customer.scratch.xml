@@ -1,0 +1,6 @@
+<customer>
+    <customer_id>{{pk}}</customer_id>
+    <name>John Smith{{pk}}</name>
+    <phone_number>808-555-1212</phone_number>
+    <balance>0</balance>
+</customer>
