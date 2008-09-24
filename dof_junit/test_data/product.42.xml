@@ -1,0 +1,9 @@
+<!-- @require("manufacturer.40.xml") -->
+<!--WARNING: DO NOT REUSE this one b/c tests on deletion in InvoiceXmlFactoryTest -->
+
+<product>
+    <id>42</id>
+    <name>tea</name>
+    <price>5</price>
+    <manufacturer_id>40</manufacturer_id>
+</product>

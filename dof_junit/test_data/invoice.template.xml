@@ -1,0 +1,29 @@
+<!-- list of dependencies for invoice number 100 -->
+        <!-- @require("customer.25.xml") -->
+        <!-- @require("product.16.xml") -->
+        <!-- @require("product.17.xml") -->
+        <!-- @require("product.18.xml") -->
+<invoice>
+    <id>{{pk:template}}</id>
+    <customer_id>25</customer_id>
+    <invoice_date>2007-05-15</invoice_date>
+    <pending_balance>90</pending_balance>
+    <total>90</total>
+    <line_items>
+        <line_item>
+            <qty>5</qty>
+            <product_id>16</product_id>
+            <price>8</price>
+        </line_item>
+        <line_item>
+            <qty>8</qty>
+            <product_id>17</product_id>
+            <price>4</price>
+        </line_item>
+        <line_item>
+            <qty>1</qty>
+            <product_id>18</product_id>
+            <price>7</price>
+        </line_item>
+    </line_items>
+</invoice>

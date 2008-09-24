@@ -1,0 +1,8 @@
+<!--Important that this we have two products that depend on anufacturer 21 b/c testing delete-->
+        <!-- @require("manufacturer.21.xml") -->
+<product>
+    <id>21</id>
+    <name>cola</name>
+    <price>2</price>
+    <manufacturer_id>21</manufacturer_id>
+</product>

@@ -1,0 +1,7 @@
+<!-- @createScratchObject("manufacturer.scratch.xml", "scratchManufacturerPk")-->
+<product>
+    <id>{{pk}}</id>
+    <name>Gatorade Rain</name>
+    <price>4</price>
+    <manufacturer_id>{{pk:scratchManufacturerPk}}</manufacturer_id>
+</product>
