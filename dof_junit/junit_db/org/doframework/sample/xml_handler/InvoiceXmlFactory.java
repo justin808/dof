@@ -110,9 +110,15 @@ public class InvoiceXmlFactory implements DependentObjectHandler, ObjectDeletion
     }
 
 
-    public boolean delete(Object objectToDelete)
+    public boolean delete(Object objectToDelete, ObjectFileInfo objectFileInfo)
     {
         return invoiceComponent.delete((Invoice) objectToDelete);
+    }
+
+
+    public boolean delete(Object object)
+    {
+        return delete(object, null);
     }
 
 

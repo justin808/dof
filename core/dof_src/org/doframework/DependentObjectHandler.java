@@ -63,10 +63,11 @@ public interface DependentObjectHandler
      as part of the deletion code.
 
      @param objectToDelete Object requested for deletion, never null
+      * @param objectFileInfo
 
      @return true if requested object is deleted.
      */
-    boolean delete(Object objectToDelete);
+    boolean delete(Object objectToDelete, ObjectFileInfo objectFileInfo);
 
 
     /** @return The class object for the class that is returned from this handler. */

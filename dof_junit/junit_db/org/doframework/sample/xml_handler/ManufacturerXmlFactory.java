@@ -54,9 +54,15 @@ public class ManufacturerXmlFactory implements DependentObjectHandler, ObjectDel
     }
 
 
-    public boolean delete(Object o)
+    public boolean delete(Object o, ObjectFileInfo objectFileInfo)
     {
         return manufacturerComponent.delete((Manufacturer) o);
+    }
+
+
+    public boolean delete(Object object)
+    {
+        return delete(object, null);
     }
 
 

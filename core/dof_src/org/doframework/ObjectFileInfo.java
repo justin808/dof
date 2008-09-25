@@ -65,7 +65,7 @@ public class ObjectFileInfo extends ObjectInfo
     {
         if (fileContents == null)
         {
-            String originalFileContents = DOF.getResourceAsString(getFileToLoad());
+            String originalFileContents = DOFGlobalSettings.getResourceAsString(getFileToLoad());
             fileContents = swapOutPksWithScratchValues(originalFileContents);
         }
         if (DOF.dofPrintDescriptionFiles)

@@ -89,9 +89,15 @@ public class ShoppingListXmlFactory implements DependentObjectHandler, ObjectDel
     }
 
 
-    public boolean delete(Object objectToDelete)
+    public boolean delete(Object objectToDelete, ObjectFileInfo objectFileInfo)
     {
         return shoppingListComponent.delete((ShoppingList) objectToDelete);
+    }
+
+
+    public boolean delete(Object object)
+    {
+        return delete(object, null);
     }
 
 

@@ -3,7 +3,6 @@ package org.doframework;
 // Released under the Eclipse Public License-v1.0
 
 
-import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -660,42 +659,6 @@ public class DOF
 
 
     /**
-     * If property DOF_DEFS_DIR is defined, then the files are retrieved from that directory, or
-     * else the files are retrieved using ClassLoader.getSystemResourceAsStream
-     *
-     * @param resourceName
-     *
-     * @return
-     */
-    static String getResourceAsString(String resourceName)
-    {
-        if (DOFGlobalSettings.DOF_DIR.length() == 0)
-        {
-            return getResourceAsStringFromClassLoader(resourceName);
-        }
-        else
-        {
-            return getResourceAsStringFromDofDefsDir(resourceName);
-        }
-    }
-
-
-    /**
-     * Used to get a fileToLoad's absolute path if you are setting system property DOF_DIR to place
-     * the object files
-     *
-     * @param fileToLoad
-     *
-     * @return The absolute path to the resource with which is DOF_DIR plus File.separator +
-     *         resourceName
-     */
-    public static String getAbsolutePath(String fileToLoad)
-    {
-        return DOFGlobalSettings.DOF_DIR + File.separator + fileToLoad;
-    }
-
-
-    /**
      * Set this to true to print messages to System.out when objects are loaded or deleted from the
      * database. This property can also be set by setting VM System Property:<p/> -DDOF_DEBUG=TRUE
      *
@@ -713,6 +676,11 @@ public class DOF
     /**
      * we keep a cache of the loaded objects to avoid searching the DB every time.
      */
+    static
+    {   // Make sure we init first
+        DOFGlobalSettings.getInstance();
+    }
+
     private static final DOFObjectCache dofObjectCache =
             new DOFObjectCache();
 
@@ -916,7 +884,7 @@ public class DOF
         Object objectToDelete = doh.get(objectFileInfo);
         if (objectToDelete != null)
         {
-            deletedObjectfromFileToLoad = doh.delete(objectToDelete);
+            deletedObjectfromFileToLoad = doh.delete(objectToDelete, objectFileInfo);
         }
         else
         {
@@ -947,7 +915,7 @@ public class DOF
 
     private static void deleteDependencies(String fileToLoad, Set<String> processedDeletions)
     {
-        String textForFile = getResourceAsString(fileToLoad);
+        String textForFile = DOFGlobalSettings.getResourceAsString(fileToLoad);
 
         ArrayList<String> dependencies = getRequiredDependecies(textForFile);
         for (int i = dependencies.size() - 1; i >= 0; i--)
@@ -990,7 +958,7 @@ public class DOF
 
     private static void loadDependencies(String fileName, Map<String, String> scratchReferenceToPk)
     {
-        String textForFile = getResourceAsString(fileName);
+        String textForFile = DOFGlobalSettings.getResourceAsString(fileName);
 
         ArrayList<String> dependencies = getRequiredDependecies(textForFile);
         for (Iterator<String> iterator = dependencies.iterator(); iterator.hasNext();)
@@ -1056,7 +1024,7 @@ public class DOF
                                                      Map<String, String> scratchReferenceToPk)
     {
 
-        String textForFile = getResourceAsString(fileName);
+        String textForFile = DOFGlobalSettings.getResourceAsString(fileName);
 
         ArrayList<FileToLoadAndScratchReference> dependencies =
                 getRequiredScratchObjects(textForFile);
@@ -1393,74 +1361,6 @@ public class DOF
             matches.add(scratchJavaAndScratchReference);
         }
         return matches;
-    }
-
-
-    private static String getResourceAsStringFromDofDefsDir(String resourceName)
-    {
-        final String resourceAbsolutePath = getAbsolutePath(resourceName);
-        InputStreamReader isr = getInputStreamReaderForPath(resourceAbsolutePath);
-
-        StringBuffer sb = readContentsOfInputStream(isr);
-        return sb.toString();
-    }
-
-
-    private static InputStreamReader getInputStreamReaderForPath(String resourceAbsolutePath)
-    {
-        File file = new File(resourceAbsolutePath);
-        if (!file.exists())
-        {
-            throw new RuntimeException("File not found: " + file.getAbsolutePath());
-        }
-        BufferedInputStream bis;
-        try
-        {
-            bis = new BufferedInputStream(new FileInputStream(file));
-        }
-        catch (FileNotFoundException e)
-        {
-            throw new RuntimeException(e);
-        }
-        return new InputStreamReader(bis);
-    }
-
-
-    private static StringBuffer readContentsOfInputStream(InputStreamReader isr)
-    {
-        StringBuffer sb;
-        BufferedReader br = new BufferedReader(isr);
-        String line;
-        sb = new StringBuffer();
-        try
-        {
-            while ((line = br.readLine()) != null)
-            {
-                sb.append(line).append('\n');
-            }
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        return sb;
-    }
-
-
-    private static String getResourceAsStringFromClassLoader(String resourceName)
-    {
-        try
-        {
-            InputStream inputStream = ClassLoader.getSystemResourceAsStream(resourceName);
-            InputStreamReader isr = new InputStreamReader(inputStream);
-            StringBuffer sb = readContentsOfInputStream(isr);
-            return sb.toString();
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException("Caught error loading resource from classpath: '" +
-                                       resourceName + "'. Possibly resource does not exist.", e);
-        }
     }
 
 

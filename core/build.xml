@@ -17,11 +17,11 @@
 	<!-- These Global properties/variables are inherited by DOF's master build
 	     however, they are included here in case a developer wants to run just
 	     this build -->
-    <property name="version.number" value="0.9.7"/>
+    <property name="version.number" value="0.9.8"/>
 	<property name="findbugs.home" value="${env.FIND_BUGS_HOME}"/>
 	<property name="findbugs.failonerror" value="true" />
 	<property name="findbugs.reportlevel" value="medium" />
-    <property name="junit.jar" value="${env.JUNIT_JAR}"/>
+    <property name="junit.jar" value="c:/dev/junit4.4/junit-4.4.jar"/>
 
     <!-- Global properties for this build -->
     <property name="dof.src.java.dir" value="${basedir}/dof_src"/>
@@ -82,7 +82,7 @@
     	<echo level="info"
     		  message="About to execute DOF JUnit tests." />
         <junit haltonfailure="yes">
-            <jvmarg value="-DDOF_DIR=${basedir}/dof"/>
+            <jvmarg value="-DDOF_DIR=${basedir}/dof/test_data"/>
             <classpath>
                 <pathelement path="${junit.jar}"/>
                 <pathelement path="${build.class.dir}"/>

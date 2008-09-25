@@ -230,7 +230,9 @@ class DOFGlobalSettings
     void initialize()
     {
         parseHandlerMappings();
+
         dofPreferences = getPropertiesFromFileName(DOF_PREFERENCES, false);
+
         parseScratchObjectDeletionHelperMappings();
     }
 
@@ -285,6 +287,7 @@ class DOFGlobalSettings
             Map.Entry<Object, Object> objectObjectEntry = (Map.Entry<Object, Object>) entryIterator.next();
             String handlerClass = (String) objectObjectEntry.getValue();
             String objectTypeFileType = (String) objectObjectEntry.getKey();
+
             int locPeriod = objectTypeFileType.lastIndexOf('.');
             if (locPeriod == -1)
             {
@@ -326,7 +329,7 @@ class DOFGlobalSettings
         {
             if (DOF_DIR.length() > 0)
             {
-                String resourceAbsolutePath = DOF.getAbsolutePath(propertyFileName);
+                String resourceAbsolutePath = getAbsolutePath(propertyFileName);
                 File file = new File(resourceAbsolutePath);
                 String filePath = file.getAbsolutePath();
                 try
@@ -631,5 +634,109 @@ class DOFGlobalSettings
         //    instance = new DOFGlobalSettings();
         //}
         return instance;
+    }
+
+
+    /**
+     * Used to get a fileToLoad's absolute path if you are setting system property DOF_DIR to place
+     * the object files
+     *
+     * @param fileToLoad
+     *
+     * @return The absolute path to the resource with which is DOF_DIR plus File.separator +
+     *         resourceName
+     */
+    public static String getAbsolutePath(String fileToLoad)
+    {
+        return DOF_DIR + File.separator + fileToLoad;
+    }
+
+
+    /**
+     * If property DOF_DEFS_DIR is defined, then the files are retrieved from that directory, or
+     * else the files are retrieved using ClassLoader.getSystemResourceAsStream
+     *
+     * @param resourceName
+     *
+     * @return
+     */
+    static String getResourceAsString(String resourceName)
+    {
+        if (DOF_DIR.length() == 0)
+        {
+            return getResourceAsStringFromClassLoader(resourceName);
+        }
+        else
+        {
+            return getResourceAsStringFromDofDefsDir(resourceName);
+        }
+    }
+
+
+    static String getResourceAsStringFromDofDefsDir(String resourceName)
+    {
+        final String resourceAbsolutePath = getAbsolutePath(resourceName);
+        InputStreamReader isr = getInputStreamReaderForPath(resourceAbsolutePath);
+
+        StringBuffer sb = readContentsOfInputStream(isr);
+        return sb.toString();
+    }
+
+
+    static InputStreamReader getInputStreamReaderForPath(String resourceAbsolutePath)
+    {
+        File file = new File(resourceAbsolutePath);
+        if (!file.exists())
+        {
+            throw new RuntimeException("File not found: " + file.getAbsolutePath());
+        }
+        BufferedInputStream bis;
+        try
+        {
+            bis = new BufferedInputStream(new FileInputStream(file));
+        }
+        catch (FileNotFoundException e)
+        {
+            throw new RuntimeException(e);
+        }
+        return new InputStreamReader(bis);
+    }
+
+
+    static StringBuffer readContentsOfInputStream(InputStreamReader isr)
+    {
+        StringBuffer sb;
+        BufferedReader br = new BufferedReader(isr);
+        String line;
+        sb = new StringBuffer();
+        try
+        {
+            while ((line = br.readLine()) != null)
+            {
+                sb.append(line).append('\n');
+            }
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        return sb;
+    }
+
+
+    static String getResourceAsStringFromClassLoader(String resourceName)
+    {
+        try
+        {
+            InputStream inputStream = ClassLoader.getSystemResourceAsStream(resourceName);
+            InputStreamReader isr = new InputStreamReader(inputStream);
+            StringBuffer sb = readContentsOfInputStream(isr);
+            return sb.toString();
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Caught error loading resource from classpath: '" +
+                                       resourceName + "'. Possibly resource does not exist.", e);
+        }
     }
 }

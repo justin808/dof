@@ -71,9 +71,15 @@ public class ProductXmlFactory implements DependentObjectHandler, ScratchPkProvi
 
 
 
-    public boolean delete(Object product)
+    public boolean delete(Object product, ObjectFileInfo objectFileInfo)
     {
         return productComponent.delete((Product) product);
+    }
+
+
+    public boolean delete(Object object)
+    {
+        return delete(object, null);
     }
 
 
