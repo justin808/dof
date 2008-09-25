@@ -3,7 +3,7 @@
     the proper functioning of the DOF, as well as the use of mock objects
     and a dependency location pattern -->
 
-<project name="AccountingDOF" default="start.db.gui" basedir=".">
+<project name="dof_junit" default="junit" basedir=".">
 
     <!-- Name of project and version -->
 
@@ -11,17 +11,60 @@
     <property name="TOP" value="."/>
     <property name="lib.dir" value="lib"/>
     <property name="class.dir" value="bin"/>
+    <property name="src.dir" value="src"/>
+    <property name="junit.dir" value="${TOP}/junit"/>
+    <property name="junit_db.dir" value="${TOP}/junit_db"/>
+    <property name="dof_core.dir" value="../core/dof_src"/>
     <property name="etc.class.dir" value="etc"/>
     <property environment="env"/>
     <property name="home.path" value="${env.HOMEPATH}"/>
+    <property name="junit.out.dir" value="${TOP}/junit_out"/>
+    <property name="dof.data.dir" value="${TOP}/test_data"/>
     <property name="db.dir" value="${TOP}/db"/>
 
     <!-- Classpath declaration -->
     <path id="lib.classpath">
         <fileset dir="${lib.dir}">
-            <include name="**/*.jar"/>
+            <include name="*.jar"/>
         </fileset>
     </path>
+
+    <target name="compile" >
+        <mkdir dir="${class.dir}"/>
+        <javac destdir="${class.dir}"
+               srcdir="${dof_core.dir}:${src.dir}:${junit.dir}:${junit_db.dir}">
+        <classpath>
+            <path refid="lib.classpath"/>
+        </classpath>
+        </javac>
+    </target>
+
+
+    <target name="junit"
+            depends="compile">
+        <delete dir="${junit.out.dir}"/>
+        <mkdir dir="${junit.out.dir}"/>
+        <echo level="info"
+              message="About to execute DOF JUnit tests." />
+        <junit haltonfailure="yes">
+            <jvmarg value="-DDOF_DIR=${dof.data.dir}"/>
+            <classpath>
+                <path refid="lib.classpath"/>
+                <pathelement location="${class.dir}"/>
+                <pathelement location="${etc.class.dir}"/>
+            </classpath>
+            <formatter type="plain"/>
+            <test fork="yes" todir="${junit.out.dir}" name="org.doframework.sample.AllTestSuiteInProcessDb"/>
+            <!--<batchtest fork="yes" todir="${junit.out.dir}">-->
+                <!--<fileset dir="${junit_db.dir}">-->
+                    <!--<include name="**/AllTestSuiteInProcessDb.java"/>-->
+                <!--</fileset>-->
+            <!--</batchtest>-->
+        </junit>
+        <echo level="info"
+              message="Finished executing DOF JUnit tests." />
+    </target>
+
 
 
     <target name="shutdown.hsqldb">
@@ -68,7 +111,7 @@
 
 
 
-    <target name="create.schema">
+    <target name="create.schema" depends="compile">
         <java classname="org.doframework.sample.persistence.jdbc_persistence.CreateSchema" fork="true">
             <classpath>
                 <path refid="lib.classpath"/>

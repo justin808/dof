@@ -45,13 +45,4 @@ public class AllTestSuite
         System.out.println("Elapsed time is " + (System.currentTimeMillis() - startTime) + " ms.");
     }
 
-    // JUnit 3.8.1 way
-    //    public class AllTestSuite extends TestCase
-    //public static Test suite()
-    //{
-    //    TestSuite suite = new TestSuite();
-    //    suite.addTest(new TestSuite(JdbcAccountingTest.class));
-    //    suite.addTest(new TestSuite(CustomerXmlFactoryTest.class));
-    //    return suite;
-    //}
 }
