@@ -14,7 +14,9 @@
     <property name="src.dir" value="src"/>
     <property name="junit.dir" value="${TOP}/junit"/>
     <property name="junit_db.dir" value="${TOP}/junit_db"/>
-    <property name="dof_core.dir" value="../core/dof_src"/>
+    <property name="dof_core.src.dir" value="${TOP}/../core/dof_src"/>
+    <property name="dof_core.junit.dir" value="${TOP}/../core/dof_junit"/>
+    <property name="dof_core.data.dir" value="../core/dof"/>
     <property name="etc.class.dir" value="etc"/>
     <property environment="env"/>
     <property name="home.path" value="${env.HOMEPATH}"/>
@@ -32,7 +34,7 @@
     <target name="compile" >
         <mkdir dir="${class.dir}"/>
         <javac destdir="${class.dir}"
-               srcdir="${dof_core.dir}:${src.dir}:${junit.dir}:${junit_db.dir}">
+               srcdir="${dof_core.src.dir}:${dof_core.junit.dir}:${src.dir}:${junit.dir}:${junit_db.dir}">
         <classpath>
             <path refid="lib.classpath"/>
         </classpath>
@@ -61,6 +63,23 @@
                 <!--</fileset>-->
             <!--</batchtest>-->
         </junit>
+
+        <junit haltonfailure="yes">
+            <jvmarg value="-DDOF_DIR=${dof_core.data.dir}"/>
+            <jvmarg value="-DDOF_DEBUG=true"/>
+            <classpath>
+                <path refid="lib.classpath"/>
+                <pathelement location="${class.dir}"/>
+            </classpath>
+            <formatter type="plain"/>
+            <test fork="yes" todir="${junit.out.dir}" name="org.doframework.AllTestSuiteCore"/>
+            <!--<batchtest fork="yes" todir="${junit.out.dir}">-->
+            <!--<fileset dir="${junit_db.dir}">-->
+            <!--<include name="**/AllTestSuiteInProcessDb.java"/>-->
+            <!--</fileset>-->
+            <!--</batchtest>-->
+        </junit>
+
         <echo level="info"
               message="Finished executing DOF JUnit tests." />
     </target>

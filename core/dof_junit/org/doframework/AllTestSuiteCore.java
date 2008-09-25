@@ -8,7 +8,7 @@ import org.junit.*;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({CalcDeletionOrderTest.class, DOFTest.class, HandlerMappingsTest.class})
 
-public class AllTestSuite
+public class AllTestSuiteCore
 {
     static long startTime;
 
