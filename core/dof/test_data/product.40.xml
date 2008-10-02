@@ -1,5 +1,5 @@
 <!--Important that this is the only product that depends on manufacturer 30 b/c testing delete-->
-<!-- @require("manufacturer.30.xml") -->
+<!-- @require("manufacturer.Snapple.xml") -->
 <product>
     <id>40</id>
     <name>Perrier</name>

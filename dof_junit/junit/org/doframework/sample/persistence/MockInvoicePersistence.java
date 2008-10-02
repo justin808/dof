@@ -54,4 +54,16 @@ public class MockInvoicePersistence implements InvoicePersistence
     }
 
 
+    public int getNextInvoiceNumber()
+    {
+        return nextId;
+    }
+
+
+    public Invoice getByInvoiceNumber(int invoiceNumber)
+    {
+        return null;
+    }
+
+
 }

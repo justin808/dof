@@ -7,6 +7,12 @@ public class Product extends Entity
     private Manufacturer manufacturer;
 
 
+    public Product(int id)
+    {
+        super(id);
+    }
+
+
     public Product(Integer productId, String name, Integer price, Manufacturer manufacturer)
     {
         super(productId);
@@ -64,4 +70,9 @@ public class Product extends Entity
     }
 
 
+    public String toString()
+    {
+        return "Product{" + "name='" + name + '\'' + ", price=" + price + ", manufacturer=" +
+               manufacturer + '}';
+    }
 }

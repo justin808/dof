@@ -28,12 +28,13 @@ public class Invoice_1002 extends InvoiceBuilder
      */
     public Object create()
     {
-        Invoice invoice = new Invoice(PRIMARY_KEY);
+        Invoice invoice = invoiceComponent.createNew();
+        invoice.setInvoiceNumber(PRIMARY_KEY);
 
         // Get required objects
-        Customer customer35 = (Customer) DOF.require(new Customer_35());
-        Product product105 = (Product) DOF.require(new Product_105());
-        Product product106 = (Product) DOF.require(new Product_106());
+        Customer customer35 = (Customer) DOF.require(new Customer_JohnDoe());
+        Product product105 = (Product) DOF.require(new Product_TinyJuiceUnfilteredAppleJuice());
+        Product product106 = (Product) DOF.require(new Product_TinyJuiceAcaiJuice());
 
         invoice.setCustomer(customer35).setInvoiceDate((new GregorianCalendar(2008, 0, 5)).getTime()); // jan 5, 2008
         invoiceComponent.addLineItem(invoice, 5, product105, product105.getPrice());
@@ -56,7 +57,9 @@ public class Invoice_1002 extends InvoiceBuilder
      */
     public ReferenceBuilder[] getReferenceJavaDependencies()
     {
-        return new ReferenceBuilder[]{new Customer_35(), new Product_106(), new  Product_105() };
+        return new ReferenceBuilder[]{new Customer_JohnDoe(),
+                new Product_TinyJuiceAcaiJuice(),
+                new Product_TinyJuiceUnfilteredAppleJuice()};
     }
 
 

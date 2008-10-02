@@ -19,7 +19,7 @@ public class Customer_Scratch implements ScratchBuilder
     {
         CustomerComponent customerComponent = ComponentFactory.getCustomerComponent();
         Customer customer = customerComponent.createNew();
-        customer.setName(customer.getId() + "--Jane Doe").setBalance(0).setOverdue(false).setPhoneNumber("415-555-1212").setNew(true);
+        customer.setName(customer.getId() + "__Jane Doe").setBalance(0).setOverdue(false).setPhoneNumber("415-555-1212").setNew(true);
         customer.setNew(true);
         customerComponent.persist(customer);
         return customer;
@@ -48,7 +48,7 @@ public class Customer_Scratch implements ScratchBuilder
      */
     public Object extractPrimaryKey(Object scratchObject)
     {
-        return ((Customer)scratchObject).getId();
+        return ((Customer)scratchObject).getName();
     }
 
 

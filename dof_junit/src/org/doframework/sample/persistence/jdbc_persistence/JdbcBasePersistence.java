@@ -10,7 +10,13 @@ public abstract class JdbcBasePersistence implements BasePersistence
 
     public int getNextId()
     {
-        String sql = "select next value for " + getTableName() + "_sequence from dual";
+        return getNextId(getTableName());
+    }
+
+
+    public int getNextId(String sequenceName)
+    {
+        String sql = "select next value for " + sequenceName + "_sequence from dual";
         int nextValue = JdbcDbUtil.executeSingleIntQuery(sql);
         return nextValue;
     }

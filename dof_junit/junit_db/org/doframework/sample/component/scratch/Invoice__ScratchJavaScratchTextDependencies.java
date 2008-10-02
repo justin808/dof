@@ -27,6 +27,7 @@ public class Invoice__ScratchJavaScratchTextDependencies extends InvoiceScratchB
     public Object create(Map scratchReferenceToPrimaryKey)
     {
         Invoice invoice = invoiceComponent.createNew();
+        invoice.setInvoiceNumber(invoiceComponent.getNextInvoiceNumber());
 
         Customer customer = (Customer) DOF.createScratchObject("customer.scratch.xml");
         Product productS1 = (Product) DOF.createScratchObject("product.scratch.xml");

@@ -36,4 +36,7 @@ public interface CustomerPersistence extends BasePersistence
      * @return true if the customer was deleted
      */
     boolean delete(Customer customer);
+
+
+    Customer getByName(String name);
 }

@@ -88,6 +88,19 @@ public class JdbcCustomerPersistence extends JdbcBasePersistence implements Cust
 
     }
 
+
+    public Customer getByName(String name)
+    {
+        String sql = "select * from customer where name = '" + name + "'";
+        String[][] data = JdbcDbUtil.executeMultiColumnQuery(sql);
+        for (int row = 0; row < data.length; row++)
+        {
+            Customer customer = getCustomerForRow(data[row]);
+            return customer;
+        }
+        return null; // if none found
+    }
+
     //public Collection<Customer> getAllCustomers()
     //{
     //    return null;

@@ -11,7 +11,7 @@ import java.util.*;
 
 public class InvoiceComponentTest
 {
-	
+
     public void setUp()
     {
         GlobalContext.setPersistanceFactory(new JdbcPersistenceFactory());
@@ -23,14 +23,15 @@ public class InvoiceComponentTest
         InvoiceComponent invoiceComponent = ComponentFactory.getInvoiceComponent();
 
         // Get objects needed for test
-        Customer johnSmith = (Customer) DOF.require("customer.25.xml");
-        Product dietCherryCola = (Product) DOF.require("product.32.xml");
-        Product dietSnapple = (Product) DOF.require("product.31.xml");
+        Customer johnSmith = (Customer) DOF.require("customer.John Smith.xml");
+        Product dietCherryCola = (Product) DOF.require("product.Drinks Unlimited__Diet Cherry Cola.xml");
+        Product dietSnapple = (Product) DOF.require("product.Drinks Unlimited__Diet Tea.xml");
 
         Integer THREE = new Integer("3");
         Integer TWO = new Integer("2");
 
         Invoice invoice = invoiceComponent.createNew();
+        invoice.setInvoiceNumber(invoiceComponent.getNextInvoiceNumber());
         invoice.setCustomer(johnSmith);
         invoice.setInvoiceDate(new Date());
         invoiceComponent.addLineItem(invoice, THREE, dietCherryCola, dietCherryCola.getPrice());
@@ -41,7 +42,7 @@ public class InvoiceComponentTest
 
         // Test persistence
         invoiceComponent.persist(invoice);
-        Invoice invoiceFromDb = ComponentFactory.getInvoiceComponent().getById(invoice.getId());
+        Invoice invoiceFromDb = ComponentFactory.getInvoiceComponent().getByInvoiceId(invoice.getId());
         assertEquals(invoice.getTotal(), invoiceFromDb.getTotal());
     }
 

@@ -1,0 +1,5 @@
+<customer>
+    <name>James Smith</name>
+    <phone_number>808-555-1212</phone_number>
+    <balance>0</balance>
+</customer>

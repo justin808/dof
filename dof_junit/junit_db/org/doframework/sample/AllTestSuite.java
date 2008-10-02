@@ -7,11 +7,12 @@ import org.doframework.sample.component.*;
 import org.doframework.sample.xml_handler.*;
 import org.doframework.sample.global.*;
 import org.doframework.sample.persistence.jdbc_persistence.*;
+import org.doframework.*;
 
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({AccountingTest.class, ManufacturerXmlFactoryTest.class, ProductXmlFactoryTest.class, CustomerXmlFactoryTest.class, InvoiceXmlFactoryTest.class, JdbcAccountingTest.class, InvoiceComponentTest.class,
-        ManufacturerJavaTest.class, InvoiceJavaTest.class, ShoppingListXmlFactoryTest.class})
+@Suite.SuiteClasses({AccountingTest.class, ManufacturerXmlFactoryTest.class, ProductXmlFactoryTest.class, FrameworkTest.class, InvoiceXmlHandlerTest.class, JdbcAccountingTest.class, InvoiceComponentTest.class,
+        ManufacturerJavaTest.class, InvoiceJavaTest.class})
 
 public class AllTestSuite
 {

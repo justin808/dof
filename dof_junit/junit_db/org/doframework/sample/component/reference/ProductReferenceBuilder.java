@@ -8,6 +8,21 @@ public abstract class ProductReferenceBuilder implements ReferenceBuilder
     protected ProductComponent productComponent = ComponentFactory.getProductComponent();
 
 
+    public abstract String getProductName();
+
+
+    /**
+     * Return the logical primary key (unique key for reference purposes) out of the reference
+     * object to be used for hash key of cached  objects. The value can be any unique value, such as
+     * a unique field, or a combination of fields that is unique.
+     * @return the unique key to be used for caching.
+     */
+    public Object getPrimaryKey()
+    {
+        return getManufacturerReferenceBuilder().getPrimaryKey() + "__" + getProductName();
+    }
+
+
     /**
      * Fetches the object, if it exists, with the given PK. Otherwise null is returned. Typically, this method should be
      * defined in the superclass for the object defined.
@@ -15,7 +30,9 @@ public abstract class ProductReferenceBuilder implements ReferenceBuilder
      * @return The object created from the db if it existed, or else null */
     public Object fetch()
     {
-        return productComponent.getById(((Integer)getPrimaryKey()).intValue());
+        return productComponent
+                .getByManufacturerAndName((String)getManufacturerReferenceBuilder().getPrimaryKey(),
+                                          getProductName());
     }
 
 
@@ -44,4 +61,35 @@ public abstract class ProductReferenceBuilder implements ReferenceBuilder
         return Product.class;
     }
 
+
+    abstract ManufacturerReferenceBuilder getManufacturerReferenceBuilder();
+
+
+    public Object create()
+    {
+        ManufacturerReferenceBuilder manufacturerReferenceBuilder = getManufacturerReferenceBuilder();
+        Manufacturer manufacturer = (Manufacturer) DOF.require(manufacturerReferenceBuilder);
+        Product product = productComponent.createNew();
+        product.setName((String) getProductName());
+        product.setManufacturer(manufacturer);
+        product.setPrice(3);
+        productComponent.persist(product);
+        return product;
+
+    }
+
+
+    /**
+     * This method defines what other objects need to be created (persisted) before this object is created. Typically,
+     * this method should be defined in the superclass for the object defined, and the implementation should use the
+     * known foreign keys and the naming pattern to generate the right class objects.
+     * <p/>
+     * Note, a StaticDependentObject can only depend on other other StaticDependentObjects
+     *
+     * @return Array of static dependent objects that this object directly depends on.
+     */
+    public ReferenceBuilder[] getReferenceJavaDependencies()
+    {
+        return new ReferenceBuilder[]{getManufacturerReferenceBuilder()};
+    }
 }

@@ -1,31 +1,29 @@
 <!-- list of dependencies for invoice number 200 -->
-        <!-- @requireJava("org.doframework.sample.component.reference.Customer_36") -->
-        <!-- @requireJava("org.doframework.sample.component.reference.Product_107") -->
-        <!-- @requireJava("org.doframework.sample.component.reference.Product_108") -->
-        <!-- @requireJava("org.doframework.sample.component.reference.Product_109") -->
+        <!-- @requireJava("org.doframework.sample.component.reference.Customer_JaneDoe") -->
+        <!-- @requireJava("org.doframework.sample.component.reference.Product_DoleBlueberryJuice")-->
+        <!-- @requireJava("org.doframework.sample.component.reference.Product_DoleAcaiJuice")-->
+        <!-- @requireJava("org.doframework.sample.component.reference.Product_DoleMixedBerryJuice")-->
 <invoice>
-    <id>200</id>
-    <customer_id>36</customer_id>
+    <invoice_number>200</invoice_number>
+    <customer_name>Jane Doe</customer_name>
     <invoice_date>2007-05-15</invoice_date>
     <total>117</total>
     <pending_balance>117</pending_balance>
     <line_items>
         <line_item>
             <qty>5</qty>
-            <product_id>107</product_id>
+            <product_manu_name_prod>Dole__Blueberry Juice</product_manu_name_prod>
             <price>9</price>
         </line_item>
         <line_item>
             <qty>8</qty>
-            <product_id>108</product_id>
+            <product_manu_name_prod>Dole__Acai Juice</product_manu_name_prod>
             <price>5</price>
         </line_item>
         <line_item>
             <qty>4</qty>
-            <product_id>109</product_id>
+            <product_manu_name_prod>Dole__Mixed Berry Juice</product_manu_name_prod>
             <price>8</price>
         </line_item>
     </line_items>
-
-
 </invoice>

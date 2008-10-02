@@ -29,13 +29,14 @@ public class Invoice_1001 extends InvoiceBuilder implements HasReferenceTextDepe
      */
     public Object create()
     {
-        Invoice invoice = new Invoice(PRIMARY_KEY);
+        Invoice invoice = invoiceComponent.createNew();
+        invoice.setInvoiceNumber(PRIMARY_KEY);
 
         // Get required objects
-        Customer customer25 = (Customer) DOF.require("customer.25.xml");
-        Product product41 = (Product) DOF.require("product.41.xml");
-        Product product42 = (Product) DOF.require("product.42.xml");
-        Product product43 = (Product) DOF.require("product.43.xml");
+        Customer customer25 = (Customer) DOF.require("customer.John Smith.xml");
+        Product product41 = (Product) DOF.require("product.Drinks One__Coffee.xml");
+        Product product42 = (Product) DOF.require("product.Drinks One__Tea.xml");
+        Product product43 = (Product) DOF.require("product.Drinks One__Kona Coffee.xml");
         invoice.setCustomer(customer25).setInvoiceDate((new GregorianCalendar(2008, 0, 5)).getTime()); // jan 5, 2008
         invoiceComponent.addLineItem(invoice, 5, product41, product41.getPrice());
         invoiceComponent.addLineItem(invoice, 10, product42, product42.getPrice());
@@ -65,7 +66,7 @@ public class Invoice_1001 extends InvoiceBuilder implements HasReferenceTextDepe
      */
     public String[] getReferenceTextDependencies()
     {
-        return new String[]{"customer.25.xml", "product.41.xml","product.42.xml","product.43.xml" };
+        return new String[]{"customer.25.xml", "product.Drinks One__Coffee.xml","product.Drinks One__Tea.xml","product.Drinks One__Kona Coffee.xml" };
     }
 
 

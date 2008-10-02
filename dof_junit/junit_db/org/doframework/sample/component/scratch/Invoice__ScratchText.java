@@ -2,7 +2,6 @@ package org.doframework.sample.component.scratch;
 
 import org.doframework.*;
 import org.doframework.sample.component.*;
-import org.doframework.sample.component.reference.*;
 
 import java.util.*;
 
@@ -22,10 +21,11 @@ public class Invoice__ScratchText extends InvoiceScratchBuilderBase implements S
     public Object create(Map scratchReferenceToPrimaryKey)
     {
         Invoice invoice = invoiceComponent.createNew();
+        invoice.setInvoiceNumber(invoiceComponent.getNextInvoiceNumber());
 
-        Customer customer = (Customer) DOF.require("customer.55.xml");
-        Product product31 = (Product) DOF.require("product.30.xml");
-        Product product32 = (Product)DOF.require("product.31.xml");
+        Customer customer = (Customer) DOF.require("customer.John Smith.xml");
+        Product product31 = (Product) DOF.require("product.Snapple__Iced Tea.xml");
+        Product product32 = (Product)DOF.require("product.Drinks Unlimited__Diet Tea.xml");
 
         invoice.setCustomer(customer).setInvoiceDate((new GregorianCalendar(2008, 0, 5)).getTime()); // jan 5, 2008
         invoiceComponent.addLineItem(invoice, 6, product31, product31.getPrice());
@@ -51,7 +51,7 @@ public class Invoice__ScratchText extends InvoiceScratchBuilderBase implements S
      */
     public Object fetch(Object pk)
     {
-        return ComponentFactory.getInvoiceComponent().getById((Integer)pk);
+        return ComponentFactory.getInvoiceComponent().getByInvoiceId((Integer)pk);
     }
 
 

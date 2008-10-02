@@ -41,7 +41,8 @@ public class JdbcManufacturerPersistence extends JdbcBasePersistence implements 
         try
         {
             int rows = JdbcDbUtil.update(deleteIfExists);
-            return (rows > 0);
+            return
+            (rows > 0);
         }
         catch (Exception e)
         {
@@ -62,7 +63,7 @@ public class JdbcManufacturerPersistence extends JdbcBasePersistence implements 
 
     public Manufacturer getByName(String manufacturerId)
     {
-        String sql = "select * from manufacturer where id = " + manufacturerId;
+        String sql = "select * from manufacturer where name = '" + manufacturerId + "'";
         String[][] rows = JdbcDbUtil.executeMultiColumnQuery(sql);
         if (rows.length == 0)
         {

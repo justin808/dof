@@ -10,6 +10,14 @@ public class ManufacturerComponent
     }
 
 
+    public Manufacturer createNew()
+    {
+        Manufacturer manufacturer = new Manufacturer(GlobalContext.getPersistanceFactory().getManufacturerPersistence().getNextId());
+        manufacturer.setNew(true);
+        return manufacturer;
+    }
+
+
     public void persist(Manufacturer manufacturer)
     {
         if (manufacturer.isNew())
@@ -38,6 +46,12 @@ public class ManufacturerComponent
     public boolean delete(Manufacturer manufacturer)
     {
         return GlobalContext.getPersistanceFactory().getManufacturerPersistence().delete(manufacturer);
+    }
+
+
+    public Manufacturer getByName(String name)
+    {
+        return GlobalContext.getPersistanceFactory().getManufacturerPersistence().getByName(name);
     }
 
 

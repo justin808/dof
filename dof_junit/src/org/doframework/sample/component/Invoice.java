@@ -9,6 +9,7 @@ import java.util.*;
  */
 public class Invoice extends Entity
 {
+    private Integer invoiceNumber;
     private Customer customer;
     private Date invoiceDate;
     private Integer total;
@@ -20,6 +21,18 @@ public class Invoice extends Entity
     public Invoice(int id)
     {
         super(id);
+    }
+
+
+    public Integer getInvoiceNumber()
+    {
+        return invoiceNumber;
+    }
+
+
+    public void setInvoiceNumber(Integer invoiceNumber)
+    {
+        this.invoiceNumber = invoiceNumber;
     }
 
 
@@ -89,7 +102,12 @@ public class Invoice extends Entity
     }
 
 
-
+    public String toString()
+    {
+        return "Invoice{" + "invoiceNumber=" + invoiceNumber + ", customer=" + customer +
+               ", invoiceDate=" + invoiceDate + ", total=" + total + ", pendingBalance=" +
+               pendingBalance + ", lineItems=" + lineItems + '}';
+    }
 
 
 }

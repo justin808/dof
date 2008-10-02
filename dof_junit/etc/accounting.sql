@@ -1,11 +1,9 @@
 -- note using all integer for decimal amounts to simplify example
-
 -- To recreate schema, run this command in the SQL GUI
 -- drop schema PUBLIC cascade;
-
 -- create schema PUBLIC authorization DBA;
 
---drop table dual;
+
 create table dual (
 dummy int
 );
@@ -13,33 +11,34 @@ dummy int
 insert into dual values (1);
 
 
---drop table customer;
-
 create table customer (
     id integer primary key,
     name varchar(255),
     phone_number varchar(50),
     balance integer,
-    is_overdue char(1)
+    is_overdue varchar(1),
+    constraint unique_customer_name unique (name)
 );
 
---drop sequence customer_sequence;
-create sequence customer_sequence start with 1000;
+create sequence customer_sequence;
 
---drop table invoice;
-create table invoice(
+
+create table invoice (
     id integer primary key,
+    invoice_number integer,
     customer_id integer,
     invoice_date date,
     total integer,
     pending_balance integer,
+    constraint unique_invoice_number unique (invoice_number),
     foreign key(customer_id) references customer
   );
 
---drop sequence invoice_sequence;
-create sequence invoice_sequence start with 10000;
 
---drop table payment;
+create sequence invoice_sequence;
+create sequence invoice_number_sequence start with 10000;
+
+
 create table payment(
     id integer primary key,
     customer_id integer,
@@ -47,46 +46,47 @@ create table payment(
     payment_date datetime
 );
 
---drop sequence payment_sequence;
-create sequence payment_sequence start with 10000;
+create sequence payment_sequence;
 
 create table manufacturer
 (
-    id int,
+    id integer primary key,
     name varchar(100),
-    primary key(id)
+    primary key(id),
+    constraint unique_manufacturer_name unique (name)
 );
-create sequence manufacturer_sequence start with 10000;
+create sequence manufacturer_sequence start with 1000;
 
 
 
 create table product
 (
-    id int,
+    id integer,
     name varchar(100),
     price integer,
-    manufacturer_id int,
+    manufacturer_id integer,
     primary key(id),
+    constraint unique_product_manu_name unique  (name, manufacturer_id),
     foreign key(manufacturer_id) references manufacturer
 );
 
-create sequence product_sequence start with 10000;
+create sequence product_sequence;
 
 
 create table line_item
 (
-    invoice_id int,
-    line_number int,
-    qty int,
-    product_id int,
+    invoice_id integer,
+    line_number integer,
+    qty integer,
+    product_id integer,
     price integer,
+    constraint unique_line_item_line_number unique (invoice_id, line_number),
     primary key(invoice_id, line_number),
     foreign key(product_id) references product,
     foreign key(invoice_id) references invoice
 );
 
 
---drop table shoppin_list;
 
 create table shopping_list(
     id integer primary key,
@@ -94,15 +94,14 @@ create table shopping_list(
     name varchar(100)
 );
 
---drop sequence shopping_list_sequence;
 create sequence shopping_list_sequence start with 10000;
 
 create table shopping_list_item
 (
-    shopping_list_id int,
-    line_number int,
-    qty int,
-    product_id int,
+    shopping_list_id integer,
+    line_number integer,
+    qty integer,
+    product_id integer,
     primary key(shopping_list_id, line_number),
     foreign key(product_id) references product,
     foreign key(shopping_list_id) references shopping_list

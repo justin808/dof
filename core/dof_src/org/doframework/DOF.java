@@ -103,6 +103,11 @@ public class DOF
     //////////////////////////////////////////////////////////////////////////////////////////////
     // public API Using Java to define objects //////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Used to ensure that a given object exists in the persistent store and to get that object.
+     * @param referenceBuilder An instance of ReferenceBuilder that defines the object requested.
+     * @return The object that this ReferenceBuilder creates
+     */
     public static Object require(ReferenceBuilder referenceBuilder)
     {
         // First check local cache of loaded files
@@ -138,11 +143,9 @@ public class DOF
                 // Create object given file of data
                 resultObject = referenceBuilder.create();
 
-                DOFObjectCache.LoadedObject loadedObject = new DOFObjectCache.LoadedObject(referenceBuilder, resultObject);
-
                 // Save the data in the cache
                 dofObjectCache
-                        .put(referenceBuilder, loadedObject);
+                        .put(referenceBuilder, resultObject);
             }
 
             if (resultObject == null)
@@ -212,15 +215,35 @@ public class DOF
      */
     public static boolean delete(ReferenceBuilder referenceBuilder, boolean greedy)
     {
-        Object objectToDelete = dofObjectCache.get(referenceBuilder);
+        Object objectToDelete = dofObjectCache.get(referenceBuilder); // will check DB too
         if (objectToDelete != null)
         {
-            return delete(objectToDelete, greedy);
+            boolean deletionOk = delete(objectToDelete, greedy);
+            if (dofDebug)
+            {
+                System.out.println("DOF: Deleting Reference Object: " +
+                                   referenceBuilder.getClass().getName());
+            }
+            return deletionOk;
         }
         else
         {
+            if (greedy)
+            {
+                // still try to clean up dependencies
+                ReferenceBuilder[] referencBuilders = referenceBuilder.getReferenceJavaDependencies();
+                if (referencBuilders != null)
+                {
+                    for (int i = 0; i < referencBuilders.length; i++)
+                    {
+                        ReferenceBuilder referencBuilder = referencBuilders[i];
+                        delete(referencBuilder, greedy);
+                    }
+                }
+            }
             return true;
         }
+    }
         //boolean deletedThisObject = false;
         //Object referenceObjectToDelete = referenceBuilder.fetch();
         //if (referenceObjectToDelete == null)
@@ -256,7 +279,7 @@ public class DOF
         //    }
         //}
         //return deletedThisObject;
-    }
+
 
 
     ///**
@@ -360,7 +383,7 @@ public class DOF
     {
         String className = objectToDelete.getClass().getName();
         ObjectDeletionHelper deletionHelper = DOFGlobalSettings
-                .getInstance().getScratchDeletionHelperForClass(className);
+                .getInstance().getDeletionHelperForClass(className);
         if (deletionHelper == null)
         {
             if (dofDebug)
@@ -371,12 +394,19 @@ public class DOF
             return false;
         }
 
-        boolean result = deletionHelper.delete(objectToDelete);
-        if (result)
+
+        boolean deletedOk = deletionHelper.delete(objectToDelete);
+        if (dofDebug)
+        {
+            System.out.println("DOF: Deletion Helper: " + deletionHelper.getClass().getName() +
+                               ": Deleting Object " + objectToDelete.getClass().getName() + ": " +
+                               objectToDelete + ": Successful = " + deletedOk);
+        }
+        if (deletedOk)
         {
             dofObjectCache.remove(objectToDelete, deletionHelper.extractPrimaryKey(objectToDelete));
         }
-        if (greedy)
+        if (greedy && deletedOk)
         {
             Object[] dependencies = deletionHelper.getDependencies(objectToDelete);
             if (dependencies != null)
@@ -387,7 +417,7 @@ public class DOF
                 }
             }
         }
-        return result;
+        return deletedOk;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
@@ -525,25 +555,33 @@ public class DOF
 
     public static Object createScratchObject(ScratchBuilder scratchBuilder)
     {
-        return createScratchObject(scratchBuilder, new HashMap<String, String>());
-    }
-
-
-    public static Object createScratchObject(ScratchBuilder scratchBuilder,
-                                             Map<String, String> scratchReferenceToPrimaryKey)
-    {
-        return createScratchObject(scratchBuilder, scratchReferenceToPrimaryKey, null);
+        return createScratchObject(scratchBuilder, new HashMap<String, Object>());
     }
 
 
     /**
      *
      * @param scratchBuilder
-     * @param scratchReferenceToPrimaryKey
+     * @param scratchReferenceToObject Map that is passed into the create method of the
+     * scratchBuilder. Since the scratchBuilder is your implementation, the value of the map can be
+     * any type of object. For example, you can map the actual object or the primary key of the object.
+     * @return Object of type defined by the scratchBuilder class
+     */
+    public static Object createScratchObject(ScratchBuilder scratchBuilder,
+                                             Map<String, Object> scratchReferenceToObject)
+    {
+        return createScratchObject(scratchBuilder, scratchReferenceToObject, null);
+    }
+
+
+    /**
+     *
+     * @param scratchBuilder
+     * @param scratchReferenceToObject
      * @return
      */
     static Object createScratchObject(ScratchBuilder scratchBuilder,
-                                      Map<String, String> scratchReferenceToPrimaryKey,
+                                      Map<String, Object> scratchReferenceToObject,
                                       String scratchReference)
     {
         // create dependencies
@@ -555,9 +593,9 @@ public class DOF
 
 
         // I'm not sure if this is a good idea to be storing scratch objects
-        if (scratchReference != null && scratchReferenceToPrimaryKey != null)
+        if (scratchReference != null && scratchReferenceToObject != null)
         {
-            String pk = scratchReferenceToPrimaryKey.get(scratchReference);
+            Object pk = scratchReferenceToObject.get(scratchReference);
             if (pk != null)
             {
                 Object fetchedObject = dofObjectCache.get(scratchBuilder.getCreatedClass(),
@@ -573,7 +611,15 @@ public class DOF
             }
         }
 
-        Object resultObject = scratchBuilder.create(scratchReferenceToPrimaryKey);
+        if (dofDebug)
+        {
+            System.out.println(
+                    "DOF: Creating Scratch Object: " + scratchBuilder.getClass().getName() + (
+                            (scratchReferenceToObject != null && scratchReferenceToObject.size() > 0) ?
+                            ", scratchReferenceToObject = " + scratchReferenceToObject : ""));
+        }
+
+        Object resultObject = scratchBuilder.create(scratchReferenceToObject);
         dofObjectCache.put(scratchBuilder, resultObject);
 
         return resultObject;
@@ -690,7 +736,7 @@ public class DOF
     private static Pattern repIncludeScratchJava;
 
 
-    static boolean dofDebug = System.getProperty("DOF_DEBUG", "").equalsIgnoreCase("TRUE");
+    public static boolean dofDebug = System.getProperty("DOF_DEBUG", "").equalsIgnoreCase("TRUE");
 
     static boolean dofPrintDescriptionFiles =
             System.getProperty("DOF_PRINT_FILES", "").equalsIgnoreCase("TRUE");
@@ -822,13 +868,13 @@ public class DOF
 
             // Create object given file of data
             resultObject = dependentObjectHandler.create(objectFileInfo);
+            if (resultObject == null)
+            {
+                throw new RuntimeException("DOF failed to create object with pk " + pk);
+            }
 
             // Save the data in the cache
             dofObjectCache.put(objectFileInfo, resultObject);
-            if (resultObject == null)
-            {
-                throw new RuntimeException("DbJUnitHandler failed to create object with pk " + pk);
-            }
 
         }
         return resultObject;
@@ -855,7 +901,7 @@ public class DOF
         }
         else
         {
-            scratchPk = System.currentTimeMillis() + "";
+            scratchPk = System.currentTimeMillis() + " " + Math.random();;
         }
         return scratchPk;
     }
@@ -881,19 +927,25 @@ public class DOF
 
         // delete passed in object first
         boolean deletedObjectfromFileToLoad;
-        Object objectToDelete = doh.get(objectFileInfo);
+        Object objectToDelete = dofObjectCache.get(objectFileInfo); // cache will call handler
+
         if (objectToDelete != null)
         {
             deletedObjectfromFileToLoad = doh.delete(objectToDelete, objectFileInfo);
+            if (dofDebug)
+            {
+                System.out.println("DOF: Deleting: ObjectFileInfo = " + objectFileInfo +
+                                   ", deleted = " + deletedObjectfromFileToLoad);
+            }
         }
         else
         {
             deletedObjectfromFileToLoad = true; // b/c already deleted
-        }
-        if (dofDebug)
-        {
-            System.out.println("DOF: Deleting: ObjectFileInfo = " + objectFileInfo +
-                               ", deleted = " + deletedObjectfromFileToLoad);
+            if (dofDebug)
+            {
+                System.out.println("Object from file " + fileToLoad + " does not exist. " +
+                                   "Continuing deletion of dependencies.");
+            }
         }
 
         if (deletedObjectfromFileToLoad)
@@ -1157,32 +1209,38 @@ public class DOF
                 if (deletionOption == DeletionOption.all ||
                     deletionOption == DeletionOption.scratch_only)
                 {
-                    deleteObjectsForClass(deletionClass, dofObjectCache.getScratchLoadedObjects());
+                    deleteObjectsForClass(deletionClass, dofObjectCache.getScratchObjects());
                 }
                 if (deletionOption == DeletionOption.all ||
                     deletionOption == DeletionOption.reference_only)
                 {
-                    deleteObjectsForClass(deletionClass, dofObjectCache.getReferenceLoadedObjects());
+                    deleteObjectsForClass(deletionClass, dofObjectCache.getReferenceObjects());
                 }
             }
+        System.out.println("After delete all");
+        System.out.println("dofObjectCache scratch= " + dofObjectCache.getScratchObjects());
+        System.out.println("dofObjectCache refs = " + dofObjectCache.getReferenceObjects());
+
     }
 
 
-    private static void deleteObjectsForClass(Class deletionClass, Collection<DOFObjectCache.LoadedObject> loadedObjects)
+    private static void deleteObjectsForClass(Class deletionClass, DOFObjectCache.MaxSizeObjectCache loadedObjects)
     {
-        for (Iterator loadedObjectIterator = loadedObjects.iterator();
-             loadedObjectIterator.hasNext();)
+        Set<Map.Entry<String, Object>> entries = loadedObjects.entrySet();
+        for (Iterator entryIterator = entries.iterator(); entryIterator.hasNext();)
         {
-            DOFObjectCache.LoadedObject loadedObject = (DOFObjectCache.LoadedObject) loadedObjectIterator.next();
-            Object objectToDelete = loadedObject.storedObject;
+            Map.Entry<String, Object> stringObjectEntry =
+                    (Map.Entry<String, Object>) entryIterator.next();
+            Object objectToDelete = (Object) stringObjectEntry.getValue();
+
             if (deletionClass.isInstance(objectToDelete))
             {
                 ObjectDeletionHelper sodh = DOFGlobalSettings.getInstance()
-                        .getScratchDeletionHelperForClass(objectToDelete
-                                .getClass().getName());
-                if (sodh.delete(objectToDelete))
+                        .getDeletionHelperForClass(objectToDelete.getClass().getName());
+                boolean deletedOk = sodh.delete(objectToDelete);
+                if (deletedOk)
                 {
-                    loadedObjectIterator.remove();
+                    entryIterator.remove();
                 }
             }
         }
@@ -1372,7 +1430,7 @@ public class DOF
         String defaultScratchPrimaryKeyProviderClassName =
                 DOFGlobalSettings.getInstance().getDefaultScratchPrimaryKeyProviderClassName();
         if (defaultScratchPrimaryKeyProviderClassName != null &&
-            defaultScratchPrimaryKeyProviderClassName.length() > 0)
+            defaultScratchPrimaryKeyProviderClassName.trim().length() > 0)
         {
             try
             {

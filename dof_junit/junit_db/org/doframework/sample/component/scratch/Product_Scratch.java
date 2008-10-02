@@ -57,7 +57,8 @@ public class Product_Scratch implements ScratchBuilder
      */
     public Object extractPrimaryKey(Object scratchObject)
     {
-        return new Integer(((Product) scratchObject).getId());
+        Product product = (Product) scratchObject;
+        return product.getManufacturer().getName() + "__" + product.getName();
     }
 
 

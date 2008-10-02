@@ -15,7 +15,7 @@ public abstract class InvoiceBuilder implements ReferenceBuilder
      * @return The object created from the db if it existed, or else null */
     public Object fetch()
     {
-        return invoiceComponent.getById((Integer)getPrimaryKey());
+        return invoiceComponent.getByInvoiceNumber((Integer) getPrimaryKey());
     }
 
 

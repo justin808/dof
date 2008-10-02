@@ -3,6 +3,7 @@ package org.doframework.sample.xml_handler;
 import static org.junit.Assert.*;
 import org.junit.*;
 import org.doframework.sample.component.*;
+import org.doframework.sample.component.reference.*;
 import org.doframework.sample.persistence.jdbc_persistence.*;
 import org.doframework.sample.global.*;
 import org.doframework.*;
@@ -20,58 +21,17 @@ public class ManufacturerXmlFactoryTest
     }
 
 
-    @Test
-    public void testParseFile()
-    {
-        ManufacturerXmlFactory mxf = new ManufacturerXmlFactory();
-        ObjectFileInfo ofi = new ObjectFileInfo("manufacturer", "35", "xml");
-        ofi.setFileToLoad("manufacturer.35.xml");
-
-        Manufacturer m = mxf.createManufacturer(ofi);
-        assertEquals(35, m.getId());
-        assertEquals("Starbucks", m.getName());
-    }
 
 
-    /**
-     * Note: this test is OK only b/c manufacturer has no dependencies. I.e., normally we depend upon the framework for
-     * creating dependencies.
-     */
-    @Test
-    public void testManufacturerInsert()
-    {
-        String sql = "select count(*) from manufacturer where id = 35";
-
-        ManufacturerXmlFactory mxf = new ManufacturerXmlFactory();
-        ObjectFileInfo ofi = new ObjectFileInfo("manufacturer", "35", "xml");
-        ofi.setFileToLoad("manufacturer.35.xml");
-
-        Manufacturer m = mxf.createManufacturer(ofi);
-
-        // first delete just in case it exists
-        manufacturerComponent.delete(m);
-        int countAfterDelete = JdbcDbUtil.executeSingleIntQuery(sql);
-        assertEquals(0, countAfterDelete);
-        GlobalContext.getPersistanceFactory().getManufacturerPersistence().insert(m);
-
-        int countAfterInsert = JdbcDbUtil.executeSingleIntQuery(sql);
-        assertEquals(1, countAfterInsert);
-
-        assertTrue(manufacturerComponent.delete(m));
-
-        int countAfterDelete2 = JdbcDbUtil.executeSingleIntQuery(sql);
-        assertEquals(0, countAfterDelete2);
-
-    }
 
 
     public void testProductDeleteReturnsTrueIfNoOtherDependencies()
     {
         // first make sure the object is there to delete
-        assertNotNull(DOF.require("manufacturer.20.xml"));
+        assertNotNull(DOF.require("manufacturer.Arrowhead.xml"));
 
         // make sure that the dependency is NOT there
-        boolean deleted = DOF.delete("manufacturer.20.xml");
+        boolean deleted = DOF.delete("manufacturer.Arrowhead.xml");
 
         // This could be a bit tricky if other products depended on #20, so
         // we made sure that nothing else does and commented the xml file
@@ -86,28 +46,27 @@ public class ManufacturerXmlFactoryTest
     @Test
     public void testManufacturerDeleteReturnsFalseIfOtherDependencies()
     {
-        assertNotNull(DOF.require("product.21.xml"));
-        assertNotNull(DOF.require("product.22.xml"));
-        assertFalse(DOF.delete("manufacturer.21.xml"));
+        assertNotNull(DOF.require("product.Pepsi__Cola.xml"));
+        assertNotNull(DOF.require("product.Pepsi__Diet Cola.xml"));
+        assertFalse(DOF.delete(new Manufacturer_Pepsi()));
     }
 
 
     @Test
     public void testProductDeleteReturnsFalseIfOtherDependencies()
     {
-        assertNotNull(DOF.require("product.21.xml"));
-        assertNotNull(DOF.require("product.22.xml"));
-        assertTrue(DOF.delete("product.21.xml")); // true b/c product deletes
-        assertNotNull(manufacturerComponent.getById(21)); // check manufacturer still there
+        assertNotNull(DOF.require("product.Pepsi__Cola.xml"));
+        assertNotNull(DOF.require("product.Pepsi__Diet Cola.xml"));
+        assertTrue(DOF.delete("product.Pepsi__Cola.xml")); // true b/c product deletes
+        assertNotNull(manufacturerComponent.getByName("Pepsi")); // check manufacturer still there
     }
 
 
     @Test
     public void testRequireManfacturerReturnsManufacturer()
     {
-        Manufacturer m = (Manufacturer) DOF.require("manufacturer.35.xml");
+        Manufacturer m = (Manufacturer) DOF.require("manufacturer.Starbucks.xml");
         assertNotNull(m);
-        assertEquals(35, m.getId());
         assertEquals("Starbucks", m.getName());
     }
 
@@ -115,8 +74,8 @@ public class ManufacturerXmlFactoryTest
     @Test
     public void testRequireManfacturerTwiceDoesNotCreateManufacturerTwice()
     {
-        Manufacturer m1 = (Manufacturer) DOF.require("manufacturer.35.xml");
-        Manufacturer m2 = (Manufacturer) DOF.require("manufacturer.35.xml");
+        Manufacturer m1 = (Manufacturer) DOF.require("manufacturer.Starbucks.xml");
+        Manufacturer m2 = (Manufacturer) DOF.require("manufacturer.Starbucks.xml");
         assertSame(m1, m2);
     }
 
@@ -124,14 +83,14 @@ public class ManufacturerXmlFactoryTest
     @Test
     public void testDeleteManufacturer()
     {
-        Manufacturer m1 = (Manufacturer) DOF.require("manufacturer.20.xml");
-        assertTrue(DOF.delete("manufacturer.20.xml"));
-        Manufacturer m2 = (Manufacturer) DOF.require("manufacturer.20.xml");
+        Manufacturer m1 = (Manufacturer) DOF.require("manufacturer.Arrowhead.xml");
+        assertTrue(DOF.delete("manufacturer.Arrowhead.xml"));
+        Manufacturer m2 = (Manufacturer) DOF.require("manufacturer.Arrowhead.xml");
         assertNotSame(m1, m2);
-        Manufacturer m3 = (Manufacturer) DOF.require("manufacturer.20.xml");
+        Manufacturer m3 = (Manufacturer) DOF.require("manufacturer.Arrowhead.xml");
         assertSame(m2, m3);
-        DOF.removeEntryFromCache(m3, m3.getId());
-        Manufacturer m4 = (Manufacturer) DOF.require("manufacturer.20.xml");
+        DOF.removeEntryFromCache(m3, m3.getName());
+        Manufacturer m4 = (Manufacturer) DOF.require("manufacturer.Arrowhead.xml");
         assertNotSame(m3, m4);
     }
 

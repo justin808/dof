@@ -37,7 +37,7 @@ public class AccountingTest extends TestCase
     {
         Customer customer = customerComponent.createNew();
         // Example of pattern to create unique PKs
-        customer.setName(System.currentTimeMillis() + "");
+        customer.setName(System.currentTimeMillis() + ":" +customer.getId());
         customerComponent.persist(customer);
         return customer;
     }
@@ -49,6 +49,8 @@ public class AccountingTest extends TestCase
         Customer customer = getNewUniqueCustomer();
 
         Invoice invoice = invoiceComponent.createNew();
+        invoice.setInvoiceNumber(invoiceComponent.getNextInvoiceNumber());
+
         int INVOICE_TOTAL = 99;
         invoice.setTotal(INVOICE_TOTAL);
         invoice.setCustomer(customer);
@@ -90,6 +92,7 @@ public class AccountingTest extends TestCase
             Customer customer = getNewUniqueCustomer();
             Invoice invoice = invoiceComponent.createNew();
             int INVOICE_TOTAL = GlobalContext.getAccountingConstants().getMaximumInvoiceTotal();
+            invoice.setInvoiceNumber(invoiceComponent.getNextInvoiceNumber());
             invoice.setTotal(INVOICE_TOTAL);
             invoice.setCustomer(customer);
             invoiceComponent.persist(invoice);
@@ -107,6 +110,7 @@ public class AccountingTest extends TestCase
         Customer customer = (Customer) DOF.createScratchObject("customer.scratch.xml");
 
         Invoice invoice = invoiceComponent.createNew();
+        invoice.setInvoiceNumber(invoiceComponent.getNextInvoiceNumber());
         int INVOICE_TOTAL = 99;
         invoice.setTotal(INVOICE_TOTAL);
         invoice.setCustomer(customer);
@@ -116,6 +120,7 @@ public class AccountingTest extends TestCase
         int INVOICE_TOTAL_2 = 101;
         invoice2.setTotal(INVOICE_TOTAL_2);
         invoice2.setCustomer(customer);
+        invoice2.setInvoiceNumber(invoiceComponent.getNextInvoiceNumber());
         invoiceComponent.persist(invoice2);
 
 
@@ -139,7 +144,7 @@ public class AccountingTest extends TestCase
         assertEquals(customer.getBalance(), invoice.getPendingBalance());
 
         Map scratchReferenceToPk = new HashMap();
-        scratchReferenceToPk.put("scratchCustomerPk", customer.getId() + "");
+        scratchReferenceToPk.put("scratchCustomerPk", customer.getName() + "");
         Invoice invoice2 = (Invoice) DOF.createScratchObject("invoice.scratchWithScratchCustomer.xml", scratchReferenceToPk);
         assertEquals(invoice.getCustomer().getId(), invoice2.getCustomer().getId());
         assertEquals(invoice2.getTotal().intValue() * 2 , invoice2.getCustomer().getBalance().intValue());

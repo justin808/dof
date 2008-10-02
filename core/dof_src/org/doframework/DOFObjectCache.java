@@ -7,58 +7,54 @@ import java.util.*;
 
 public class DOFObjectCache
 {
-    LoadedObjectCache referenceObjects;
-    LoadedObjectCache scratchObjects;
+    MaxSizeObjectCache referenceObjects;
+    MaxSizeObjectCache scratchObjects;
 
 
     public DOFObjectCache()
     {
-        referenceObjects = new LoadedObjectCache(DOFGlobalSettings.getInstance().getMaxCachedReferenceObjects());
-        scratchObjects = new LoadedObjectCache(DOFGlobalSettings.getInstance().getMaxCachedScratchObjects());
+        referenceObjects = new MaxSizeObjectCache(DOFGlobalSettings.getInstance().getMaxCachedReferenceObjects());
+        scratchObjects = new MaxSizeObjectCache(DOFGlobalSettings.getInstance().getMaxCachedScratchObjects());
     }
 
-    public void put(Object pk, DOFBuilder dofBuilder, Object storedObject)
+    public void put(Object pk, Object storedObject)
     {
         String key = getKeyForHashing(storedObject.getClass(), pk);
-        LoadedObject loadedObject = new LoadedObject(dofBuilder, storedObject);
-        referenceObjects.put(key, loadedObject);
+        referenceObjects.put(key, storedObject);
     }
 
 
     public void put(ReferenceBuilder referenceBuilder, Object storedObject)
     {
         String key = getKeyForHashing(storedObject.getClass(), referenceBuilder.getPrimaryKey());
-        LoadedObject loadedObject = new LoadedObject(referenceBuilder, storedObject);
-        referenceObjects.put(key, loadedObject);
+        referenceObjects.put(key, storedObject);
     }
 
 
     public void put(ScratchBuilder scratchBuilder, Object storedObject)
     {
         String key = getKeyForHashing(storedObject.getClass(), ((ScratchBuilder)scratchBuilder).extractPrimaryKey(storedObject));
-        LoadedObject loadedObject = new LoadedObject(scratchBuilder, storedObject);
-        scratchObjects.put(key, loadedObject);
+        scratchObjects.put(key, storedObject);
     }
 
 
     public Object get(Class clazz, Object pk)
     {
         String key = getKeyForHashing(clazz, pk);
-        LoadedObject loadedObject = referenceObjects.get(key);
-        if (loadedObject != null)
+        Object object = referenceObjects.get(key);
+        if (object != null)
         {
-            return loadedObject.storedObject;
+            return object;
         }
-        loadedObject = scratchObjects.get(key);
-        return (loadedObject != null ?loadedObject.storedObject : null);
+        object = scratchObjects.get(key);
+        return object;
     }
 
 
     public Object get(ObjectFileInfo ofi)
     {
         String key = ofi.getKeyForHashing();
-        LoadedObject loadedObject = referenceObjects.get(key);
-        Object cachedObject = loadedObject != null ? loadedObject.storedObject : null;
+        Object cachedObject = referenceObjects.get(key);
         if (cachedObject != null)
         {
             return cachedObject;
@@ -79,8 +75,7 @@ public class DOFObjectCache
     public Object get(ReferenceBuilder referenceBuilder)
     {
         String key = getReferenceObjectHashKey(referenceBuilder);
-        LoadedObject loadedObject = referenceObjects.get(key);
-        Object cachedObject = loadedObject != null ? loadedObject.storedObject : null;
+        Object cachedObject = referenceObjects.get(key);
         if (cachedObject != null)
         {
             return cachedObject;
@@ -98,8 +93,7 @@ public class DOFObjectCache
     public Object get(ScratchBuilder scratchBuilder, String scratchRequestedPk)
     {
         String key = getScratchObjectHashKeyFromPk(scratchBuilder, scratchRequestedPk);
-        LoadedObject loadedObject = scratchObjects.get(key);
-        Object foundObject = loadedObject != null ? loadedObject.storedObject : null;
+        Object foundObject = scratchObjects.get(key);
         if (foundObject != null)
         {
             return foundObject;
@@ -134,12 +128,6 @@ public class DOFObjectCache
     }
 
 
-    private static String getScratchObjectHashKey(ScratchBuilder sb, Object object)
-    {
-        return getJavaBuilderHashKey(sb, sb.extractPrimaryKey(object));
-    }
-
-
     public Object getLoadedObject(Class clazz, Object pk)
     {
         String key = getKeyForHashing(clazz, pk);
@@ -159,10 +147,10 @@ public class DOFObjectCache
     public boolean remove(Object objectToRemove, Object objectPrimaryKey)
     {
         String key = getKeyForHashing(objectToRemove.getClass(), objectPrimaryKey);
-        boolean removedFromReferenceObjects = referenceObjects.remove(key) != null;
+        boolean removedFromReferenceObjects = (referenceObjects.remove(key) != null);
         if (!removedFromReferenceObjects)
         {
-            return scratchObjects.remove(key) != null;
+            return (scratchObjects.remove(key) != null);
         }
         return removedFromReferenceObjects;
     }
@@ -179,10 +167,8 @@ public class DOFObjectCache
     public void put(ObjectFileInfo objectFileInfo, Object resultObject)
     {
         String key = objectFileInfo.getKeyForHashing();
-        DOFObjectCache.LoadedObject loadedObject =
-                new DOFObjectCache.LoadedObject(objectFileInfo.getFileToLoad(), resultObject);
         Map map = objectFileInfo.isScratchMode() ? scratchObjects : referenceObjects;
-        map.put(key, loadedObject);
+        map.put(key, resultObject);
     }
 
 
@@ -194,62 +180,34 @@ public class DOFObjectCache
     }
 
 
-    public Collection<LoadedObject> getScratchLoadedObjects()
+    public MaxSizeObjectCache getScratchObjects()
     {
-        return scratchObjects.values();
+        return scratchObjects;
     }
 
 
-    public Collection<LoadedObject> getReferenceLoadedObjects()
+    public MaxSizeObjectCache getReferenceObjects()
     {
-        return referenceObjects.values();
+        return referenceObjects;
     }
 
 
-    static class LoadedObjectCache extends LinkedHashMap<String, LoadedObject>
+    static class MaxSizeObjectCache extends LinkedHashMap<String, Object>
     {
         int maxSize;
 
 
-        public LoadedObjectCache(int maxSize)
+        public MaxSizeObjectCache(int maxSize)
         {
             super(16, (float) .75, true);
             this.maxSize = maxSize;
         }
 
 
-        protected boolean removeEldestEntry(Map.Entry<String, LoadedObject> eldest)
+        protected boolean removeEldestEntry(Map.Entry<String, Object> eldest)
         {
-            return size() > maxSize;
+            return maxSize > 0 && size() > maxSize;
         }
     }
 
-    public static class LoadedObject
-    {
-        // The actual object created by text or Java
-        Object storedObject;
-
-        // One of these will be null
-
-        // The builder class for Java objects
-        DOFBuilder dofBuilder;
-
-        // The file for Java objects
-        String fileName;
-
-        LoadedObject(String fileName, Object storedObject)
-        {
-            this.fileName = fileName;
-            this.storedObject = storedObject;
-        }
-
-
-        LoadedObject(DOFBuilder dofBuilder, Object storedObject)
-        {
-            this.dofBuilder = dofBuilder;
-            this.storedObject = storedObject;
-        }
-
-
-    }
 }

@@ -52,7 +52,7 @@ class DOFGlobalSettings
 {
     static final String DOF_PREFERENCES = "dof_preferences.properties";
     static final String HANDLER_MAPPINGS_PROPERTIES_NAME = "handler_mappings.properties";
-    static final String SCRATCH_OBJECT_DELETION_HELPER_PROPERTIES_NAME = "deletion_mappings.properties";
+    static final String OBJECT_DELETION_HELPER_MAPPINGS_NAME = "deletion_mappings.properties";
 
 
     public static final String MAX_CACHED_SCRATCH_OBJECTS = "MaxCachedScratchObjects";
@@ -88,7 +88,7 @@ class DOFGlobalSettings
     Pattern SCRATCH_PK_PATTERN;
 
 
-    Map<String, ObjectDeletionHelper> classNameToScratchObjectDeletionHelper =
+    Map<String, ObjectDeletionHelper> classNameToObjectDeletionHelper =
             new HashMap<String, ObjectDeletionHelper>();
 
     /**
@@ -113,9 +113,9 @@ class DOFGlobalSettings
      *
      * @return
      */
-    ObjectDeletionHelper getScratchDeletionHelperForClass(String objectClassName)
+    ObjectDeletionHelper getDeletionHelperForClass(String objectClassName)
     {
-        return classNameToScratchObjectDeletionHelper.get(objectClassName);
+        return classNameToObjectDeletionHelper.get(objectClassName);
     }
 
 
@@ -131,6 +131,10 @@ class DOFGlobalSettings
         {
             String c = dofPreferences.getProperty(OBJECT_FILE_INFO_PROCESSOR_PROPERTY,
                                                   DEFAULT_OBJECT_FILE_INFO_PROCESSOR);
+            if (c == null || c.trim().length() == 0 )
+            {
+                c = DEFAULT_OBJECT_FILE_INFO_PROCESSOR;
+            }
             try
             {
                 Class objectFileInfoProcessorClass = Class.forName(c);
@@ -175,7 +179,7 @@ class DOFGlobalSettings
     {
         if (objectDeletionOrder == null)
         {
-            objectDeletionOrder = calcObjectDeletionOrder(classNameToScratchObjectDeletionHelper);
+            objectDeletionOrder = calcObjectDeletionOrder(classNameToObjectDeletionHelper);
         }
         return objectDeletionOrder;
     }
@@ -198,7 +202,7 @@ class DOFGlobalSettings
     {
         if (SCRATCH_PK_PATTERN == null)
         {
-            String s = handlerMappings
+            String s = dofPreferences
                     .getProperty("ScratchPrimaryKeyPattern", "\\{\\{pk(\\:(\\w+))?\\}\\}");
             if (DOF.dofDebug)
             {
@@ -233,33 +237,33 @@ class DOFGlobalSettings
 
         dofPreferences = getPropertiesFromFileName(DOF_PREFERENCES, false);
 
-        parseScratchObjectDeletionHelperMappings();
+        parseObjectDeletionHelperMappings();
     }
 
 
-    void parseScratchObjectDeletionHelperMappings()
+    void parseObjectDeletionHelperMappings()
     {
-        Properties scratchObjectDeletionHelperProperties =
-                getPropertiesFromFileName(SCRATCH_OBJECT_DELETION_HELPER_PROPERTIES_NAME, true);
-        if (scratchObjectDeletionHelperProperties != null)
+        Properties objectDeletionHelperProperties =
+                getPropertiesFromFileName(OBJECT_DELETION_HELPER_MAPPINGS_NAME, true);
+        if (objectDeletionHelperProperties != null)
         {
-            Set<Map.Entry<Object, Object>> entries = scratchObjectDeletionHelperProperties.entrySet();
+            Set<Map.Entry<Object, Object>> entries = objectDeletionHelperProperties.entrySet();
             for (Iterator entryIterator = entries.iterator(); entryIterator.hasNext();)
             {
                 Map.Entry<Object, Object> objectObjectEntry = (Map.Entry<Object, Object>) entryIterator.next();
-                String scratchObjectDeletionHelperClassName = (String) objectObjectEntry.getValue();
-                String scratchObjectClassName = (String) objectObjectEntry.getKey();
+                String objectDeletionHelperClassName = (String) objectObjectEntry.getValue();
+                String className = (String) objectObjectEntry.getKey();
                 try
                 {
-                    ObjectDeletionHelper scratchObjectDeletionHelper =
+                    ObjectDeletionHelper objectDeletionHelper =
                             (ObjectDeletionHelper) Class
-                                    .forName(scratchObjectDeletionHelperClassName).newInstance();
-                    classNameToScratchObjectDeletionHelper
-                            .put(scratchObjectClassName, scratchObjectDeletionHelper);
+                                    .forName(objectDeletionHelperClassName).newInstance();
+                    classNameToObjectDeletionHelper
+                            .put(className, objectDeletionHelper);
                 }
                 catch (ClassNotFoundException e)
                 {
-                    throw new RuntimeException("Class name not found: " + scratchObjectDeletionHelperClassName +
+                    throw new RuntimeException("Class name not found: " + objectDeletionHelperClassName +
                                                "\nPlease examine contents of file: " +
                                                propertyFileToResource
                                                        .get(HANDLER_MAPPINGS_PROPERTIES_NAME));
@@ -305,7 +309,7 @@ class DOFGlobalSettings
                 DependentObjectHandler doh = getDofHandlerInstanceForClassName(handlerClass);
                 if (doh instanceof ObjectDeletionHelper)
                 {
-                    classNameToScratchObjectDeletionHelper
+                    classNameToObjectDeletionHelper
                             .put(doh.getCreatedClass().getName(), (ObjectDeletionHelper) doh);
                 }
             }
@@ -538,7 +542,7 @@ class DOFGlobalSettings
                                                        Map<String, ObjectDeletionHelper> classNameToScratchObjectDeletionHelperMap)
             throws ClassNotFoundException
     {
-        Class[] parentDependencyClasses = scratchObjectDeletionHelper.getParentDependencyClasses();
+        Class[] parentDependencyClasses = scratchObjectDeletionHelper.getDependencyClasses();
 
         int position = sortedClasses.indexOf(currentClass);
         if (position < 0)
@@ -616,7 +620,7 @@ class DOFGlobalSettings
                 ObjectDeletionHelper parentDependencyDeletionHelper =
                         classNameToScratchObjectDeletionHelperMap
                                 .get(parentDependencyClass.getName());
-                Class[] parentParentDependencyClasses = parentDependencyDeletionHelper.getParentDependencyClasses();
+                Class[] parentParentDependencyClasses = parentDependencyDeletionHelper.getDependencyClasses();
                 highestOrderDependencyPosition = getHighestOrderDependencyPosition(sortedClasses,
                                                                                    classNameToScratchObjectDeletionHelperMap,
                                                                                    parentParentDependencyClasses,

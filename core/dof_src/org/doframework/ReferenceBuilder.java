@@ -48,12 +48,12 @@ public interface ReferenceBuilder extends DOFBuilder
     Object fetch();
 
 
-    /**
-     * This method defines what other objects need to be created (persisted) before this object is
-     * created. This method is used by the DOF for cleanup purposes.
-     *
-     * @return Array of reference objects that this object directly depends on.
-     */
+    ///**
+    // * This method defines what other objects need to be created (persisted) before this object is
+    // * created. This method is used by the DOF for cleanup purposes.
+    // *
+    // * @return Array of reference objects that this object directly depends on.
+    // */
     ReferenceBuilder[] getReferenceJavaDependencies();
 
 
@@ -86,9 +86,11 @@ public interface ReferenceBuilder extends DOFBuilder
      */
     boolean delete(Object objectToDelete);
 
-
     /**
-     * @return the primary key of this object
+     * This key is used for hashing objects. The value can be any unique value, such as a unique
+     * field, or a combination of fields that is unique. It does not need to be the same as
+     * the database physical primary key. This is the value used for linking up objects in the DOF.
+     * @return the unique key to be used for caching.
      */
     Object getPrimaryKey();
 

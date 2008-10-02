@@ -11,7 +11,6 @@ public class JdbcPersistenceFactory implements PersistenceFactory
     PaymentPersistence paymentPersistence = new JdbcPaymentPersistence();
     ProductPersistence productPersistence = new JdbcProductPersistence();
     ManufacturerPersistence manufacturerPersistence = new JdbcManufacturerPersistence();
-    ShoppingListPersistence shoppingListPersistence = new JdbcShoppingListPersistence();
 
 
     public CustomerPersistence getCustomerPersistence()
@@ -44,8 +43,4 @@ public class JdbcPersistenceFactory implements PersistenceFactory
     }
 
 
-    public ShoppingListPersistence getShoppingListPersistence()
-    {
-        return shoppingListPersistence;
-    }
 }

@@ -13,10 +13,10 @@ public class ManufacturerJavaTest
     @Test
     public void testReferenceManufacturer()
     {
-        Manufacturer dofManufacturer = (Manufacturer) DOF.require(new Manufacturer_50());
-        assertEquals(50, dofManufacturer.getId());
+        Manufacturer dofManufacturer = (Manufacturer) DOF.require(new Manufacturer_TinyJuice());
+        assertEquals("Tiny Juice", dofManufacturer.getName());
         ManufacturerPersistence manufacturerPersistence = GlobalContext.getPersistanceFactory().getManufacturerPersistence();
-        Manufacturer manuallyRetrievedManufacturer = manufacturerPersistence.getById(50);
+        Manufacturer manuallyRetrievedManufacturer = manufacturerPersistence.getByName("Tiny Juice");
         assertEquals(manuallyRetrievedManufacturer, dofManufacturer);
     }
 

@@ -26,6 +26,7 @@
     <!-- Global properties for this build -->
     <property name="dof.src.java.dir" value="${basedir}/dof_src"/>
     <property name="dof.src.junit.dir" value="${basedir}/dof_junit"/>
+    <property name="dof.src.dof_junit.dir" value="${basedir}/../dof_junit"/>
     <property name="build.dir" value="${basedir}/build"/>
     <property name="build.class.dir" value="${build.dir}/classes"/>
     <property name="build.junit.class.dir" value="${build.dir}/junit_classes"/>
@@ -35,6 +36,7 @@
 	<property name="dist.dof.jar" value="${dist.dir}/dof-${version.number}.jar" />
 	<property name="dist.dof.javadoc.zip" value="${dist.dir}/dof-javadoc-${version.number}.zip" />
 	<property name="dist.dof.src.zip" value="${dist.dir}/dof-src-${version.number}.zip" />
+    <property name="dist.dof.dof_junit.zip" value="${dist.dir}/dof-junit-${version.number}.zip" />
 
 
 
@@ -53,9 +55,8 @@
 	<!-- See the junit target for information on the unless clause
 	 	 of this target -->
     <target name="compile.junit"
-    		depends="compile"
-    		unless="junit.do.not.run">
-        <javac srcdir="${dof.src.junit.dir}"
+    		depends="compile">
+    <javac srcdir="${dof.src.junit.dir}"
                destdir="${build.junit.class.dir}">
             <classpath>
                 <pathelement path="${junit.jar}"/>
@@ -76,29 +77,29 @@
 		 running JUnit by declaring a property.  A developer would set the
 		 junit.do.not.run property by either a command line or IDE support
 		 (they shouldn't modify the build.xml to turn off junit). -->
-    <target name="junit"
-    		depends="dof.test.init, compile.junit"
-    		unless="junit.do.not.run">
-    	<echo level="info"
-    		  message="About to execute DOF JUnit tests." />
-        <junit haltonfailure="yes">
-            <jvmarg value="-DDOF_DIR=${basedir}/dof/test_data"/>
-            <classpath>
-                <pathelement path="${junit.jar}"/>
-                <pathelement path="${build.class.dir}"/>
-                <pathelement path="${build.junit.class.dir}"/>
-                <pathelement path="${basedir}/dof"/>
-            </classpath>
-            <formatter type="plain"/>
-            <batchtest fork="yes" todir="${build.tests.reports.dir}">
-                <fileset dir="${dof.src.junit.dir}">
-                    <include name="**/*Test*.java"/>
-                </fileset>
-            </batchtest>
-        </junit>
-    	<echo level="info"
-    		  message="Finished executing DOF JUnit tests." />
-    </target>
+    <!--<target name="junit"-->
+    		<!--depends="dof.test.init, compile.junit"-->
+    		<!--unless="junit.do.not.run">-->
+    	<!--<echo level="info"-->
+    		  <!--message="About to execute DOF JUnit tests." />-->
+        <!--<junit haltonfailure="yes">-->
+            <!--<jvmarg value="-DDOF_DIR=${basedir}/dof/test_data"/>-->
+            <!--<classpath>-->
+                <!--<pathelement path="${junit.jar}"/>-->
+                <!--<pathelement path="${build.class.dir}"/>-->
+                <!--<pathelement path="${build.junit.class.dir}"/>-->
+                <!--<pathelement path="${basedir}/dof"/>-->
+            <!--</classpath>-->
+            <!--<formatter type="plain"/>-->
+            <!--<batchtest fork="yes" todir="${build.tests.reports.dir}">-->
+                <!--<fileset dir="${dof.src.junit.dir}">-->
+                    <!--<include name="**/*Test*.java"/>-->
+                <!--</fileset>-->
+            <!--</batchtest>-->
+        <!--</junit>-->
+    	<!--<echo level="info"-->
+    		  <!--message="Finished executing DOF JUnit tests." />-->
+    <!--</target>-->
 
 	<!-- Findbugs can take a long time to run, so the unless clause with the
 		 findbugs.do.not.run property allows developers to be able to switch off
@@ -129,7 +130,16 @@
         		 destdir="${build.javadoc.dir}" />
     </target>
 
-	<target name="dof.test" depends="junit, findbugs" />
+    <target name="junit">
+        <ant antfile="../dof_junit/build.xml"
+             target="junit"
+             inheritall="false">
+            <property name="TOP" value="../dof_junit" />
+        </ant>
+    </target>
+
+
+    <target name="dof.test" depends="junit, findbugs" />
 
     <target name="dist"
     		depends="compile, dof.test, dof.javadoc"
@@ -143,15 +153,17 @@
     		  destfile="${dist.dof.javadoc.zip}" />
     	<zip basedir="${dof.src.java.dir}"
     		 destfile="${dist.dof.src.zip}">
-    		<exclude name="**/*.iml" />
     	</zip>
-    	<!-- Now put the unit tests in the src zip this is done in 2 steps
+        <zip basedir="${dof.src.dof_junit.dir}"
+             destfile="${dist.dof.src.zip}">
+        </zip>
+
+        <!-- Now put the unit tests in the src zip this is done in 2 steps
     	     because I did know how to do it in 1 step. -->
     	<zip basedir="${dof.src.junit.dir}"
     		 destfile="${dist.dof.src.zip}"
     		 update="true" />
     </target>
-
 
     <property name="zip.release.dir" value="../release"/>
     <property name="release.pattern" value="DOF-${version.number}"/>
@@ -162,7 +174,9 @@
     <target name="dof.copy" >
         <delete dir="${release.dir}"/>
         <copy todir="${release.dir}">
-            <fileset dir="${whole.release.dir}">
+            <fileset dir="${whole.release.dir}/core">
+                <exclude name="**/*.jar"/>
+                <exclude name="**/build/**"/>
                 <exclude name="**/database/**"/>
                 <exclude name="**/release/**"/>
                 <exclude name="**/out/**"/>
@@ -176,10 +190,43 @@
                 <exclude name="**/*.tmp"/>
                 <exclude name="**/reports/**"/>
             </fileset>
+            <fileset dir="${whole.release.dir}/dof_junit">
+                <exclude name="**/*.jar"/>
+                <exclude name="**/build/**"/>
+                <exclude name="**/database/**"/>
+                <exclude name="**/release/**"/>
+                <exclude name="**/out/**"/>
+                <exclude name="**/classes/**"/>
+                <exclude name="**/*.class"/>
+                <exclude name="**/jpa/**"/>
+                <exclude name="**/hibernate/**"/>
+                <exclude name="**/db/**"/>
+                <exclude name="**/.metadata/**"/>
+                <exclude name="**/*.zip"/>
+                <exclude name="**/*.tmp"/>
+                <exclude name="**/reports/**"/>
+            </fileset>
+            <fileset dir="${whole.release.dir}/build">
+                <exclude name="**/*.jar"/>
+                <exclude name="**/build/**"/>
+                <exclude name="**/database/**"/>
+                <exclude name="**/release/**"/>
+                <exclude name="**/out/**"/>
+                <exclude name="**/classes/**"/>
+                <exclude name="**/*.class"/>
+                <exclude name="**/jpa/**"/>
+                <exclude name="**/hibernate/**"/>
+                <exclude name="**/db/**"/>
+                <exclude name="**/.metadata/**"/>
+                <exclude name="**/*.zip"/>
+                <exclude name="**/*.tmp"/>
+                <exclude name="**/reports/**"/>
+            </fileset>
+
         </copy>
     </target>
 
-    <target name="dof.zip.release" >
+    <target name="dof.zip.release" depends="dist">
         <zip basedir="${release.dir}/.."
              destfile="${dof.release.destfile}"
              includes="${release.pattern}/**">

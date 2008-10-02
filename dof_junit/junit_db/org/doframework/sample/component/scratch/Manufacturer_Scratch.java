@@ -55,7 +55,7 @@ public class Manufacturer_Scratch implements ScratchBuilder
      */
     public Object extractPrimaryKey(Object scratchObject)
     {
-        return ((Manufacturer)scratchObject).getId();
+        return ((Manufacturer)scratchObject).getName();
     }
 
 

@@ -39,11 +39,6 @@ public class MockPersistenceFactory implements PersistenceFactory
     }
 
 
-    public ShoppingListPersistence getShoppingListPersistence()
-    {
-        // todo: implement this
-        return null;
-    }
 
 
 }

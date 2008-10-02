@@ -7,7 +7,6 @@ public class ComponentFactory
     private static PaymentComponent paymentComponent = new PaymentComponent();
     private static ProductComponent productComponent = new ProductComponent();
     private static ManufacturerComponent manufacturerComponent = new ManufacturerComponent();
-    private static ShoppingListComponent shoppingListComponent = new ShoppingListComponent();
 
 
     public static CustomerComponent getCustomerComponent()
@@ -40,9 +39,5 @@ public class ComponentFactory
     }
 
 
-    public static ShoppingListComponent getShoppingListComponent()
-    {
-        return shoppingListComponent;
-    }
 
 }

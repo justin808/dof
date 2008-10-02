@@ -7,6 +7,7 @@ package org.doframework.sample.component;
  */
 public class Customer extends Entity
 {
+
     private String name;
     private Integer balance;
     private boolean isOverdue;
@@ -86,4 +87,13 @@ public class Customer extends Entity
         this.phoneNumber = phoneNumber;
         return this;
     }
+
+
+    public String toString()
+    {
+        return "Customer{" + "name='" + name + '\'' + ", balance=" + balance + ", isOverdue=" +
+               isOverdue + ", phoneNumber='" + phoneNumber + '\'' + '}';
+    }
+
+
 }

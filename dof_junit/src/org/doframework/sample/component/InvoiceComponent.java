@@ -85,14 +85,33 @@ public class InvoiceComponent
      *
      * @return the invoice or null if the invoice does not exist with that ID
      */
-    public Invoice getById(int id)
+    public Invoice getByInvoiceId(int id)
     {
         return getPersistanceFactory().getInvoicePersistence().getById(id);
+    }
+
+
+    /**
+     * Get the invoice by Invoice Number
+     *
+     * @param invoiceNumber
+     *
+     * @return the invoice or null if the invoice does not exist with that ID
+     */
+    public Invoice getByInvoiceNumber(int invoiceNumber)
+    {
+        return getPersistanceFactory().getInvoicePersistence().getByInvoiceNumber(invoiceNumber);
     }
 
 
     public boolean delete(Invoice invoice)
     {
         return getPersistanceFactory().getInvoicePersistence().delete(invoice);
+    }
+
+
+    public int getNextInvoiceNumber()
+    {
+        return getPersistanceFactory().getInvoicePersistence().getNextInvoiceNumber();
     }
 }

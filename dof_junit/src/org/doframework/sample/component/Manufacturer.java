@@ -47,4 +47,10 @@ public class Manufacturer extends Entity
         Manufacturer other = (Manufacturer) obj;
         return other.id == id && other.name.equals(name);
     }
+
+
+    public String toString()
+    {
+        return "Manufacturer{" + "name='" + name + '\'' + '}';
+    }
 }

@@ -13,18 +13,10 @@ public class Invoice__ScratchJavaScratchDependencies extends InvoiceScratchBuild
         implements ScratchBuilder
 {
 
-    /**
-     * The implementation of this method must insert the defined object into the DB.
-     * <p/>
-     * Note, for dependencies, it is better to use DOF.requireReference(ReferenceDependentObject) than to get the object
-     * on your own, as the object will be cached right before create is called.
-     *
-     * @return An object that was created and saved in the DB
-     * @param scratchReferenceToPrimaryKey
-     */
     public Object create(Map scratchReferenceToPrimaryKey)
     {
         Invoice invoice = invoiceComponent.createNew();
+        invoice.setInvoiceNumber(invoiceComponent.getNextInvoiceNumber());
 
         Customer customer = (Customer) scratchReferenceToPrimaryKey.get("scratchCustomer");
         if (customer == null)
@@ -38,8 +30,7 @@ public class Invoice__ScratchJavaScratchDependencies extends InvoiceScratchBuild
 
         if (customer == null)
         {
-            Customer_Scratch customer_scratch = new Customer_Scratch();
-            customer = (Customer) DOF.createScratchObject(customer_scratch);
+            customer = (Customer) DOF.createScratchObject(new Customer_Scratch());
         }
         invoice.setCustomer(customer).setInvoiceDate((new GregorianCalendar(2008, 0, 5)).getTime()); // jan 5, 2008
         Product_Scratch productScratchBuilder1 = new Product_Scratch();
@@ -48,8 +39,6 @@ public class Invoice__ScratchJavaScratchDependencies extends InvoiceScratchBuild
         Product_Scratch productScratchBuilder2 = new Product_Scratch();
         Product productScratch2 = (Product) DOF.createScratchObject(productScratchBuilder2);
         invoiceComponent.addLineItem(invoice, 6, productScratch2, productScratch2.getPrice());
-        invoice.setNew(true);
-
         invoiceComponent.persist(invoice);
         return invoice;
     }

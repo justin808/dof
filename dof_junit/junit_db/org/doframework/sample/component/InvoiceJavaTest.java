@@ -14,9 +14,9 @@ public class InvoiceJavaTest
     @Test
     public void testReferenceInvoiceDependsOnJavaReferences()
     {
-        Invoice dofInvoice = (Invoice) DOF.require(new Invoice_1000());
-        assertEquals(1000, dofInvoice.getId());
-        assertEquals(35, dofInvoice.getCustomer().getId());
+        Invoice dofInvoice = (Invoice) DOF.require(new Invoice_500());
+        assertEquals((Object) 500, dofInvoice.getInvoiceNumber());
+        assertEquals("John Doe", dofInvoice.getCustomer().getName());
         List<LineItem> lineItems = dofInvoice.getLineItems();
         int total = getLineItemTotal(lineItems);
         assertEquals(total, (int)dofInvoice.getTotal());
@@ -28,8 +28,8 @@ public class InvoiceJavaTest
     public void testReferenceInvoiceDependsOnTextReferences()
     {
         Invoice dofInvoice = (Invoice) DOF.require(new Invoice_1001());
-        assertEquals(1001, dofInvoice.getId());
-        assertEquals(25, dofInvoice.getCustomer().getId());
+        assertEquals((Object) 1001, dofInvoice.getInvoiceNumber());
+        assertEquals("John Smith", dofInvoice.getCustomer().getName());
         List<LineItem> lineItems = dofInvoice.getLineItems();
         int total = getLineItemTotal(lineItems);
 
@@ -55,36 +55,55 @@ public class InvoiceJavaTest
     {
         // ensure object created
         DOF.require(new Invoice_1001());
+        String manufacturerName = "Drinks One";
+        assertNotNull(ComponentFactory.getInvoiceComponent().getByInvoiceNumber(1001));
+
+        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName(manufacturerName,
+                                                                                   "Coffee"));
+        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName(manufacturerName,
+                                                                                   "Tea"));
+        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName(manufacturerName,
+                                                                                   "Kona Coffee"));
 
         // delete object
         DOF.delete(new Invoice_1001());
 
-        assertNull(ComponentFactory.getInvoiceComponent().getById(1001));
-        assertNull(ComponentFactory.getProductComponent().getById(41));
-        assertNull(ComponentFactory.getProductComponent().getById(42));
-        assertNull(ComponentFactory.getProductComponent().getById(43));
+        assertNull(ComponentFactory.getInvoiceComponent().getByInvoiceNumber(1001));
+        assertNull(ComponentFactory.getProductComponent().getByManufacturerAndName(manufacturerName,
+                                                                                   "Coffee"));
+        assertNull(ComponentFactory.getProductComponent().getByManufacturerAndName(manufacturerName,
+                                                                                   "Tea"));
+        assertNull(ComponentFactory.getProductComponent().getByManufacturerAndName(manufacturerName,
+                                                                                   "Kona Coffee"));
     }
 
-    @Test
-    public void test()
-    {
-        DOF.delete(new Invoice_1000(), false);
-    }
+    // Example of using a test to delete objects while working out the JUnit tests
+    //@Test
+    //public void test()
+    //{
+    //    DOF.delete(new Invoice_500(), false);
+    //}
+
     @Test
     public void testReferenceInvoiceDeleteNotGreedyJava()
     {
         // ensure object created
-        DOF.require(new Invoice_1000());
-        assertNotNull(ComponentFactory.getInvoiceComponent().getById(1000));
-        assertNotNull(ComponentFactory.getProductComponent().getById(101));
-        assertNotNull(ComponentFactory.getProductComponent().getById(102));
+        DOF.require(new Invoice_500());
+        assertNotNull(DOF.getCachedObject(Invoice.class, "500"));
+        assertNotNull(ComponentFactory.getInvoiceComponent().getByInvoiceNumber(500));
+        assertNotNull(ComponentFactory
+                .getProductComponent().getByManufacturerAndName("Dole", "Pineapple Juice"));
+        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("Dole",
+                                                                                      "Cranberry Juice"));
 
         // delete object
-        DOF.delete(new Invoice_1000(), false);
+        DOF.delete(new Invoice_500());
 
-        assertNull(ComponentFactory.getInvoiceComponent().getById(1000));
-        assertNotNull(ComponentFactory.getProductComponent().getById(101));
-        assertNotNull(ComponentFactory.getProductComponent().getById(102));
+        assertNull(ComponentFactory.getInvoiceComponent().getByInvoiceId(500));
+        assertNull(ComponentFactory
+                .getProductComponent().getByManufacturerAndName("Dole", "Pineapple Juice"));
+        assertNull(ComponentFactory
+                .getProductComponent().getByManufacturerAndName("Dole", "Cranberry Juice"));
     }
 
 
@@ -97,7 +116,7 @@ public class InvoiceJavaTest
         // delete object
         DOF.delete(new Invoice_1002(), true);
 
-        assertNull(ComponentFactory.getInvoiceComponent().getById(1002));
+        assertNull(ComponentFactory.getInvoiceComponent().getByInvoiceId(1002));
         assertNull(ComponentFactory.getProductComponent().getById(105));
         assertNull(ComponentFactory.getProductComponent().getById(106));
     }
@@ -110,7 +129,7 @@ public class InvoiceJavaTest
         Invoice dofInvoice2 = (Invoice) DOF.createScratchObject(new Invoice__ScratchJava());
         assertEquals(dofInvoice1.getId() + 1, dofInvoice2.getId());
 
-        assertEquals(36, dofInvoice1.getCustomer().getId());
+        assertEquals("Jane Doe", dofInvoice1.getCustomer().getName());
         List<LineItem> lineItems = dofInvoice1.getLineItems();
         int total = getLineItemTotal(lineItems);
         assertEquals(total, (int) dofInvoice1.getTotal());
@@ -126,7 +145,7 @@ public class InvoiceJavaTest
         Invoice dofInvoice2 = (Invoice) DOF.createScratchObject(new Invoice__ScratchText());
         assertEquals(dofInvoice1.getId() + 1, dofInvoice2.getId());
 
-        assertEquals(55, dofInvoice1.getCustomer().getId());
+        assertEquals("John Smith", dofInvoice1.getCustomer().getName());
         List<LineItem> lineItems = dofInvoice1.getLineItems();
         int total = getLineItemTotal(lineItems);
         assertEquals(total, (int) dofInvoice1.getTotal());
@@ -186,7 +205,7 @@ public class InvoiceJavaTest
         assertNotNull(ComponentFactory.getProductComponent().getById(productId2));
         assertNotNull(ComponentFactory.getManufacturerComponent().getById(manufacturerId1));
         assertNotNull(ComponentFactory.getManufacturerComponent().getById(manufacturerId2));
-        assertNotNull(ComponentFactory.getInvoiceComponent().getById(invoiceId));
+        assertNotNull(ComponentFactory.getInvoiceComponent().getByInvoiceId(invoiceId));
 
         // delete object
         DOF.delete(scratchInvoice);
@@ -196,7 +215,7 @@ public class InvoiceJavaTest
         assertNull(ComponentFactory.getProductComponent().getById(productId2));
         assertNull(ComponentFactory.getManufacturerComponent().getById(manufacturerId1));
         assertNull(ComponentFactory.getManufacturerComponent().getById(manufacturerId2));
-        assertNull(ComponentFactory.getInvoiceComponent().getById(invoiceId));
+        assertNull(ComponentFactory.getInvoiceComponent().getByInvoiceId(invoiceId));
     }
 
     @Test
@@ -286,8 +305,8 @@ public class InvoiceJavaTest
         }
 
         InvoiceComponent invoiceComponent = ComponentFactory.getInvoiceComponent();
-        assertNull(invoiceComponent.getById(invoiceId1));
-        assertNull(invoiceComponent.getById(invoiceId2));
+        assertNull(invoiceComponent.getByInvoiceId(invoiceId1));
+        assertNull(invoiceComponent.getByInvoiceId(invoiceId2));
 
         CustomerComponent customerComponent = ComponentFactory.getCustomerComponent();
         assertNull(customerComponent.getById(customerId1));
@@ -304,13 +323,33 @@ public class InvoiceJavaTest
         Invoice invoice1 = (Invoice) DOF.createScratchObject(scratchInvoiceBuilder);
         Customer customer = invoice1.getCustomer();
 
-        Map scratchReferenceToReference = new HashMap();
-        scratchReferenceToReference.put("scratchCustomer", customer);
+        Map scratchReferenceToObject = new HashMap();
+        scratchReferenceToObject.put("scratchCustomer", customer);
         Invoice invoice2 = (Invoice) DOF.createScratchObject(scratchInvoiceBuilder,
-                                                             scratchReferenceToReference);
+                                                             scratchReferenceToObject);
         assertEquals(invoice1.getCustomer().getId(), invoice2.getCustomer().getId());
-
-
     }
+
+@Test
+public void testNewInvoiceSubtotal()
+{
+    Invoice invoice = (Invoice) DOF.createScratchObject(new Invoice__ScratchJavaScratchDependencies());
+    int originalSubtotal = invoice.getTotal();
+    Product acaiJuice = (Product) DOF.require(new Product_TinyJuiceAcaiJuice());
+    Product blueberryJuice = (Product) DOF.require(new Product_TinyJuiceBlueberryJuice());
+    InvoiceComponent invoiceComponent = ComponentFactory.getInvoiceComponent();
+    invoiceComponent.addLineItem(invoice, 2, acaiJuice, acaiJuice.getPrice());
+    invoiceComponent.addLineItem(invoice, 3, blueberryJuice, blueberryJuice.getPrice());
+
+    // triangulation
+    assertEquals((long) (originalSubtotal + acaiJuice.getPrice() * 2 + blueberryJuice.getPrice() * 3),
+                 (long) invoice.getTotal());
+
+    // Test persistence
+    invoiceComponent.persist(invoice);
+    Invoice invoiceFromDb = invoiceComponent.getByInvoiceId(invoice.getId());
+    assertEquals(invoice.getTotal(), invoiceFromDb.getTotal());
+}
+
 
 }

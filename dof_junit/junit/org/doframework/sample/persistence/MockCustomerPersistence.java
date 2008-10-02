@@ -30,6 +30,12 @@ public class MockCustomerPersistence implements CustomerPersistence
     }
 
 
+    public Customer getByName(String name)
+    {
+        return null;
+    }
+
+
     public int getNextId()
     {
         return nextId++;

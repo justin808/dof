@@ -25,10 +25,11 @@ public class Invoice__ScratchJava extends InvoiceScratchBuilderBase implements S
     public Object create(Map scratchReferenceToPrimaryKey)
     {
         Invoice invoice = invoiceComponent.createNew();
+        invoice.setInvoiceNumber(invoiceComponent.getNextInvoiceNumber());
 
-        Customer customer36 = (Customer) DOF.require(new Customer_36());
-        Product product103 = (Product) DOF.require(new Product_103());
-        Product product104 = (Product) DOF.require(new Product_104());
+        Customer customer36 = (Customer) DOF.require(new Customer_JaneDoe());
+        Product product103 = (Product) DOF.require(new Product_TinyJuiceAppleJuice());
+        Product product104 = (Product) DOF.require(new Product_TinyJuiceBlueberryJuice());
         invoice.setCustomer(customer36).setInvoiceDate((new GregorianCalendar(2008, 0, 5)).getTime()); // jan 5, 2008
         invoiceComponent.addLineItem(invoice, 6, product103, product103.getPrice());
         invoiceComponent.addLineItem(invoice, 11, product104, product104.getPrice());

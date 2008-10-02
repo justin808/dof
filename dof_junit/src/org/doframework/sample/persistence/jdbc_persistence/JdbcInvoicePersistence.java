@@ -10,40 +10,48 @@ public class JdbcInvoicePersistence extends JdbcBasePersistence implements Invoi
 {
     public Invoice getById(int invoiceId)
     {
-        String sql = "select * from invoice where id = " + invoiceId;
-        String[][] rows = JdbcDbUtil.executeMultiColumnQuery(sql);
-        if (rows.length == 0)
-        {
-            return null;
-        }
-        else
-        {
-            final String[] invoiceRow = rows[0];
-            int fetchedInvoiceId = Integer.parseInt(invoiceRow[0]);
-            if (fetchedInvoiceId != invoiceId)
-            {
-                throw new RuntimeException("Query for invoice broken: " + sql);
-            }
-
-            Invoice invoice = getInvoice(invoiceId, invoiceRow, null);
-            return invoice;
-        }
+        return getInvoiceForQuery("select * from invoice where id = " + invoiceId);
     }
 
 
-    private Invoice getInvoice(int invoiceId, String[] invoiceRow, Customer customer)
+    public Invoice getByInvoiceNumber(int invoiceNumber)
     {
-        int customerId = Integer.parseInt(invoiceRow[1]);
+        return getInvoiceForQuery("select * from invoice where invoice_number = " + invoiceNumber);
+    }
+
+
+    private Invoice getInvoiceForQuery(String sql)
+    {
+        Invoice invoice = null;
+        String[][] rows = JdbcDbUtil.executeMultiColumnQuery(sql);
+        if (rows.length == 1)
+        {
+            final String[] invoiceRow = rows[0];
+            invoice = getInvoice(invoiceRow, null);
+        } else if (rows.length > 1)
+        {
+            throw new RuntimeException("Query for invoice broken -- too many rows returned: " + sql);
+        }
+        return invoice;
+    }
+
+
+    private Invoice getInvoice(String[] invoiceRow, Customer customer)
+    {
+        int invoiceId = Integer.parseInt(invoiceRow[0]);
+        int invoiceNumber = Integer.parseInt(invoiceRow[1]);
+        int customerId = Integer.parseInt(invoiceRow[2]);
         CustomerPersistence customerPersistence = getPersistanceFactory().getCustomerPersistence();
         if (customer == null)
         {
             customer = customerPersistence.getById(customerId);
         }
-        Date invoiceDate = JdbcDbUtil.parseDate(invoiceRow[2]);
-        Integer total = new Integer(invoiceRow[3]);
-        Integer pendingBalance = new Integer(invoiceRow[4]);
+        Date invoiceDate = JdbcDbUtil.parseDate(invoiceRow[3]);
+        Integer total = new Integer(invoiceRow[4]);
+        Integer pendingBalance = new Integer(invoiceRow[5]);
         List<LineItem> lineItems = getLineItems(invoiceId);
         Invoice invoice = new Invoice(invoiceId);
+        invoice.setInvoiceNumber(invoiceNumber);
         invoice.setCustomer(customer);
         invoice.setInvoiceDate(invoiceDate);
         invoice.setTotal(total);
@@ -81,9 +89,12 @@ public class JdbcInvoicePersistence extends JdbcBasePersistence implements Invoi
 
     public void insert(Invoice invoice) throws DuplicateRecordException
     {
-
-        String sql = "insert into invoice (id, customer_id, invoice_date, total, pending_balance) " + "values (" +
-                     invoice.getId() + ", " + invoice.getCustomer().getId() + ", " +
+        if (invoice.getInvoiceNumber() == null)
+        {
+            throw new RuntimeException("Null invoice number!: " + invoice);
+        }
+        String sql = "insert into invoice (id, invoice_number, customer_id, invoice_date, total, pending_balance) " + "values (" +
+                     invoice.getId() + ", " + invoice.getInvoiceNumber() + ", " + invoice.getCustomer().getId() + ", " +
                      JdbcDbUtil.formatDate(invoice.getInvoiceDate()) + ", " + invoice.getTotal() + ", " +
                      invoice.getPendingBalance() + ")";
         JdbcDbUtil.update(sql);
@@ -136,6 +147,12 @@ public class JdbcInvoicePersistence extends JdbcBasePersistence implements Invoi
     }
 
 
+    public int getNextInvoiceNumber()
+    {
+        return getNextId("invoice_number");
+    }
+
+
     /**
      * @return All the invoices for the customer, ordered chronologically
      */
@@ -160,7 +177,7 @@ public class JdbcInvoicePersistence extends JdbcBasePersistence implements Invoi
         List<Invoice> invoices = new ArrayList<Invoice>();
         for (int row = 0; row < data.length; row++)
         {
-            Invoice invoice = getInvoice(Integer.parseInt(data[row][0]), data[row], customer);
+            Invoice invoice = getInvoice(data[row], customer);
             invoices.add(invoice);
         }
         return invoices; // if none found

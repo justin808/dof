@@ -2,23 +2,23 @@
 <!--Scratch customer could be needed because the customer stores the sum of invoices created-->
 <!-- list of dependencies for invoice number 100 -->
 <!-- @createScratchObject("customer.scratchBalance35.xml", "scratchCustomerPk")-->
-<!-- @require("product.31.xml") -->
-<!-- @require("product.32.xml") -->
+<!-- @require("product.Drinks Unlimited__Diet Tea.xml") -->
+<!-- @require("product.Drinks Unlimited__Diet Cherry Cola.xml") -->
 <invoice>
-    <id>{{pk}}</id>
-    <customer_id>{{pk:scratchCustomerPk}}</customer_id>
+    <invoice_number>{{pk}}</invoice_number>
+    <customer_name>{{pk:scratchCustomerPk}}</customer_name>
     <invoice_date>2007-05-15</invoice_date>
     <total>38</total>
     <pending_balance>38</pending_balance>
     <line_items>
         <line_item>
             <qty>8</qty>
-            <product_id>31</product_id>
+            <product_manu_name_prod>Drinks Unlimited__Diet Tea</product_manu_name_prod>
             <price>4</price>
         </line_item>
         <line_item>
             <qty>2</qty>
-            <product_id>32</product_id>
+            <product_manu_name_prod>Drinks Unlimited__Diet Cherry Cola</product_manu_name_prod>
             <price>3</price>
         </line_item>
     </line_items>

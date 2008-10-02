@@ -30,4 +30,10 @@ public interface InvoicePersistence extends BasePersistence
 
 
     boolean delete(Invoice invoice);
+
+
+    int getNextInvoiceNumber();
+
+
+    Invoice getByInvoiceNumber(int invoiceNumber);
 }

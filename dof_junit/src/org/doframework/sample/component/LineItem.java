@@ -49,4 +49,11 @@ public class LineItem
     {
         this.price = price;
     }
+
+
+    public String toString()
+    {
+        return "LineItem{" + "quantity=" + quantity + ", product=" + product + ", price=" + price +
+               '}';
+    }
 }

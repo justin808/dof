@@ -59,4 +59,10 @@ public class CustomerComponent
     {
         return getPersistanceFactory().getCustomerPersistence().delete(customer);
     }
+
+
+    public Customer getByName(String name)
+    {
+        return getPersistanceFactory().getCustomerPersistence().getByName(name);
+    }
 }

@@ -1,0 +1,7 @@
+<!--Do not let anything other than test testProductInsertFailsDependencyDoesNotExist depend on this file-->
+<!-- @require("manufacturer.Fuzzy Drinks.xml") -->
+<product>
+    <name>Root Beer</name>
+    <price>4</price>
+    <manufacturer_name>Fuzzy Drinks</manufacturer_name>
+</product>

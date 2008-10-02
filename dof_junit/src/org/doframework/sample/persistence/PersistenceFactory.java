@@ -10,7 +10,6 @@ public interface PersistenceFactory
     PaymentPersistence getPaymentPersistence();
     ProductPersistence getProductPersistence();
     ManufacturerPersistence getManufacturerPersistence();
-    ShoppingListPersistence getShoppingListPersistence();
 
 
 }

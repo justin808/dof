@@ -14,4 +14,7 @@ public interface ProductPersistence extends BasePersistence
 
 
     boolean delete(Product product);
+
+
+    Product getByManufacturerNameProductName(String manufacturerName, String productName);
 }

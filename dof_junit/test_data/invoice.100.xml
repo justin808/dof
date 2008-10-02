@@ -1,28 +1,28 @@
 <!-- list of dependencies for invoice number 100 -->
-        <!-- @require("customer.25.xml") -->
-        <!-- @require("product.13.xml") -->
-        <!-- @require("product.14.xml") -->
-        <!-- @require("product.15.xml") -->
+        <!-- @require("customer.John Smith.xml") -->
+        <!-- @require("product.Starbucks__Coffee.xml") -->
+        <!-- @require("product.Lipton__Tea.xml") -->
+        <!-- @require("product.Lipton__Green Tea.xml") -->
 <invoice>
-    <id>100</id>
-    <customer_id>25</customer_id>
+    <invoice_number>100</invoice_number>
+    <customer_name>John Smith</customer_name>
     <invoice_date>2007-05-15</invoice_date>
     <total>117</total>
     <pending_balance>117</pending_balance>
     <line_items>
         <line_item>
             <qty>5</qty>
-            <product_id>13</product_id>
+            <product_manu_name_prod>Starbucks__Coffee</product_manu_name_prod>
             <price>9</price>
         </line_item>
         <line_item>
             <qty>8</qty>
-            <product_id>14</product_id>
+            <product_manu_name_prod>Lipton__Tea</product_manu_name_prod>
             <price>5</price>
         </line_item>
         <line_item>
             <qty>4</qty>
-            <product_id>15</product_id>
+            <product_manu_name_prod>Lipton__Green Tea</product_manu_name_prod>
             <price>8</price>
         </line_item>
     </line_items>

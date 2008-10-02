@@ -2,6 +2,7 @@ package org.doframework.sample.persistence.jdbc_persistence;
 
 import org.doframework.sample.component.*;
 import org.doframework.sample.persistence.*;
+import org.doframework.*;
 
 import java.sql.*;
 
@@ -52,6 +53,27 @@ public class JdbcProductPersistence extends JdbcBasePersistence implements Produ
     }
 
 
+    public Product getByManufacturerNameProductName(String manufacturerName, String productName)
+    {
+        String sql = "select * from product where name = '" + productName + "' and manufacturer_id = " +
+                "(select id from manufacturer where name = '" + manufacturerName + "')";
+        //if (DOF.dofDebug)
+        //{
+        //    System.out.println("sql = " + sql);
+        //}
+        String[][] rows = JdbcDbUtil.executeMultiColumnQuery(sql);
+        if (rows.length == 0)
+        {
+            return null;
+        }
+        else
+        {
+            return getProductFromRow(rows, sql);
+        }
+
+    }
+
+
     public Product getById(int id)
     {
         String sql = "select * from product where id = " + id;
@@ -62,15 +84,30 @@ public class JdbcProductPersistence extends JdbcBasePersistence implements Produ
         }
         else
         {
-            String name = rows[0][1];
-            String sPrice = rows[0][2];
-            Integer price = new Integer(sPrice);
-            String sManufacturerId = rows[0][3];
-            int manufacturerId = Integer.parseInt(sManufacturerId);
-            ManufacturerComponent manufacturerComponent = ComponentFactory.getManufacturerComponent();
-            Manufacturer manufacturer = manufacturerComponent.getById(manufacturerId);
-            return new Product(id, name, price, manufacturer);
+            return getProductFromRow(rows, sql);
         }
+    }
+
+
+    private Product getProductFromRow(String[][] rows, String sql)
+    {
+        if (rows.length != 1)
+        {
+            throw new IllegalArgumentException(
+                    "Called getProductFromRow with more than one row returned " +
+                    "from query: " + sql);
+        }
+
+
+        int productId = Integer.parseInt(rows[0][0]);
+        String name = rows[0][1];
+        String sPrice = rows[0][2];
+        Integer price = new Integer(sPrice);
+        String sManufacturerId = rows[0][3];
+        int manufacturerId = Integer.parseInt(sManufacturerId);
+        ManufacturerComponent manufacturerComponent = ComponentFactory.getManufacturerComponent();
+        Manufacturer manufacturer = manufacturerComponent.getById(manufacturerId);
+        return new Product(productId, name, price, manufacturer);
     }
 
 

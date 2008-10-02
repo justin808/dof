@@ -1,9 +1,6 @@
 package org.doframework.sample.component.scratch;
 
-import org.doframework.*;
 import org.doframework.sample.component.*;
-
-import java.util.*;
 
 public abstract class InvoiceScratchBuilderBase
 {
@@ -19,7 +16,7 @@ public abstract class InvoiceScratchBuilderBase
      */
     public Object fetch(Object pk)
     {
-        return invoiceComponent.getById(pk instanceof Integer ? (Integer)pk : Integer.parseInt(pk + ""));
+        return invoiceComponent.getByInvoiceId(pk instanceof Integer ? (Integer)pk : Integer.parseInt(pk + ""));
     }
 
 

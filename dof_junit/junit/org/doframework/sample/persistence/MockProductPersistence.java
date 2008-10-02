@@ -30,6 +30,12 @@ public class MockProductPersistence implements ProductPersistence
     }
 
 
+    public Product getByManufacturerNameProductName(String manufacturerName, String productName)
+    {
+        return null;
+    }
+
+
     public int getNextId()
     {
         return nextId++;

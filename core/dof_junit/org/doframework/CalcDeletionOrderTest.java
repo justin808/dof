@@ -59,7 +59,7 @@ public class CalcDeletionOrderTest
                     (StubScratchObjectDeletionHelper) classNameToScratchObjectDeletionHelper
                             .get(aClass.getName());
             // Check that all dependencies are lower
-            Class[] parentDependencyClasses = ssodh.getParentDependencyClasses();
+            Class[] parentDependencyClasses = ssodh.getDependencyClasses();
             if (parentDependencyClasses != null)
             {
                 for (int i = 0; i < parentDependencyClasses.length; i++)
@@ -99,7 +99,7 @@ public class CalcDeletionOrderTest
 
         public Object[] getDependencies(Object object) { return new Object[0]; }
 
-        public Class[] getParentDependencyClasses()
+        public Class[] getDependencyClasses()
         {
             return dependencies;
         }

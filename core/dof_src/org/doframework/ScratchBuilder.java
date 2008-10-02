@@ -57,10 +57,6 @@ public interface ScratchBuilder extends DOFBuilder
     Object fetch(Object pk);
 
 
-    /** Return the primary key for the scratch object */
-    Object extractPrimaryKey(Object scratchObject);
-
-
     /**
      * The implementation of this method must insert the defined object into the DB, using a
      * <b>unique</b> primary key.
@@ -97,4 +93,16 @@ public interface ScratchBuilder extends DOFBuilder
      * @return An object that was created and saved in the DB
      */
     Object create(Map scratchReferenceToPrimaryKey);
+
+
+    /**
+     * Extract the logical primary key (unique key for reference purposes) out of the scratch object
+     * to be used for hash key of cached  objects. The value can be any unique value, such as a
+     * unique field, or a combination of fields that is unique. It does not need to be the database
+     * primary key.
+     *
+     * @return the unique key to be used for caching.
+     */
+    Object extractPrimaryKey(Object scratchObject);
+
 }

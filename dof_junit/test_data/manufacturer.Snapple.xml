@@ -1,0 +1,4 @@
+<!--Do not let anything other than one product depend on this file-->
+<manufacturer>
+    <name>Snapple</name>
+</manufacturer>

@@ -30,7 +30,7 @@ public abstract class CustomerReferenceBuilder implements ReferenceBuilder
      * @return The object created from the db if it existed, or else null */
     public Object fetch()
     {
-        return customerComponent.getById(((Integer)getPrimaryKey()).intValue());
+        return customerComponent.getByName((String) getPrimaryKey());
     }
 
 
@@ -59,4 +59,18 @@ public abstract class CustomerReferenceBuilder implements ReferenceBuilder
         return Customer.class;
     }
 
+
+    /**
+     * The implementation of this method must insert the defined object into the DB.
+     * <p/>
+     *
+     * @return An object that was created and saved in the DB
+     */
+    public Object create()
+    {
+        Customer customer = customerComponent.createNew();
+        customer.setName((String) getPrimaryKey()).setBalance(0).setOverdue(false).setPhoneNumber("415-555-1212");
+        customerComponent.persist(customer);
+        return customer;
+    }
 }

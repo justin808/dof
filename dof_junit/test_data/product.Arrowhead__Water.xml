@@ -1,0 +1,7 @@
+<!--Important that this is the only product that depends on manufacturer 20 b/c testing delete-->
+<!-- @require("manufacturer.Arrowhead.xml") -->
+<product>
+    <name>Water</name>
+    <price>1.99</price>
+    <manufacturer_name>Arrowhead</manufacturer_name>
+</product>
