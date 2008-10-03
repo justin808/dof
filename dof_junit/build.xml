@@ -9,8 +9,8 @@
 
     <!-- Global properties for this build -->
     <property name="TOP" value="."/>
-    <property name="lib.dir" value="lib"/>
-    <property name="class.dir" value="bin"/>
+    <property name="lib.dir" value="../lib"/>
+    <property name="class.dir" value="classes"/>
     <property name="src.dir" value="src"/>
     <property name="junit.dir" value="${TOP}/junit"/>
     <property name="junit_db.dir" value="${TOP}/junit_db"/>
@@ -56,7 +56,7 @@
                 <pathelement location="${etc.class.dir}"/>
             </classpath>
             <formatter type="plain"/>
-            <test fork="yes" todir="${junit.out.dir}" name="org.doframework.sample.AllTestSuiteInProcessDb"/>
+            <test fork="yes" todir="${junit.out.dir}" name="org.doframework.sample.component.AllTestSuiteInProcessDbThreeTimes"/>
             <!--<batchtest fork="yes" todir="${junit.out.dir}">-->
                 <!--<fileset dir="${junit_db.dir}">-->
                     <!--<include name="**/AllTestSuiteInProcessDb.java"/>-->

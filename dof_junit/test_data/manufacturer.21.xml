@@ -1,5 +1,0 @@
-<!--Important that this two products depend on manufacturer 21 b/c testing delete-->
-<manufacturer>
-    <id>21</id>
-    <name>Pepsi</name>
-</manufacturer>
