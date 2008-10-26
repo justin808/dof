@@ -11,39 +11,39 @@ public class CalcDeletionOrderTest
     @Test
     public void testCalcObjectDeletionOrder()
     {
-        Map<String, ObjectDeletionHelper> classNameToScratchObjectDeletionHelper =
-                new HashMap<String, ObjectDeletionHelper>();
+        Map<Class, DeletionHelper> classNameToScratchObjectDeletionHelper =
+                new HashMap<Class, DeletionHelper>();
         int countClasses = 0;
         classNameToScratchObjectDeletionHelper
-                .put(A.class.getName(),
+                .put(A.class,
                      new StubScratchObjectDeletionHelper(new Class[]{B.class, C.class}));
         countClasses++;
 
         classNameToScratchObjectDeletionHelper
-                .put(B.class.getName(),
+                .put(B.class,
                      new StubScratchObjectDeletionHelper(new Class[]{D.class}));
         countClasses++;
 
 
         classNameToScratchObjectDeletionHelper
-                .put(C.class.getName(),
+                .put(C.class,
                      new StubScratchObjectDeletionHelper(new Class[]{}));
         countClasses++;
 
         classNameToScratchObjectDeletionHelper
-                .put(D.class.getName(), new StubScratchObjectDeletionHelper(new Class[]{}));
+                .put(D.class, new StubScratchObjectDeletionHelper(new Class[]{}));
         countClasses++;
 
         classNameToScratchObjectDeletionHelper
-                .put(E.class.getName(), new StubScratchObjectDeletionHelper(new Class[]{B.class, C.class}));
+                .put(E.class, new StubScratchObjectDeletionHelper(new Class[]{B.class, C.class}));
         countClasses++;
 
         classNameToScratchObjectDeletionHelper
-                .put(F.class.getName(), new StubScratchObjectDeletionHelper(new Class[]{A.class, E.class}));
+                .put(F.class, new StubScratchObjectDeletionHelper(new Class[]{A.class, E.class}));
         countClasses++;
 
         classNameToScratchObjectDeletionHelper
-                .put(G.class.getName(), new StubScratchObjectDeletionHelper(new Class[]{F.class, E.class, D.class}));
+                .put(G.class, new StubScratchObjectDeletionHelper(new Class[]{F.class, E.class, D.class}));
         countClasses++;
 
 
@@ -57,9 +57,9 @@ public class CalcDeletionOrderTest
             Class aClass = (Class) classIterator.next();
             StubScratchObjectDeletionHelper ssodh =
                     (StubScratchObjectDeletionHelper) classNameToScratchObjectDeletionHelper
-                            .get(aClass.getName());
+                            .get(aClass);
             // Check that all dependencies are lower
-            Class[] parentDependencyClasses = ssodh.getDependencyClasses();
+            Class[] parentDependencyClasses = ssodh.getReferencedClasses();
             if (parentDependencyClasses != null)
             {
                 for (int i = 0; i < parentDependencyClasses.length; i++)
@@ -84,7 +84,7 @@ public class CalcDeletionOrderTest
     static class G {}
 
 
-    static class StubScratchObjectDeletionHelper implements ObjectDeletionHelper
+    static class StubScratchObjectDeletionHelper implements DeletionHelper
     {
         Class[] dependencies;
 
@@ -97,11 +97,24 @@ public class CalcDeletionOrderTest
 
         public boolean delete(Object object) { return false; }
 
-        public Object[] getDependencies(Object object) { return new Object[0]; }
 
-        public Class[] getDependencyClasses()
+        public boolean okToDelete(Object object)
+        {
+            return true;
+        }
+
+
+        public Object[] getReferencedObjects(Object object) { return new Object[0]; }
+
+        public Class[] getReferencedClasses()
         {
             return dependencies;
+        }
+
+
+        public Class getCreatedClass()
+        {
+            return null;
         }
 
 

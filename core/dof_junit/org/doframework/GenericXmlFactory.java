@@ -14,10 +14,10 @@ public class GenericXmlFactory implements DependentObjectHandler
     }
 
 
-    public boolean delete(Object objectToDelete, ObjectFileInfo objectFileInfo)
-    {
-        return false;
-    }
+    //public boolean delete(Object objectToDelete, ObjectFileInfo objectFileInfo)
+    //{
+    //    return false;
+    //}
 
 
     public Class getCreatedClass()
