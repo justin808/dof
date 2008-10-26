@@ -1,0 +1,25 @@
+<!--Sample of creating a scratch invoice that depends on a scratch customer-->
+<!--Scratch customer could be needed because the customer stores the sum of invoices created-->
+<!-- list of dependencies for invoice number 100 -->
+<!-- @createScratchObjectJava("org.doframework.sample.component.scratch.Customer_Scratch","scratchCustomerPk") -->
+<!-- @createScratchObjectJava("org.doframework.sample.component.scratch.Product_Scratch","scratchProductPk1") -->
+<!-- @createScratchObjectJava("org.doframework.sample.component.scratch.Product_Scratch","scratchProductPk2") -->
+<invoice>
+    <invoice_number>{{pk}}</invoice_number>
+    <customer_name>{{pk:scratchCustomerPk}}</customer_name>
+    <invoice_date>2007-05-15</invoice_date>
+    <total>38</total>
+    <pending_balance>38</pending_balance>
+    <line_items>
+        <line_item>
+            <qty>8</qty>
+            <product_manu_name_prod>{{pk:scratchProductPk1}}</product_manu_name_prod>
+            <price>4</price>
+        </line_item>
+        <line_item>
+            <qty>2</qty>
+            <product_manu_name_prod>{{pk:scratchProductPk2}}</product_manu_name_prod>
+            <price>3</price>
+        </line_item>
+    </line_items>
+</invoice>

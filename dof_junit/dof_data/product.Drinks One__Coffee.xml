@@ -1,0 +1,7 @@
+<!-- @require("manufacturer.Drinks One.xml") -->
+        <!--WARNING: DO NOT REUSE this one b/c tests on deletion in InvoiceXmlHandlerTest -->
+<product>
+    <name>Coffee</name>
+    <price>9</price>
+    <manufacturer_name>Drinks One</manufacturer_name>
+</product>

@@ -1,0 +1,7 @@
+<!-- @require("manufacturer.James Drinks.xml") -->
+
+<product>
+    <name>Lipton Tea</name>
+    <price>5</price>
+    <manufacturer_name>James Drinks</manufacturer_name>
+</product>

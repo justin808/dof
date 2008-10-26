@@ -1,0 +1,6 @@
+<!-- @require("manufacturer.Drinks Unlimited.xml") -->
+<product>
+    <name>Diet Cherry Cola</name>
+    <price>3</price>
+    <manufacturer_name>Drinks Unlimited</manufacturer_name>
+</product>

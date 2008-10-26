@@ -52,7 +52,6 @@ create table manufacturer
 (
     id integer primary key,
     name varchar(100),
-    primary key(id),
     constraint unique_manufacturer_name unique (name)
 );
 create sequence manufacturer_sequence start with 1000;
@@ -61,11 +60,10 @@ create sequence manufacturer_sequence start with 1000;
 
 create table product
 (
-    id integer,
+    id integer primary key,
     name varchar(100),
     price integer,
     manufacturer_id integer,
-    primary key(id),
     constraint unique_product_manu_name unique  (name, manufacturer_id),
     foreign key(manufacturer_id) references manufacturer
 );

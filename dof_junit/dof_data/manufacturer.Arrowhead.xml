@@ -1,0 +1,4 @@
+<!--Important that this only one product depends on manufacturer Arrowhead b/c testing delete-->
+<manufacturer>
+    <name>Arrowhead</name>
+</manufacturer>
