@@ -17,6 +17,12 @@ public class MockManufacturerPersistence implements ManufacturerPersistence
     }
 
 
+    public int countProductsWithManufacturerId(int manufacturerId)
+    {
+        return 0;
+    }
+
+
     /**
      * Delete the manufacturer
      *

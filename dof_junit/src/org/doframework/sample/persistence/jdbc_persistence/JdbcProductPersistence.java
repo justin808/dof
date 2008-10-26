@@ -74,6 +74,13 @@ public class JdbcProductPersistence extends JdbcBasePersistence implements Produ
     }
 
 
+    public int countInvoicesWithProductId(int productId)
+    {
+        String sql = "select count(invoice_id) from line_item li where li.product_id = " + productId;
+        return JdbcDbUtil.executeSingleIntQuery(sql);
+    }
+
+
     public Product getById(int id)
     {
         String sql = "select * from product where id = " + id;

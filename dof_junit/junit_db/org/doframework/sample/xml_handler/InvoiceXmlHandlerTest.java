@@ -69,12 +69,11 @@ public class InvoiceXmlHandlerTest
         DOF.require("invoice.100.xml");
         DOF.delete("invoice.100.xml");
         assertNull(invoiceComponent.getByInvoiceId(100));
-        CustomerComponent customerComponent = ComponentFactory.getCustomerComponent();
-        assertNull(productComponent.getById(13)); // product 2 levels deep is null
-        assertNull(productComponent.getById(14));
-        assertNull(productComponent.getById(15));
-        assertNull(manufacturerComponent.getById(35)); // manufacturer 3 levels deep is null
-        assertNull(manufacturerComponent.getById(37));
+        assertNull(productComponent.getByManufacturerAndName("Starbucks", "Coffee")); // product 2 levels deep is null
+        assertNull(productComponent.getByManufacturerAndName("Lipton", "Tea"));
+        assertNull(productComponent.getByManufacturerAndName("Lipton", "Green Tea"));
+        assertNull(manufacturerComponent.getByName("Starbucks")); // manufacturer 3 levels deep is null
+        assertNull(manufacturerComponent.getByName("Lipton"));
     }
 
 

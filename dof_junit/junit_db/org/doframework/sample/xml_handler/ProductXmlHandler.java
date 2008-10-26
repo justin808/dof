@@ -5,13 +5,16 @@ import org.doframework.sample.component.*;
 import org.doframework.sample.persistence.*;
 import org.doframework.sample.global.*;
 import org.doframework.*;
+import org.doframework.annotation.*;
 
 import javax.xml.parsers.*;
 import javax.xml.xpath.*;
 import java.io.*;
 
-public class ProductXmlHandler implements DependentObjectHandler, ScratchPkProvider,
-                                          ObjectDeletionHelper
+@TargetClass(Product.class)
+@TargetReferencedClasses({Manufacturer.class})
+
+public class ProductXmlHandler implements DependentObjectHandler, ScratchPkProvider, DeletionHelper
 {
 
 
@@ -78,15 +81,17 @@ public class ProductXmlHandler implements DependentObjectHandler, ScratchPkProvi
 
 
 
-    public boolean delete(Object product, ObjectFileInfo objectFileInfo)
-    {
-        return productComponent.delete((Product) product);
-    }
 
 
     public boolean delete(Object object)
     {
-        return delete(object, null);
+        return productComponent.delete((Product) object);
+    }
+
+
+    public boolean okToDelete(Object object)
+    {
+        return !productComponent.hasInvoices((Product) object);
     }
 
 
@@ -110,7 +115,7 @@ public class ProductXmlHandler implements DependentObjectHandler, ScratchPkProvi
      *
      * @return The dependencies of the given scratch object
      */
-    public Object[] getDependencies(Object scratchObject)
+    public Object[] getReferencedObjects(Object scratchObject)
     {
         return new Object[]{((Product) scratchObject).getManufacturer()};
     }
@@ -123,7 +128,7 @@ public class ProductXmlHandler implements DependentObjectHandler, ScratchPkProvi
      *
      * @return
      */
-    public Class[] getDependencyClasses()
+    public Class[] getReferencedClasses()
     {
         return new Class[] { Manufacturer.class};
     }

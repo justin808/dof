@@ -83,6 +83,8 @@ public class ManufacturerXmlFactoryTest
     @Test
     public void testDeleteManufacturer()
     {
+        DOF.require("product.Arrowhead__Water.xml");
+        DOF.delete("product.Arrowhead__Water.xml");
         Manufacturer m1 = (Manufacturer) DOF.require("manufacturer.Arrowhead.xml");
         assertTrue(DOF.delete("manufacturer.Arrowhead.xml"));
         Manufacturer m2 = (Manufacturer) DOF.require("manufacturer.Arrowhead.xml");

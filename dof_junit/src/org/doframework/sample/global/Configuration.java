@@ -7,7 +7,7 @@ public class Configuration
 {
 
     static Properties m_properties;
-    private static final String DB_TYPE = "db_type";
+    //private static final String DB_TYPE = "db_type";
     private static final String DB_USER = "db_user";
     private static final String DB_PASSWORD = "db_password";
     private static final String DB_URL = "db_url";
@@ -35,10 +35,10 @@ public class Configuration
      *
      * @return
      */
-    static String getDbTypeString()
-    {
-        return m_properties.getProperty(DB_TYPE);
-    }
+    //static String getDbTypeString()
+    //{
+    //    return m_properties.getProperty(DB_TYPE);
+    //}
 
 
     public static String getDbUser()

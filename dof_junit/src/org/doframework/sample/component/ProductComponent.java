@@ -67,4 +67,13 @@ public class ProductComponent
         return GlobalContext.getPersistanceFactory().getProductPersistence().
                 getByManufacturerNameProductName(manufacturerName, productName);
     }
+
+
+    public boolean hasInvoices(Product product)
+    {
+        int numInvoices = GlobalContext.getPersistanceFactory().getProductPersistence()
+                .countInvoicesWithProductId(product.getId());
+        return (numInvoices > 0);
+
+    }
 }

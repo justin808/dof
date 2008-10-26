@@ -1,6 +1,7 @@
 package org.doframework.sample.component;
 
 import static org.doframework.sample.global.GlobalContext.*;
+import org.doframework.sample.global.*;
 
 /**
  * This class orchestrates actions around the Customer entity Using class rather than interface because we want only one
@@ -64,5 +65,13 @@ public class CustomerComponent
     public Customer getByName(String name)
     {
         return getPersistanceFactory().getCustomerPersistence().getByName(name);
+    }
+
+
+    public boolean hasInvoices(Customer customer)
+    {
+        int numInvoices = GlobalContext.getPersistanceFactory().getCustomerPersistence()
+                .countInvoicesWithCustomerId(customer.getId());
+        return (numInvoices > 0);
     }
 }

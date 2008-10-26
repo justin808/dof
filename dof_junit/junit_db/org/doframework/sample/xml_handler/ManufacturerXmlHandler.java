@@ -1,6 +1,7 @@
 package org.doframework.sample.xml_handler;
 
 import org.doframework.*;
+import org.doframework.annotation.*;
 import org.doframework.sample.component.*;
 import org.w3c.dom.*;
 
@@ -8,7 +9,8 @@ import javax.xml.parsers.*;
 import javax.xml.xpath.*;
 import java.io.*;
 
-public class ManufacturerXmlHandler implements DependentObjectHandler, ObjectDeletionHelper, ScratchPkProvider
+@TargetClass(Manufacturer.class)
+public class ManufacturerXmlHandler implements DependentObjectHandler, DeletionHelper, ScratchPkProvider
 {
 
     ManufacturerComponent manufacturerComponent = ComponentFactory.getManufacturerComponent();
@@ -53,10 +55,6 @@ public class ManufacturerXmlHandler implements DependentObjectHandler, ObjectDel
     }
 
 
-    public boolean delete(Object o, ObjectFileInfo objectFileInfo)
-    {
-        return manufacturerComponent.delete((Manufacturer) o);
-    }
 
 
     public Class getCreatedClass()
@@ -68,16 +66,23 @@ public class ManufacturerXmlHandler implements DependentObjectHandler, ObjectDel
 
     public boolean delete(Object object)
     {
-        return delete(object, null);
+        return manufacturerComponent.delete((Manufacturer) object);
     }
 
-    public Object[] getDependencies(Object object)
+
+    public boolean okToDelete(Object object)
+    {
+        return !manufacturerComponent.hasProducts((Manufacturer)object);
+    }
+
+
+    public Object[] getReferencedObjects(Object object)
     {
         return null;
     }
 
 
-    public Class[] getDependencyClasses()
+    public Class[] getReferencedClasses()
     {
         return null;
     }

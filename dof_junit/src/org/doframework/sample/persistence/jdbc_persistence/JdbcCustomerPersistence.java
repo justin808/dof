@@ -101,6 +101,14 @@ public class JdbcCustomerPersistence extends JdbcBasePersistence implements Cust
         return null; // if none found
     }
 
+
+    public int countInvoicesWithCustomerId(int customerId)
+    {
+        String sql =
+                "select count(*) from invoice inv where inv.customer_id = " + customerId;
+        return JdbcDbUtil.executeSingleIntQuery(sql);
+    }
+
     //public Collection<Customer> getAllCustomers()
     //{
     //    return null;

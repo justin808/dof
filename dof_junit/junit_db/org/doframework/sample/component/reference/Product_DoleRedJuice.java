@@ -13,7 +13,7 @@ public class Product_DoleRedJuice extends ProductReferenceBuilder
 
     ManufacturerReferenceBuilder getManufacturerReferenceBuilder()
     {
-        return new Manufacturer_Dole();
+        return new Manufacturer_NewDole();
     }
 
 

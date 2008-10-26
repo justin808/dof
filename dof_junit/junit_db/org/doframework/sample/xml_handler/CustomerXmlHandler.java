@@ -1,16 +1,17 @@
 package org.doframework.sample.xml_handler;
 
 import org.doframework.*;
+import org.doframework.annotation.*;
 import org.doframework.sample.component.*;
-import org.doframework.sample.global.*;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.*;
 import javax.xml.xpath.*;
 import java.io.*;
 
-public class CustomerXmlHandler implements DependentObjectHandler, ScratchPkProvider,
-                                           ObjectDeletionHelper
+@TargetClass(Customer.class)
+
+public class CustomerXmlHandler implements DependentObjectHandler, ScratchPkProvider, DeletionHelper
 {
 
     CustomerComponent customerComponent = ComponentFactory.getCustomerComponent();
@@ -56,15 +57,15 @@ public class CustomerXmlHandler implements DependentObjectHandler, ScratchPkProv
     }
 
 
-    public boolean delete(Object o, ObjectFileInfo objectFileInfo)
+    public boolean delete(Object object)
     {
-        return customerComponent.delete((Customer) o);
+        return customerComponent.delete((Customer) object);
     }
 
 
-    public boolean delete(Object object)
+    public boolean okToDelete(Object object)
     {
-        return delete(object, null);
+        return !customerComponent.hasInvoices((Customer) object);
     }
 
 
@@ -76,7 +77,7 @@ public class CustomerXmlHandler implements DependentObjectHandler, ScratchPkProv
      *
      * @return The dependencies of the given object
      */
-    public Object[] getDependencies(Object object)
+    public Object[] getReferencedObjects(Object object)
     {
         return null;
     }
@@ -89,7 +90,7 @@ public class CustomerXmlHandler implements DependentObjectHandler, ScratchPkProv
      *
      * @return
      */
-    public Class[] getDependencyClasses()
+    public Class[] getReferencedClasses()
     {
         return null;
     }

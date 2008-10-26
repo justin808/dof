@@ -17,4 +17,7 @@ public interface ProductPersistence extends BasePersistence
 
 
     Product getByManufacturerNameProductName(String manufacturerName, String productName);
+
+
+    int countInvoicesWithProductId(int productId);
 }

@@ -59,4 +59,11 @@ public class ManufacturerComponent
     {
         return GlobalContext.getPersistanceFactory().getManufacturerPersistence().getById(pk);
     }
+
+
+    public boolean hasProducts(Manufacturer manufacturer)
+    {
+        int numProducts = GlobalContext.getPersistanceFactory().getManufacturerPersistence().countProductsWithManufacturerId(manufacturer.getId());
+        return (numProducts > 0);
+    }
 }

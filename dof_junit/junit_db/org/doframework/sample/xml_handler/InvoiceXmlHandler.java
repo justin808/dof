@@ -1,6 +1,7 @@
 package org.doframework.sample.xml_handler;
 
 import org.doframework.*;
+import org.doframework.annotation.*;
 import org.doframework.sample.component.*;
 import org.doframework.sample.persistence.jdbc_persistence.*;
 import org.w3c.dom.*;
@@ -10,8 +11,9 @@ import javax.xml.xpath.*;
 import java.io.*;
 import java.util.*;
 
-
-public class InvoiceXmlHandler implements DependentObjectHandler, ObjectDeletionHelper,
+@TargetReferencedClasses({Customer.class, Product.class})
+@TargetClass(Invoice.class)
+public class InvoiceXmlHandler implements DependentObjectHandler, DeletionHelper,
                                           ScratchPkProvider
 {
 
@@ -115,15 +117,16 @@ public class InvoiceXmlHandler implements DependentObjectHandler, ObjectDeletion
     }
 
 
-    public boolean delete(Object objectToDelete, ObjectFileInfo objectFileInfo)
-    {
-        return invoiceComponent.delete((Invoice) objectToDelete);
-    }
-
 
     public boolean delete(Object object)
     {
-        return delete(object, null);
+        return invoiceComponent.delete((Invoice) object);
+    }
+
+
+    public boolean okToDelete(Object object)
+    {
+        return true;
     }
 
 
@@ -132,7 +135,7 @@ public class InvoiceXmlHandler implements DependentObjectHandler, ObjectDeletion
      *
      * @return The dependencies of the given scratch object
      */
-    public Object[] getDependencies(Object scratchObject)
+    public Object[] getReferencedObjects(Object scratchObject)
     {
         Invoice invoice = (Invoice) scratchObject;
         List<LineItem> lineItems = invoice.getLineItems();
@@ -162,7 +165,7 @@ public class InvoiceXmlHandler implements DependentObjectHandler, ObjectDeletion
      *
      * @return
      */
-    public Class[] getDependencyClasses()
+    public Class[] getReferencedClasses()
     {
         return new Class[] { Customer.class, Product.class};
     }

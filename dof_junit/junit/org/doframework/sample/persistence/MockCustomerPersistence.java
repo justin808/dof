@@ -36,6 +36,12 @@ public class MockCustomerPersistence implements CustomerPersistence
     }
 
 
+    public int countInvoicesWithCustomerId(int customerId)
+    {
+        return 0;
+    }
+
+
     public int getNextId()
     {
         return nextId++;

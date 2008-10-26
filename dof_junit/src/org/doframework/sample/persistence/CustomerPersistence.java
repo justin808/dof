@@ -39,4 +39,7 @@ public interface CustomerPersistence extends BasePersistence
 
 
     Customer getByName(String name);
+
+
+    int countInvoicesWithCustomerId(int customerId);
 }

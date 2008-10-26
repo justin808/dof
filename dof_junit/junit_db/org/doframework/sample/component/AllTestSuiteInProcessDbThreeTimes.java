@@ -1,6 +1,6 @@
 package org.doframework.sample.component;
 
-import org.junit.BeforeClass;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.doframework.sample.global.Configuration;
@@ -11,6 +11,20 @@ import org.doframework.sample.*;
         AllTestSuiteInProcessDb.class})
 public class AllTestSuiteInProcessDbThreeTimes
 {
+    static long startTime;
 
+
+    @BeforeClass
+    public static void beforeClass()
+    {
+        startTime = System.currentTimeMillis();
+    }
+
+
+    @AfterClass
+    public static void afterClass()
+    {
+        System.out.println("Elapsed time '3 times' is " + (System.currentTimeMillis() - startTime) + " ms.");
+    }
 
 }

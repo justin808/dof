@@ -92,8 +92,8 @@ public class InvoiceJavaTest
         assertNotNull(DOF.getCachedObject(Invoice.class, "500"));
         assertNotNull(ComponentFactory.getInvoiceComponent().getByInvoiceNumber(500));
         assertNotNull(ComponentFactory
-                .getProductComponent().getByManufacturerAndName("Dole", "Pineapple Juice"));
-        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("Dole",
+                .getProductComponent().getByManufacturerAndName("New Dole", "Pineapple Juice"));
+        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("New Dole",
                                                                                       "Cranberry Juice"));
 
         // delete object
@@ -101,9 +101,9 @@ public class InvoiceJavaTest
 
         assertNull(ComponentFactory.getInvoiceComponent().getByInvoiceId(500));
         assertNull(ComponentFactory
-                .getProductComponent().getByManufacturerAndName("Dole", "Pineapple Juice"));
+                .getProductComponent().getByManufacturerAndName("New Dole", "Pineapple Juice"));
         assertNull(ComponentFactory
-                .getProductComponent().getByManufacturerAndName("Dole", "Cranberry Juice"));
+                .getProductComponent().getByManufacturerAndName("New Dole", "Cranberry Juice"));
     }
 
 

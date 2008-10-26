@@ -17,5 +17,8 @@ public interface ManufacturerPersistence extends BasePersistence
 
 
     Manufacturer getById(int id);
+
+
+    int countProductsWithManufacturerId(int manufacturerId);
 }
 

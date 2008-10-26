@@ -36,6 +36,12 @@ public class MockProductPersistence implements ProductPersistence
     }
 
 
+    public int countInvoicesWithProductId(int productId)
+    {
+        return 0;
+    }
+
+
     public int getNextId()
     {
         return nextId++;

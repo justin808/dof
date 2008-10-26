@@ -25,18 +25,20 @@ public class AllTestSuite
         startTime = System.currentTimeMillis();
         System.out.println("Using connection:" + Configuration.getDbUrl());
 
+        if (DOFGlobalSettings.getDofDir().trim().length() == 0)
+        {
+            DOFGlobalSettings.setDofDir("dof_junit/dof_data");
+        }
+
         try
         {
             JdbcDbUtil.executeSingleIntQuery("SELECT COUNT(*) FROM CUSTOMER");
         }
         catch (Exception e)
         {
-            if (e.getMessage().indexOf("Table not found") >= 0)
-            {
-                System.out.println("Creating Schema in memory");
-                CreateSchema.main(null);
-                System.out.println("Finished Creating Schema in memory");
-            }
+            System.out.println("Creating Schema in memory");
+            CreateSchema.main(null);
+            System.out.println("Finished Creating Schema in memory");
         }
     }
 

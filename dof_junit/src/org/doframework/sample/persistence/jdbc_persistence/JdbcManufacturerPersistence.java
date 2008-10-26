@@ -26,6 +26,13 @@ public class JdbcManufacturerPersistence extends JdbcBasePersistence implements 
     }
 
 
+    public int countProductsWithManufacturerId(int manufacturerId)
+    {
+        String sql = "select count(*) from product where manufacturer_id = " + manufacturerId;
+        return JdbcDbUtil.executeSingleIntQuery(sql);
+    }
+
+
     public void insert(Manufacturer manufacturer)
     {
         String sql = "insert into manufacturer values (" + manufacturer.getId() + ", '" + manufacturer

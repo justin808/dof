@@ -25,23 +25,24 @@ public class ManufacturerJavaTest
     {
         Object invoice1003 = DOF.require(new Invoice_1003());
         assertNotNull(ComponentFactory.getCustomerComponent().getByName("John Adams"));
-        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("Dole",
+        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("New Dole",
                                                                                       "Green Juice"));
-        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("Dole",
+        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("New Dole",
                                                                                       "Red Juice"));
 
         DOF.delete(invoice1003, false); // not greedy;
 
         assertNotNull(ComponentFactory.getCustomerComponent().getByName("John Adams"));
-        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("Dole",
+        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("New Dole",
                                                                                       "Green Juice"));
-        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("Dole",
+        assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("New Dole",
                                                                                       "Red Juice"));
+        DOF.require(new Invoice_1003());
         DOF.delete(new Invoice_1003());
         assertNull(ComponentFactory.getCustomerComponent().getByName("John Adams"));
-        assertNull(ComponentFactory.getProductComponent().getByManufacturerAndName("Dole",
+        assertNull(ComponentFactory.getProductComponent().getByManufacturerAndName("New Dole",
                                                                                       "Green Juice"));
-        assertNull(ComponentFactory.getProductComponent().getByManufacturerAndName("Dole",
+        assertNull(ComponentFactory.getProductComponent().getByManufacturerAndName("New Dole",
                                                                                    "Red Juice"));
 
 
@@ -64,6 +65,7 @@ public class ManufacturerJavaTest
                                                                                       "Cola"));
         assertNotNull(ComponentFactory.getProductComponent().getByManufacturerAndName("Drinks One",
                                                                                       "Club Soda"));
+        DOF.require(new Invoice_1004());
         DOF.delete(new Invoice_1004());
         assertNull(ComponentFactory.getCustomerComponent().getByName("James Adams"));
         assertNull(ComponentFactory.getProductComponent().getByManufacturerAndName("Drinks One",
