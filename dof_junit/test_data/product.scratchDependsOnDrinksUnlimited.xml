@@ -1,7 +1,0 @@
-<!--Important that this we have two products that depend on anufacturer 21 b/c testing delete-->
-<!-- @require("manufacturer.Drinks Unlimited.xml") -->
-<product>
-    <name>{{pk}}</name>
-    <price>4</price>
-    <manufacturer_name>Drinks Unlimited</manufacturer_name>
-</product>

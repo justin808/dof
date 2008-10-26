@@ -1,7 +1,0 @@
-<!--Do not let anything other than test testProductInsertFailsDependencyDoesNotExist depend on this file-->
-<!-- @require("manufacturer.Snapple.xml") -->
-<product>
-    <name>Iced Tea</name>
-    <price>4</price>
-    <manufacturer_name>Snapple</manufacturer_name>
-</product>

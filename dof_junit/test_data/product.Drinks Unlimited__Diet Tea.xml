@@ -1,6 +1,0 @@
-<!-- @require("manufacturer.Drinks Unlimited.xml") -->
-<product>
-    <name>Diet Tea</name>
-    <price>4</price>
-    <manufacturer_name>Drinks Unlimited</manufacturer_name>
-</product>

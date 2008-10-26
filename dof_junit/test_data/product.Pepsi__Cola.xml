@@ -1,8 +1,0 @@
-<!--Important that this we have two products that depend on anufacturer 21 b/c testing delete-->
-        <!-- @requireJava("org.doframework.sample.component.reference.Manufacturer_Pepsi")-->
-
-<product>
-    <name>Cola</name>
-    <price>2</price>
-    <manufacturer_name>Pepsi</manufacturer_name>
-</product>
