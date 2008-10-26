@@ -8,8 +8,9 @@
     NOTE: This file is tested with ANT 1.7.0. This file does NOT work with ant 1.6.2.
     -->
 
-<project name="DOF_CORE" default="dist" basedir=".">
+<project name="DOF_CORE" default="dof.release" basedir=".">
 
+	<property file="build.properties" />
 	<!-- Declaration of non-core ANT tasks -->
 	<!--<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>-->
 
@@ -17,27 +18,44 @@
 	<!-- These Global properties/variables are inherited by DOF's master build
 	     however, they are included here in case a developer wants to run just
 	     this build -->
-    <property name="version.number" value="0.9.8"/>
-	<property name="findbugs.home" value="${env.FIND_BUGS_HOME}"/>
-	<property name="findbugs.failonerror" value="true" />
-	<property name="findbugs.reportlevel" value="medium" />
-    <property name="junit.jar" value="c:/dev/junit4.4/junit-4.4.jar"/>
+    <property name="version.number" value="{version.number}"/>
+    <property name="lib.dir" value="../lib"/>
+
+    <property name="junit.jar" value="{lib.dir}/junit-4.4.jar"/>
+
 
     <!-- Global properties for this build -->
     <property name="dof.src.java.dir" value="${basedir}/dof_src"/>
     <property name="dof.src.junit.dir" value="${basedir}/dof_junit"/>
     <property name="dof.src.dof_junit.dir" value="${basedir}/../dof_junit"/>
+
     <property name="build.dir" value="${basedir}/build"/>
     <property name="build.class.dir" value="${build.dir}/classes"/>
     <property name="build.junit.class.dir" value="${build.dir}/junit_classes"/>
     <property name="build.tests.reports.dir" value="${build.dir}/reports"/>
     <property name="build.javadoc.dir" value="${build.dir}/javadoc"/>
-	<property name="dist.dir" value="${basedir}/dist" />
-	<property name="dist.dof.jar" value="${dist.dir}/dof-${version.number}.jar" />
-	<property name="dist.dof.javadoc.zip" value="${dist.dir}/dof-javadoc-${version.number}.zip" />
-	<property name="dist.dof.src.zip" value="${dist.dir}/dof-src-${version.number}.zip" />
-    <property name="dist.dof.dof_junit.zip" value="${dist.dir}/dof-junit-${version.number}.zip" />
 
+    <property name="dist.dir" value="${basedir}/dist" />
+    <property name="dist.sub.dir" value="${dist.dir}/dof" />
+	<property name="dist.dof.jar" value="${dist.sub.dir}/dof-${version.number}.jar" />
+	<property name="dist.dof.javadoc.zip" value="${dist.sub.dir}/dof-javadoc-${version.number}.zip" />
+	<property name="dist.dof.src.zip" value="${dist.sub.dir}/dof-src-${version.number}.zip" />
+    <property name="dist.dof.dof_junit.zip" value="${dist.sub.dir}/dof-junit-${version.number}.zip" />
+
+
+
+    <property name="zip.release.dir" value="../release"/>
+    <property name="release.pattern" value="DOF-${version.number}"/>
+    <property name="release.dir" value="../../${release.pattern}"/>
+    <property name="whole.release.dir" value=".."/>
+    <property name="dof.full.release.destfile" value="${dist.sub.dir}/dof-src-plus-tests-${version.number}.zip"/>
+    <property name="dof.all.zip" value="${dist.dir}/dof-${version.number}.zip"/>
+
+
+<!--     Put findbugs back in later -->
+<!-- 	<property name="findbugs.home" value="${env.FIND_BUGS_HOME}"/> -->
+<!-- 	<property name="findbugs.failonerror" value="true" /> -->
+<!-- 	<property name="findbugs.reportlevel" value="medium" /> -->
 
 
     <target name="clean" description="Clean the build directory">
@@ -139,7 +157,11 @@
     </target>
 
 
-    <target name="dof.test" depends="junit, findbugs" />
+
+
+
+    <target name="dof.test" />
+    <!--depends="junit, findbugs" />-->
 
     <target name="dist"
     		depends="compile, dof.test, dof.javadoc"
@@ -153,28 +175,34 @@
     		  destfile="${dist.dof.javadoc.zip}" />
     	<zip basedir="${dof.src.java.dir}"
     		 destfile="${dist.dof.src.zip}">
-    	</zip>
-        <zip basedir="${dof.src.dof_junit.dir}"
-             destfile="${dist.dof.src.zip}">
+            <include name="**/*.java"/>
         </zip>
 
-        <!-- Now put the unit tests in the src zip this is done in 2 steps
-    	     because I did know how to do it in 1 step. -->
-    	<zip basedir="${dof.src.junit.dir}"
-    		 destfile="${dist.dof.src.zip}"
-    		 update="true" />
+        <zip basedir="${release.dir}/.."
+             destfile="${dof.full.release.destfile}"
+             includes="${release.pattern}/**">
+            <!--<include name="**/*.java"/>-->
+            <!--<include name="**/*.zip"/>-->
+            <!--<include name="**/*.xml"/>-->
+            <!--<include name="**/*.txt"/>-->
+            <!--<include name="**/*.TXT"/>-->
+            <!--<include name="**/*.HTML"/>-->
+        </zip>
+
+
+        <zip basedir="${dist.sub.dir}"
+             destfile="${dof.all.zip}"
+             update="true" />
+
     </target>
 
-    <property name="zip.release.dir" value="../release"/>
-    <property name="release.pattern" value="DOF-${version.number}"/>
-    <property name="release.dir" value="../../${release.pattern}"/>
-    <property name="whole.release.dir" value=".."/>
-    <property name="dof.release.destfile" value="${dist.dir}/DOF-${version.number}.zip"/>
 
+<!--     copy files for test env to see junits and core code -->
     <target name="dof.copy" >
         <delete dir="${release.dir}"/>
-        <copy todir="${release.dir}">
+        <copy todir="${release.dir}/core">
             <fileset dir="${whole.release.dir}/core">
+                <exclude name="**/dist/**"/>
                 <exclude name="**/*.jar"/>
                 <exclude name="**/build/**"/>
                 <exclude name="**/database/**"/>
@@ -190,6 +218,8 @@
                 <exclude name="**/*.tmp"/>
                 <exclude name="**/reports/**"/>
             </fileset>
+       </copy>
+        <copy todir="${release.dir}/dof_junit">
             <fileset dir="${whole.release.dir}/dof_junit">
                 <exclude name="**/*.jar"/>
                 <exclude name="**/build/**"/>
@@ -205,8 +235,13 @@
                 <exclude name="**/*.zip"/>
                 <exclude name="**/*.tmp"/>
                 <exclude name="**/reports/**"/>
+                <exclude name="**/junit_out/**"/>
+                <exclude name="**/lib/**"/>
+                <exclude name="**/bin/**"/>
             </fileset>
-            <fileset dir="${whole.release.dir}/build">
+            </copy>
+        <copy todir="${release.dir}/hello_dof_1">
+            <fileset dir="${whole.release.dir}/dof_junit">
                 <exclude name="**/*.jar"/>
                 <exclude name="**/build/**"/>
                 <exclude name="**/database/**"/>
@@ -221,25 +256,28 @@
                 <exclude name="**/*.zip"/>
                 <exclude name="**/*.tmp"/>
                 <exclude name="**/reports/**"/>
+                <exclude name="**/junit_out/**"/>
+                <exclude name="**/lib/**"/>
+                <exclude name="**/bin/**"/>
             </fileset>
-
         </copy>
+
+        <copy todir="${release.dir}/lib">
+            <fileset dir="${whole.release.dir}/lib">
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${release.dir}">
+            <fileset dir="${whole.release.dir}">
+                <include name="**/*.ipr"/>
+                <include name="**/*.iws"/>
+            </fileset>
+        </copy>
+
     </target>
 
-    <target name="dof.zip.release" depends="dist">
-        <zip basedir="${release.dir}/.."
-             destfile="${dof.release.destfile}"
-             includes="${release.pattern}/**">
-            <!--<include name="**/*.java"/>-->
-            <!--<include name="**/*.zip"/>-->
-            <!--<include name="**/*.xml"/>-->
-            <!--<include name="**/*.txt"/>-->
-            <!--<include name="**/*.TXT"/>-->
-            <!--<include name="**/*.HTML"/>-->
-        </zip>
-    </target>
 
-    <target name="dof.release" depends="clean, dist, dof.javadoc, dof.copy, dof.zip.release"/>
+    <target name="dof.release" depends="clean, dof.javadoc, dof.copy, dist"/>
 
 
 
@@ -251,6 +289,6 @@
         <mkdir dir="${build.class.dir}"/>
         <mkdir dir="${build.junit.class.dir}"/>
         <mkdir dir="${build.javadoc.dir}"/>
-		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.sub.dir}" />
 	</target>
 </project>

@@ -111,80 +111,70 @@ public class DOF
     public static Object require(ReferenceBuilder referenceBuilder)
     {
         // First check local cache of loaded files
-        Object resultObject = dofObjectCache.get(referenceBuilder);
+        Object resultObject = getDofObjectCache().get(referenceBuilder);
+        //if (resultObject == null)
+        //{
+        // Second, check if object exists in DB
+        //resultObject = referenceBuilder.fetch();
+
         if (resultObject == null)
         {
-            // Second, check if object exists in DB
-            resultObject = referenceBuilder.fetch();
+            // Finally, do creation, first creating dependencies
 
-            if (resultObject == null)
+            // JG - I do not think we need to call the creation of the reference objects,
+            // as the java code should be doing this directly.
+            // The list of dependencies is only needed for delete.
+
+            //ReferenceBuilder[] dependencies = referenceObject.getReferenceJavaDependencies();
+            //if (dependencies != null)
+            //{
+            //    for (int i = 0; i < dependencies.length; i++)
+            //    {
+            //        require(dependencies[i]);
+            //    }
+            //}
+
+            if (DOFGlobalSettings.dofDebug)
             {
-                // Finally, do creation, first creating dependencies
-
-                // JG - I do not think we need to call the creation of the reference objects,
-                // as the java code should be doing this directly.
-                // The list of dependencies is only needed for delete.
-
-                //ReferenceBuilder[] dependencies = referenceObject.getReferenceJavaDependencies();
-                //if (dependencies != null)
-                //{
-                //    for (int i = 0; i < dependencies.length; i++)
-                //    {
-                //        require(dependencies[i]);
-                //    }
-                //}
-
-                if (dofDebug)
-                {
-                    System.out.println("DOF: Loading Reference Object: " +
-                                       referenceBuilder.getClass().getName());
-                }
-
-                // Create object given file of data
-                resultObject = referenceBuilder.create();
-
-                // Save the data in the cache
-                dofObjectCache
-                        .put(referenceBuilder, resultObject);
+                String s =
+                        "DOF: Loading Reference Object: " + referenceBuilder.getClass().getName();
+                logMessage(s);
             }
 
-            if (resultObject == null)
-            {
-                throw new RuntimeException(
-                        "DbJUnitHandler failed to create reference object from " +
-                        referenceBuilder.getClass().getName());
-            }
+            // Create object given file of data
+            resultObject = referenceBuilder.create();
 
+            // Save the data in the cache
+            getDofObjectCache()
+                    .put(referenceBuilder, resultObject);
         }
+
+        if (resultObject == null)
+        {
+            throw new RuntimeException(
+                    "DbJUnitHandler failed to create reference object from " +
+                    referenceBuilder.getClass().getName());
+        }
+
+        //}
         return resultObject;
     }
 
+    static void logMessage(String msg)
+    {
+        System.out.println(msg);
+    }
 
     public static Object getCachedObject(Class clazz,
                                            Object pk)
     {
-        return dofObjectCache.get(clazz, pk);
+        return getDofObjectCache().get(clazz, pk);
     }
 
 
     /**
-     * Use this method to delete an object. This method will opportunistically try to delete all of
-     * the parent dependencies. Note, the deletion is greedy. Even if the object requested to be
-     * deleted does not exist, then it's parent objects will still try to be deleted. This method is
-     * useful when setting up tests, as the object definition files often need frequent tweaking.
-     * Note, it is critical that objects created with the require method be deleted using this
-     * method because the require method caches the created objects by the file name.
-     * <p/>
-     * Deletion is greedy in that referenced objects will try to get deleted even if this object to
-     * be deleted does not exist.
-     *
-     * @return true if requested object deleted successfully, false if object could not be deleted,
-     *         maybe because another object depends upon it. Note, the return value from deleting
-     *         dependency objects for the requested object is discarded. For example, if you request
-     *         an invoice to be deleted, the return value only reflects if that requested invoice
-     *         was deleted, and not if the parent customer record of that invoice is deleted. If the
-     *         object does not exist, then theis method returns true, indicating that object was
-     *         previously deleted.
+     * Same as calling delete(ReferenceBuilder, true) to do a greedy deletion.
+     * See javadoc for DOF.delete( org.doframework.ReferenceBuilder, boolean)
      */
     public static boolean delete(ReferenceBuilder dependentObject)
     {
@@ -193,20 +183,32 @@ public class DOF
 
 
     /**
-     * Use this method to delete an object. This method will opportunistically try to delete all of
-     * the parent dependencies. Note, the deletion is greedy. Even if the object requested to be
-     * deleted does not exist, then it's parent objects will still try to be deleted. This method is
-     * useful when setting up tests, as the object definition files often need frequent tweaking.
-     * Note, it is critical that objects created with the require method be deleted using this
-     * method because the require method caches the created objects by the file name.
+     * Use this method to delete an object taking in a ReferenceBuilder. There must either be a DeletionHelper
+     * defined for this object's class in deletion_helpers.properties or the passed in ReferenceBuilder can
+     * implement interface DeletionHelper. If both are applicable, the passed in ReferenceBuilder is chosen first.
+     * <p/>
+     * Before deletion is attempted, DeletionHelper.okToDelete(Object) is called to check that no
+     * other objects depend on object requested for deletion.
+     * <p/>
+     * This method will opportunistically try to delete all of the parent dependencies of this
+     * object after this object is deleted.
+     *
+     * If the object defined by the ReferenceBuilder does not exist, then  parent dependencies of this object
+     * will not be deleted. Use DOF.require(ReferenceBuilder) before calling DOF.delete(ReferenceBuilder, true)
+     * to ensure that the object and all of its parent dependencies get deleted.
+     *
+     * This method is most useful when setting up tests, as the object definition files often need
+     * frequent tweaking. It is critical that objects created with the DOF.require method be deleted
+     * using DOF deletion methods because the DOF caches the created objects.
      * <p/>
      *
-     * @param greedy If true, then try to delete parent objects too! If false, only delete this
-     *               object.
+     * @param referenceBuilder ReferenceBuilder that defines the object to be deleted.
+     * @param greedy If true, then try to delete parent dependency objects as well as the specfied object.
+     *  If false, only delete this object.
      *
      * @return true if requested object deleted successfully or does not exist, false if object
-     *         could not be deleted,
-     *         maybe because another object depends upon it. Note, the return value from deleting
+     *         could not be deleted, maybe because another object depends upon it.
+     *         Note, the return value from deleting
      *         dependency objects for the requested object is discarded. For example, if you request
      *         an invoice to be deleted, the return value only reflects if that requested invoice
      *         was deleted, and not if the parent customer record of that invoice is deleted. If the
@@ -215,47 +217,59 @@ public class DOF
      */
     public static boolean delete(ReferenceBuilder referenceBuilder, boolean greedy)
     {
-        Object objectToDelete = dofObjectCache.get(referenceBuilder); // will check DB too
+        Object objectToDelete = getDofObjectCache().get(referenceBuilder); // will check DB too
+        boolean deletionOk = false;
         if (objectToDelete != null)
         {
-            boolean deletionOk = delete(objectToDelete, greedy);
-            if (dofDebug)
+            if (DOFGlobalSettings.dofDebug)
             {
-                System.out.println("DOF: Deleting Reference Object: " +
-                                   referenceBuilder.getClass().getName());
+                logMessage("DOF: Deleting Reference Object: " +
+                                   referenceBuilder.getClass().getName()+ ": " + deletionOk);
             }
-            return deletionOk;
+            if (referenceBuilder instanceof DeletionHelper)
+            {
+                deletionOk = deleteObjectWithDeletionHelper(objectToDelete, greedy, ((DeletionHelper) referenceBuilder));
+            }
+            else
+            {
+                deletionOk = delete(objectToDelete, greedy);
+            }
         }
         else
         {
-            if (greedy)
-            {
-                // still try to clean up dependencies
-                ReferenceBuilder[] referencBuilders = referenceBuilder.getReferenceJavaDependencies();
-                if (referencBuilders != null)
-                {
-                    for (int i = 0; i < referencBuilders.length; i++)
-                    {
-                        ReferenceBuilder referencBuilder = referencBuilders[i];
-                        delete(referencBuilder, greedy);
-                    }
-                }
-            }
-            return true;
+            deletionOk = true; // signal that the object is cleaned up
         }
+        return deletionOk;
     }
-        //boolean deletedThisObject = false;
-        //Object referenceObjectToDelete = referenceBuilder.fetch();
-        //if (referenceObjectToDelete == null)
+
+        //Object objectToDelete = dofObjectCache.get(referenceBuilder); // will check DB too
+        //boolean deletionOk = false;
+        //if (objectToDelete != null)
         //{
-        //    deletedThisObject = false;
+        //    deletionOk = referenceBuilder.delete(objectToDelete);
+        //    if (dofDebug)
+        //    {
+        //        logMessage("DOF: Deleting Reference Object: " +
+        //                   referenceBuilder.getClass().getName() + ": " + deletionOk);
+        //    }
         //}
         //else
         //{
-        //    deletedThisObject = referenceBuilder.delete(referenceObjectToDelete);
+        //    deletionOk = true; // signal that the object is cleaned up
         //}
         //if (greedy)
         //{
+        //    // still try to clean up dependencies
+        //    ReferenceBuilder[] referencBuilders = referenceBuilder.getReferenceJavaDependencies();
+        //    if (referencBuilders != null)
+        //    {
+        //        for (int i = 0; i < referencBuilders.length; i++)
+        //        {
+        //            ReferenceBuilder referencBuilder = referencBuilders[i];
+        //            delete(referencBuilder, greedy);
+        //        }
+        //    }
+        //
         //    if (referenceBuilder instanceof HasReferenceTextDependencies)
         //    {
         //        String[] referenceTextDependencies =
@@ -266,21 +280,13 @@ public class DOF
         //            String referenceTextDependency = referenceTextDependencies[i];
         //            delete(referenceTextDependency);
         //        }
+        //
         //    }
-        //    ReferenceBuilder[] dependentObjects =
-        //            ((ReferenceBuilder) referenceBuilder).getReferenceJavaDependencies();
-        //    if (dependentObjects != null)
-        //    {
-        //        for (int i = 0; i < dependentObjects.length; i++)
-        //        {
-        //            ReferenceBuilder ido = dependentObjects[i];
-        //            delete(ido);
-        //        }
-        //    }
+        //
         //}
-        //return deletedThisObject;
+        //return deletionOk;
 
-
+    //}
 
     ///**
     // * Use this method to delete an object. This method will opportunistically try to delete all of
@@ -381,34 +387,46 @@ public class DOF
      */
     public static boolean delete(Object objectToDelete, boolean greedy)
     {
-        String className = objectToDelete.getClass().getName();
-        ObjectDeletionHelper deletionHelper = DOFGlobalSettings
-                .getInstance().getDeletionHelperForClass(className);
+        DeletionHelper deletionHelper = DOFGlobalSettings
+                .getInstance().getDeletionHelperForClass(objectToDelete.getClass());
         if (deletionHelper == null)
         {
-            if (dofDebug)
+            if (DOFGlobalSettings.dofDebug)
             {
-                System.out.println("WARNING: No ObjectDeletionHelper for class: " + className);
-                System.out.println("Object not deleted: " + objectToDelete);
+                logMessage("WARNING: No DeletionHelper for class: " +
+                           objectToDelete.getClass().getName());
+                logMessage("Object not deleted: " + objectToDelete);
             }
             return false;
         }
+        return deleteObjectWithDeletionHelper(objectToDelete, greedy, deletionHelper);
+    }
 
+
+    private static boolean deleteObjectWithDeletionHelper(Object objectToDelete,
+                                                          boolean greedy,
+                                                          DeletionHelper deletionHelper)
+    {
+        // First check if there are dependencies on the object to be deleted
+        if (!deletionHelper.okToDelete(objectToDelete))
+        {
+            return false;
+        }
 
         boolean deletedOk = deletionHelper.delete(objectToDelete);
-        if (dofDebug)
+        if (DOFGlobalSettings.dofDebug)
         {
-            System.out.println("DOF: Deletion Helper: " + deletionHelper.getClass().getName() +
+            logMessage("DOF: Deletion Helper: " + deletionHelper.getClass().getName() +
                                ": Deleting Object " + objectToDelete.getClass().getName() + ": " +
                                objectToDelete + ": Successful = " + deletedOk);
         }
         if (deletedOk)
         {
-            dofObjectCache.remove(objectToDelete, deletionHelper.extractPrimaryKey(objectToDelete));
+            getDofObjectCache().remove(objectToDelete, deletionHelper.extractPrimaryKey(objectToDelete));
         }
         if (greedy && deletedOk)
         {
-            Object[] dependencies = deletionHelper.getDependencies(objectToDelete);
+            Object[] dependencies = deletionHelper.getReferencedObjects(objectToDelete);
             if (dependencies != null)
             {
                 for (int i = 0; i < dependencies.length; i++)
@@ -598,7 +616,7 @@ public class DOF
             Object pk = scratchReferenceToObject.get(scratchReference);
             if (pk != null)
             {
-                Object fetchedObject = dofObjectCache.get(scratchBuilder.getCreatedClass(),
+                Object fetchedObject = getDofObjectCache().get(scratchBuilder.getCreatedClass(),
                                                             pk);
                 if (fetchedObject == null)
                 {
@@ -611,16 +629,15 @@ public class DOF
             }
         }
 
-        if (dofDebug)
+        if (DOFGlobalSettings.dofDebug)
         {
-            System.out.println(
-                    "DOF: Creating Scratch Object: " + scratchBuilder.getClass().getName() + (
-                            (scratchReferenceToObject != null && scratchReferenceToObject.size() > 0) ?
-                            ", scratchReferenceToObject = " + scratchReferenceToObject : ""));
+            logMessage("DOF: Creating Scratch Object: " + scratchBuilder.getClass().getName() + (
+                    (scratchReferenceToObject != null && scratchReferenceToObject.size() > 0) ?
+                    ", scratchReferenceToObject = " + scratchReferenceToObject : ""));
         }
 
         Object resultObject = scratchBuilder.create(scratchReferenceToObject);
-        dofObjectCache.put(scratchBuilder, resultObject);
+        getDofObjectCache().put(scratchBuilder, resultObject);
 
         return resultObject;
     }
@@ -684,7 +701,7 @@ public class DOF
      */
     public static void removeEntryFromCache(Object objectToRemove, Object objectPrimaryKey)
     {
-        dofObjectCache.remove(objectToRemove, objectPrimaryKey);
+        getDofObjectCache().remove(objectToRemove, objectPrimaryKey);
     }
 
 
@@ -712,23 +729,12 @@ public class DOF
      */
     public static void setDofDebug(boolean b)
     {
-        dofDebug = b;
+        DOFGlobalSettings.dofDebug = b;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     // private members and methods ///////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * we keep a cache of the loaded objects to avoid searching the DB every time.
-     */
-    static
-    {   // Make sure we init first
-        DOFGlobalSettings.getInstance();
-    }
-
-    private static final DOFObjectCache dofObjectCache =
-            new DOFObjectCache();
 
     private static Pattern repIncludeDependency;
     private static Pattern repIncludeScratch;
@@ -736,7 +742,6 @@ public class DOF
     private static Pattern repIncludeScratchJava;
 
 
-    public static boolean dofDebug = System.getProperty("DOF_DEBUG", "").equalsIgnoreCase("TRUE");
 
     static boolean dofPrintDescriptionFiles =
             System.getProperty("DOF_PRINT_FILES", "").equalsIgnoreCase("TRUE");
@@ -745,6 +750,12 @@ public class DOF
     //        new HashMap<Object, ObjectFileInfo>();
     //
 
+    // called by DOFGlobalSettings
+    //static void initDofObjectCache()
+    //{
+    //    dofObjectCache = new DOFObjectCache();
+    //}
+    //
 
     private static void checkRepIncludeDependencyInitialized()
     {
@@ -821,7 +832,7 @@ public class DOF
         }
 
         Object resultObject = lookupByPrimaryKey ?
-                              dofObjectCache.get(objectFileInfo) :
+                              getDofObjectCache().get(objectFileInfo) :
                               null;
 
         if (resultObject == null)
@@ -839,9 +850,9 @@ public class DOF
             loadDependencyScratchObjects(fileToLoadAndScratchReference.fileToLoad,
                                          scratchReferenceToPk);
 
-            if (dofDebug)
+            if (DOFGlobalSettings.dofDebug)
             {
-                System.out.println("DOF: Loading" + (isScratchObject ? " Scratch Object" : "") +
+                logMessage("DOF: Loading" + (isScratchObject ? " Scratch Object" : "") +
                                    ": ObjectFileInfo = " + objectFileInfo);
             }
 
@@ -874,7 +885,7 @@ public class DOF
             }
 
             // Save the data in the cache
-            dofObjectCache.put(objectFileInfo, resultObject);
+            getDofObjectCache().put(objectFileInfo, resultObject);
 
         }
         return resultObject;
@@ -895,9 +906,9 @@ public class DOF
         {
             scratchPk = ((ScratchPkProvider) dofHandler).getScratchPk();
         }
-        else if (defaultScratchPrimaryKeyProvider != null)
+        else if (DOFGlobalSettings.getInstance().getDefaultScratchPrimaryKeyProvider() != null)
         {
-            scratchPk = defaultScratchPrimaryKeyProvider.getScratchPk();
+            scratchPk = DOFGlobalSettings.getInstance().getDefaultScratchPrimaryKeyProvider().getScratchPk();
         }
         else
         {
@@ -927,23 +938,38 @@ public class DOF
 
         // delete passed in object first
         boolean deletedObjectfromFileToLoad;
-        Object objectToDelete = dofObjectCache.get(objectFileInfo); // cache will call handler
+        Object objectToDelete = getDofObjectCache().get(objectFileInfo); // cache will call handler
 
         if (objectToDelete != null)
         {
-            deletedObjectfromFileToLoad = doh.delete(objectToDelete, objectFileInfo);
-            if (dofDebug)
+            if (doh instanceof DeletionHelper)
             {
-                System.out.println("DOF: Deleting: ObjectFileInfo = " + objectFileInfo +
-                                   ", deleted = " + deletedObjectfromFileToLoad);
+                // Let's not do this greedy b/c we're going to use the file dependencies
+                deletedObjectfromFileToLoad = deleteObjectWithDeletionHelper(objectToDelete, false,
+                                                                             (DeletionHelper)doh);
+                if (DOFGlobalSettings.dofDebug)
+                {
+                    logMessage("DOF: Deleting: ObjectFileInfo = " + objectFileInfo +
+                               ", deleted = " + deletedObjectfromFileToLoad);
+                }
             }
+            else
+            {
+                if (DOFGlobalSettings.dofDebug)
+                {
+                    logMessage("DOF: CANNOT DELETE object defined by " + objectFileInfo +
+                               " because class " + doh + " does not implement interface DeletionHelper");
+                }
+                deletedObjectfromFileToLoad = false;
+            }
+                //deletedObjectfromFileToLoad = doh.delete(objectToDelete);
         }
         else
         {
             deletedObjectfromFileToLoad = true; // b/c already deleted
-            if (dofDebug)
+            if (DOFGlobalSettings.dofDebug)
             {
-                System.out.println("Object from file " + fileToLoad + " does not exist. " +
+                logMessage("Object from file " + fileToLoad + " does not exist. " +
                                    "Continuing deletion of dependencies.");
             }
         }
@@ -956,7 +982,7 @@ public class DOF
 //        System.out.println("DOF.deleteObjectWorker removing fileToLoad = " + scratchBuilder);
         if (deletedObjectfromFileToLoad)
         {
-            dofObjectCache.remove(objectFileInfo);
+            getDofObjectCache().remove(objectFileInfo);
             // then delete the dependencies
             deleteDependencies(fileToLoad, processedDeletions);
         }
@@ -990,9 +1016,8 @@ public class DOF
             }
             catch (Exception e)
             {
-                System.out
-                        .println("Could not delete path = " + requiredPath +
-                                 ", Possibly other objects depend on this object. " + e);
+                logMessage("Could not delete path = " + requiredPath +
+                         ", Possibly other objects depend on this object. " + e);
             }
         }
 
@@ -1018,14 +1043,14 @@ public class DOF
             String requiredPath = iterator.next();
             if (requiredPath.equals(fileName))
             {
-                System.out.println(
+                logMessage(
                         "WARNING: You listed a file a file as a dependency of itself. Please see: " +
                         fileName);
                 continue;
             }
 
             ObjectFileInfo dependencyObjectFileInfo = getObjectFileInfo(requiredPath);
-            if (!dofObjectCache
+            if (!getDofObjectCache()
                     .containsKey(dependencyObjectFileInfo))
             {
                 FileToLoadAndScratchReference so = new FileToLoadAndScratchReference();
@@ -1088,7 +1113,7 @@ public class DOF
 
             if (requiredPath.equals(fileName))
             {
-                System.out.println(
+                logMessage(
                         "WARNING: You listed a file a file as a dependency of itself. Please see: " +
                         fileName);
                 continue;
@@ -1129,7 +1154,7 @@ public class DOF
             String scratchRequestedPk = scratchReferenceToPk.get(scratchReference);
             if (scratchRequestedPk != null)
             {
-                scratchObject = dofObjectCache.get(scratchBuilder, scratchRequestedPk);
+                scratchObject = getDofObjectCache().get(scratchBuilder, scratchRequestedPk);
             }
 
             // If not found, then create
@@ -1175,6 +1200,16 @@ public class DOF
     }
 
 
+    public static void setDofObjectCache(DOFObjectCache dofObjectCache)
+    {
+        DOFGlobalSettings.getInstance().dofObjectCache = dofObjectCache;
+    }
+
+
+    public static DOFObjectCache getDofObjectCache()
+    {
+        return DOFGlobalSettings.getInstance().dofObjectCache;
+    }
 
     //static List<DeletableScratchBuilder> scratchJavaObjectsCreated =
     //        new ArrayList<DeletableScratchBuilder>();
@@ -1209,17 +1244,17 @@ public class DOF
                 if (deletionOption == DeletionOption.all ||
                     deletionOption == DeletionOption.scratch_only)
                 {
-                    deleteObjectsForClass(deletionClass, dofObjectCache.getScratchObjects());
+                    deleteObjectsForClass(deletionClass, getDofObjectCache().getScratchObjects());
                 }
                 if (deletionOption == DeletionOption.all ||
                     deletionOption == DeletionOption.reference_only)
                 {
-                    deleteObjectsForClass(deletionClass, dofObjectCache.getReferenceObjects());
+                    deleteObjectsForClass(deletionClass, getDofObjectCache().getReferenceObjects());
                 }
             }
-        System.out.println("After delete all");
-        System.out.println("dofObjectCache scratch= " + dofObjectCache.getScratchObjects());
-        System.out.println("dofObjectCache refs = " + dofObjectCache.getReferenceObjects());
+        //System.out.println("After delete all");
+        //System.out.println("dofObjectCache scratch= " + dofObjectCache.getScratchObjects());
+        //System.out.println("dofObjectCache refs = " + dofObjectCache.getReferenceObjects());
 
     }
 
@@ -1235,8 +1270,8 @@ public class DOF
 
             if (deletionClass.isInstance(objectToDelete))
             {
-                ObjectDeletionHelper sodh = DOFGlobalSettings.getInstance()
-                        .getDeletionHelperForClass(objectToDelete.getClass().getName());
+                DeletionHelper sodh = DOFGlobalSettings.getInstance()
+                        .getDeletionHelperForClass(objectToDelete.getClass());
                 boolean deletedOk = sodh.delete(objectToDelete);
                 if (deletedOk)
                 {
@@ -1422,29 +1457,12 @@ public class DOF
     }
 
 
-    private static ScratchPkProvider defaultScratchPrimaryKeyProvider;
 
-
-    static
-    {
-        String defaultScratchPrimaryKeyProviderClassName =
-                DOFGlobalSettings.getInstance().getDefaultScratchPrimaryKeyProviderClassName();
-        if (defaultScratchPrimaryKeyProviderClassName != null &&
-            defaultScratchPrimaryKeyProviderClassName.trim().length() > 0)
-        {
-            try
-            {
-                Class<? extends ScratchPkProvider> scratchClass =
-                        (Class<? extends ScratchPkProvider>) Class
-                                .forName(defaultScratchPrimaryKeyProviderClassName);
-                defaultScratchPrimaryKeyProvider = scratchClass.newInstance();
-            }
-            catch (Throwable e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+    //static void logMessage(String message)
+    //{
+    //    // todo -- consider some sort of plug-in for logging
+    //
+    //}
 
 
 }

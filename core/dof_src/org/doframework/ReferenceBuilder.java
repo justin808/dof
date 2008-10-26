@@ -49,47 +49,50 @@ public interface ReferenceBuilder extends DOFBuilder
 
 
     ///**
-    // * This method defines what other objects need to be created (persisted) before this object is
-    // * created. This method is used by the DOF for cleanup purposes.
     // *
-    // * @return Array of reference objects that this object directly depends on.
+    // * Delete the passed in object. Immediately before this method is called, okToDelete(Object)
+    // * is called and that method must return true before this method is called.
+    // * <p/>
+    // * Typically, this method should be defined in the superclass for the object defined because you
+    // * typically have many builder classes for a given object type, and the methods implementations
+    // * might be the same for both scratch builders and reference builders.
+    // * <p/>
+    // * This method is passed the objectToDelete as a convenience as many systems will use that
+    // * object as part of the deletion code.
+    // * <p/>
+    // * In order for this method to work correctly, you must correctly implement method
+    // * getReferenceJavaDependencies and possibly implement interface HasReferenceTextDependencies.
+    // * <p/>
+    // * Also, keep in mind that deletion of reference objects is typically only done during the
+    // * development of tests. Cleaning up reference objects in the tear down of each test will lead
+    // * to horrible performance issues. The whole point of reference objects is that these objects
+    // * can stick around.
+    // *
+    // * @param objectToDelete Object requested for deletion, never null
+    // *
+    // * @return true if requested object is deleted.
     // */
-    ReferenceBuilder[] getReferenceJavaDependencies();
+    //boolean delete(Object objectToDelete);
+    //
+    //
+    ///**
+    // * This method is called to check if an object can be deleted. Generally, an object can be
+    // * deleted if no other objects refer to it. It may be possible to rely on relational integrity
+    // * to fail a deletion call with a SqlException, but that can get messy depending on if you are
+    // * using an ORM such as JPA.
+    // *
+    // * @param object to be deleted
+    // *
+    // * @return true if the object is OK for deletion
+    // */
+    //boolean okToDelete(Object object);
 
 
     /**
-     * Delete the object passed, which was created by this DOF builder class. Note that the
-     * framework will automatically try to delete the object's dependencies as well in a breadth
-     * first manner. It is CRITICAL that this method not delete the requested object and return
-     * false if there are any existing dependencies upon this object. For example, if this is a
-     * request to delete a customer record and invoices depend upon this customer record, it must
-     * simply return false.
-     * <p/>
-     * Typically, this method should be defined in the superclass for the object defined because you
-     * typically have many builder classes for a given object type, and the methods implementations
-     * might be the same for both scratch builders and reference builders.
-     * <p/>
-     * This method is passed the objectToDelete as a convenience as many systems will use that
-     * object as part of the deletion code.
-     * <p/>
-     * In order for this method to work correctly, you must correctly implement method
-     * getReferenceJavaDependencies and possibly implement interface HasReferenceTextDependencies.
-     * <p/>
-     * Also, keep in mind that deletion of reference objects is typically only done during the
-     * development of tests. Cleaning up reference objects in the tear down of each test will lead
-     * to horrible performance issues. The whole point of reference objects is that these objects
-     * can stick around.
-     *
-     * @param objectToDelete Object requested for deletion, never null
-     *
-     * @return true if requested object is deleted.
-     */
-    boolean delete(Object objectToDelete);
-
-    /**
-     * This key is used for hashing objects. The value can be any unique value, such as a unique
-     * field, or a combination of fields that is unique. It does not need to be the same as
-     * the database physical primary key. This is the value used for linking up objects in the DOF.
+     * This method is used for caching objects. The value can be any unique value, such as a unique
+     * field, or a combination of fields that is unique for the given object type, as the key is combined
+     * with the class name. It does not need to be the same as the database physical primary key.
+     * This is the value used for linking up objects in the DOF.
      * @return the unique key to be used for caching.
      */
     Object getPrimaryKey();
@@ -105,5 +108,16 @@ public interface ReferenceBuilder extends DOFBuilder
      * @return An object that was created and saved in the DB
      */
     Object create();
+
+
+    ///**
+    // * This method defines what other objects need to be created (persisted) before this object is
+    // * created. This method is used by the DOF for cleanup purposes.
+    // *
+    // * @return Array of reference objects that this object directly depends on.
+    // */
+    //ReferenceBuilder[] getReferenceJavaDependencies();
+
+
 }
 

@@ -2,6 +2,8 @@ package org.doframework;
 
 // Released under the Eclipse Public License-v1.0
 
+import org.doframework.annotation.*;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -9,77 +11,75 @@ import java.util.regex.*;
 
 
 /**
- This is helper class for that handles the mappings of the Handler classes to the object types. The user of the DOF is
- responsible for having a file "handler_mappings.properties" located in the classpath
- <p/>
- The format of the properties file is:
- <p/>
- <code>objectType.fileSuffix=DependentObjectHandlerImplementationClassName</code>
- <p/>
- This is an example of a line in the mappings file:
- <p/>
- <code>customer.xml=dof_xml_handler.CustomerXmlFactory</code>
- <p/>
-
- It states that a customer.PK.xml file maps to the handler class dof_xml_handler.CustomerXmlFactory Note, the
- CustomerXmlFactory class must implement interface <b>DependentObjectHandler</b>
-
- Even though fileToLoad uses the period as the delimiter, the primary key may contain periods because the first and last periods are used to find the
- object type and the file suffix. This also means that object types may NOT contain a period
- (if you are using the default org.doframework.TypePkExtensionObjectFileInfoProcessor)
-  <p/>
-  You may specify a custom ObjectFileInfoProcessor class in case you do not like the form of objectType.PK.fileType.
-  Do this by putting in a property in file handler_mappings.properties
-  <pre>
-  ObjectFileInfoProcessor=FullClassName
-  </pre>
-  <p/>
-  Specify regexp matches like this (note the "RE:" signifies regexp, and it is removed from the expression
-  <pre>
-  RE:{regular expression}=class
-  RE:\w+\.xml=dof_xml_handler.GenericXmlFactory
-  </pre>
-  For regexp documentation, consult http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html<p/>
-
- @author Justin Gordon
- @date January, 2008
-
-
+ * This is helper class for that handles the mappings of the Handler classes to the object types.
+ * The user of the DOF is responsible for having a file "handler_mappings.properties" located in the
+ * classpath
+ * <p/>
+ * The format of the properties file is:
+ * <p/>
+ * <code>objectType.fileSuffix=DependentObjectHandlerImplementationClassName</code>
+ * <p/>
+ * This is an example of a line in the mappings file:
+ * <p/>
+h * <code>customer.xml=dof_xml_handler.CustomerXmlFactory</code>
+ * <p/>
+ * <p/>
+ * It states that a customer.PK.xml file maps to the handler class dof_xml_handler.CustomerXmlFactory
+ * Note, the CustomerXmlFactory class must implement interface <b>DependentObjectHandler</b>
+ * <p/>
+ * Even though fileToLoad uses the period as the delimiter, the primary key may contain periods
+ * because the first and last periods are used to find the object type and the file suffix. This
+ * also means that object types may NOT contain a period (if you are using the default
+ * org.doframework.TypePkExtensionObjectFileInfoProcessor)
+ * <p/>
+ * You may specify a custom ObjectFileInfoProcessor class in case you do not like the form of
+ * objectType.PK.fileType. Do this by putting in a property in file handler_mappings.properties
+ * <pre>
+ * ObjectFileInfoProcessor=FullClassName
+ * </pre>
+ * <p/>
+ * Specify regexp matches like this (note the "RE:" signifies regexp, and it is removed from the
+ * expression
+ * <pre>
+ * RE:{regular expression}=class
+ * RE:\w+\.xml=dof_xml_handler.GenericXmlFactory
+ * </pre>
+ * For regexp documentation, consult http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html<p/>
+ *
+ * @author Justin Gordon
+ * @date January, 2008
  */
 
 
-class DOFGlobalSettings
+public class DOFGlobalSettings
 {
     static final String DOF_PREFERENCES = "dof_preferences.properties";
     static final String HANDLER_MAPPINGS_PROPERTIES_NAME = "handler_mappings.properties";
-    static final String OBJECT_DELETION_HELPER_MAPPINGS_NAME = "deletion_mappings.properties";
+    static final String OBJECT_DELETION_HELPER_MAPPINGS_NAME = "deletion_helpers.properties";
 
 
     public static final String MAX_CACHED_SCRATCH_OBJECTS = "MaxCachedScratchObjects";
     public static final String MAX_CACHED_REFERENCE_OBJECTS = "MaxCachedReferenceObjects";
     public static final String DEFAULT_SCRATCH_PRIMARY_KEY_PROVIDER =
             "DefaultScratchPrimaryKeyProvider";
+    private static final String DEFAULT_SCRATCH_PK_PROVIDER =
+            "org.doframework.IntScratchPkProvider";
+
     public static final String OBJECT_FILE_INFO_PROCESSOR_PROPERTY = "ObjectFileInfoProcessor";
-    public static final String DEFAULT_OBJECT_FILE_INFO_PROCESSOR = "org.doframework.TypePkExtensionObjectFileInfoProcessor";
-    static final String DOF_DIR = System.getProperty("DOF_DIR", "");
+    public static final String DEFAULT_OBJECT_FILE_INFO_PROCESSOR =
+            "org.doframework.TypePkExtensionObjectFileInfoProcessor";
+
+    private static String dofDir = System.getProperty("DOF_DIR", "");
+    public static boolean dofDebug = System.getProperty("DOF_DEBUG", "").equalsIgnoreCase("TRUE");
     static DOFGlobalSettings instance;
-
-    static
-    {
-        instance = new DOFGlobalSettings();
-        instance.initialize();
-    }
-
 
 
     Properties handlerMappings;
     Properties dofPreferences;
     Properties scratchDeletionHelpers;
 
-    Map<String,String> propertyFileToResource = new HashMap<String, String>();
-    /**
-     * This is the property to specify a custom ObjectFileInfoProcessor
-     */
+    Map<String, String> propertyFileToResource = new HashMap<String, String>();
+    /** This is the property to specify a custom ObjectFileInfoProcessor */
     ObjectFileInfoProcessor objectFileInfoProcessor;
 
     Map<Pattern, String> compiledPatterns;
@@ -88,12 +88,10 @@ class DOFGlobalSettings
     Pattern SCRATCH_PK_PATTERN;
 
 
-    Map<String, ObjectDeletionHelper> classNameToObjectDeletionHelper =
-            new HashMap<String, ObjectDeletionHelper>();
+    Map<Class, DeletionHelper> classToObjectDeletionHelper =
+            new HashMap<Class, DeletionHelper>();
 
-    /**
-     *  Mapping of the entries in the handler_mappings.properties to the appropriate classes
-     */
+    /** Mapping of the entries in the handler_mappings.properties to the appropriate classes */
     Map<String, Class> objectTypeFileTypeToDOFHandlerClass = new HashMap<String, Class>();
 
     Map<String, DependentObjectHandler> dofHandlerClassNameToInstance =
@@ -104,18 +102,26 @@ class DOFGlobalSettings
      * objects.
      */
     List<Class> objectDeletionOrder;
-
-
+    private ScratchPkProvider defaultScratchPrimaryKeyProvider;
+    /**
+     * we keep a cache of the loaded objects to avoid searching the DB every time.
+     */
+    //static
+    //{   // Make sure we init first
+    //    DOFGlobalSettings.getInstance();
+    //}
+    //
+    DOFObjectCache dofObjectCache;
 
 
     /**
-     * @param objectClassName
+     * @param clazz
      *
      * @return
      */
-    ObjectDeletionHelper getDeletionHelperForClass(String objectClassName)
+    DeletionHelper getDeletionHelperForClass(Class clazz)
     {
-        return classNameToObjectDeletionHelper.get(objectClassName);
+        return classToObjectDeletionHelper.get(clazz);
     }
 
 
@@ -131,14 +137,15 @@ class DOFGlobalSettings
         {
             String c = dofPreferences.getProperty(OBJECT_FILE_INFO_PROCESSOR_PROPERTY,
                                                   DEFAULT_OBJECT_FILE_INFO_PROCESSOR);
-            if (c == null || c.trim().length() == 0 )
+            if (c == null || c.trim().length() == 0)
             {
                 c = DEFAULT_OBJECT_FILE_INFO_PROCESSOR;
             }
             try
             {
                 Class objectFileInfoProcessorClass = Class.forName(c);
-                objectFileInfoProcessor = (ObjectFileInfoProcessor) objectFileInfoProcessorClass.newInstance();
+                objectFileInfoProcessor =
+                        (ObjectFileInfoProcessor) objectFileInfoProcessorClass.newInstance();
             }
             catch (ClassNotFoundException e)
             {
@@ -157,7 +164,8 @@ class DOFGlobalSettings
     }
 
 
-    DependentObjectHandler getDependentObjectHandlerForObjectTypeFileType(String objectType, String fileType)
+    DependentObjectHandler getDependentObjectHandlerForObjectTypeFileType(String objectType,
+                                                                          String fileType)
     {
         String className = getDOFHandlerClassName(objectType, fileType);
         if (className == null)
@@ -171,15 +179,16 @@ class DOFGlobalSettings
 
     /**
      * Determine the most efficient order for deletion. Delete those objects that have the least
-     * other objects dependendent upon them. For example, if invoices depend on products that
-     * depend on manufacturers, return { Invoice.class, Product.class, Manufacturer.class}
+     * other objects dependendent upon them. For example, if invoices depend on products that depend
+     * on manufacturers, return { Invoice.class, Product.class, Manufacturer.class}
+     *
      * @return List of classes in the optimal order to delete objects
      */
     public List<Class> getObjectDeletionOrder()
     {
         if (objectDeletionOrder == null)
         {
-            objectDeletionOrder = calcObjectDeletionOrder(classNameToObjectDeletionHelper);
+            objectDeletionOrder = calcObjectDeletionOrder(classToObjectDeletionHelper);
         }
         return objectDeletionOrder;
     }
@@ -204,9 +213,9 @@ class DOFGlobalSettings
         {
             String s = dofPreferences
                     .getProperty("ScratchPrimaryKeyPattern", "\\{\\{pk(\\:(\\w+))?\\}\\}");
-            if (DOF.dofDebug)
+            if (dofDebug)
             {
-                System.out.println("ScratchPrimaryKeyPattern=" + s);
+                DOF.logMessage("Parsed preference: ScratchPrimaryKeyPattern=" + s);
             }
             SCRATCH_PK_PATTERN = Pattern.compile(s);
         }
@@ -216,13 +225,32 @@ class DOFGlobalSettings
 
     int getMaxCachedScratchObjects()
     {
-        return Integer.parseInt(dofPreferences.getProperty(MAX_CACHED_SCRATCH_OBJECTS));
+        String sMaxCachedScratchObjects = dofPreferences.getProperty(MAX_CACHED_SCRATCH_OBJECTS);
+        if (sMaxCachedScratchObjects == null || sMaxCachedScratchObjects.trim().length() == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return Integer.parseInt(sMaxCachedScratchObjects);
+        }
     }
 
 
     int getMaxCachedReferenceObjects()
     {
-        return Integer.parseInt(dofPreferences.getProperty(MAX_CACHED_REFERENCE_OBJECTS));
+
+        String sMaxCachedReferenceObjects =
+                dofPreferences.getProperty(MAX_CACHED_REFERENCE_OBJECTS);
+        if (sMaxCachedReferenceObjects == null || sMaxCachedReferenceObjects.trim().length() == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return Integer.parseInt(sMaxCachedReferenceObjects);
+        }
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,42 +259,88 @@ class DOFGlobalSettings
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+
     void initialize()
     {
-        parseHandlerMappings();
+        dofPreferences = getPropertiesFromFileName(DOF_PREFERENCES);
+        if (dofPreferences == null)
+        {
+            if (dofDebug)
+            {
+                logMissingFileMessage("Using default DOF preferences", DOF_PREFERENCES);
+            }
+            dofPreferences = new Properties();
 
-        dofPreferences = getPropertiesFromFileName(DOF_PREFERENCES, false);
-
+            dofPreferences.put(DEFAULT_SCRATCH_PRIMARY_KEY_PROVIDER, DEFAULT_SCRATCH_PK_PROVIDER);
+            dofPreferences.put(MAX_CACHED_SCRATCH_OBJECTS, "0");
+            dofPreferences.put(MAX_CACHED_REFERENCE_OBJECTS, "0");
+        }
         parseObjectDeletionHelperMappings();
+        int referenceObjectsSize = getMaxCachedReferenceObjects();
+        int scratchObjectsSize = getMaxCachedScratchObjects();
+        dofObjectCache = new DOFObjectCache(referenceObjectsSize, scratchObjectsSize);
+
+        String defaultScratchPrimaryKeyProviderClassName =
+                getDefaultScratchPrimaryKeyProviderClassName();
+        if (defaultScratchPrimaryKeyProviderClassName != null &&
+            defaultScratchPrimaryKeyProviderClassName.trim().length() > 0)
+        {
+            try
+            {
+                Class<? extends ScratchPkProvider> scratchClass =
+                        (Class<? extends ScratchPkProvider>) Class
+                                .forName(defaultScratchPrimaryKeyProviderClassName);
+                defaultScratchPrimaryKeyProvider = scratchClass.newInstance();
+            }
+            catch (Throwable e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
 
     void parseObjectDeletionHelperMappings()
     {
         Properties objectDeletionHelperProperties =
-                getPropertiesFromFileName(OBJECT_DELETION_HELPER_MAPPINGS_NAME, true);
-        if (objectDeletionHelperProperties != null)
+                getPropertiesFromFileName(OBJECT_DELETION_HELPER_MAPPINGS_NAME);
+        if (objectDeletionHelperProperties == null)
         {
-            Set<Map.Entry<Object, Object>> entries = objectDeletionHelperProperties.entrySet();
-            for (Iterator entryIterator = entries.iterator(); entryIterator.hasNext();)
+            if (dofDebug)
             {
-                Map.Entry<Object, Object> objectObjectEntry = (Map.Entry<Object, Object>) entryIterator.next();
-                String objectDeletionHelperClassName = (String) objectObjectEntry.getValue();
-                String className = (String) objectObjectEntry.getKey();
+                logMissingFileMessage("No deletion helper mappings file found",
+                                      OBJECT_DELETION_HELPER_MAPPINGS_NAME);
+            }
+        }
+        else
+        {
+            Set<Object> objectDeletionHelpers = objectDeletionHelperProperties.keySet();
+            for (Iterator classNameIterator = objectDeletionHelpers.iterator();
+                 classNameIterator.hasNext();)
+            {
+                String objectDeletionHelperClassName = (String) classNameIterator.next();
                 try
                 {
-                    ObjectDeletionHelper objectDeletionHelper =
-                            (ObjectDeletionHelper) Class
-                                    .forName(objectDeletionHelperClassName).newInstance();
-                    classNameToObjectDeletionHelper
-                            .put(className, objectDeletionHelper);
+                    DeletionHelper deletionHelper = (DeletionHelper) Class
+                            .forName(objectDeletionHelperClassName).newInstance();
+                    TargetClass annotation =
+                            deletionHelper.getClass().getAnnotation(TargetClass.class);
+                    if (annotation == null)
+                    {
+                        throw new RuntimeException("DeletionHelper class must declare annotation: " +
+                                                   TargetClass.class.getName());
+                    }
+                    Class deletionTarget = annotation.value();
+                    classToObjectDeletionHelper
+                            .put(deletionTarget, deletionHelper);
                 }
                 catch (ClassNotFoundException e)
                 {
-                    throw new RuntimeException("Class name not found: " + objectDeletionHelperClassName +
+                    throw new RuntimeException("Class name not found: " +
+                                               objectDeletionHelperClassName +
                                                "\nPlease examine contents of file: " +
-                                               propertyFileToResource
-                                                       .get(HANDLER_MAPPINGS_PROPERTIES_NAME));
+                                               OBJECT_DELETION_HELPER_MAPPINGS_NAME);
                 }
                 catch (IllegalAccessException e)
                 {
@@ -281,14 +355,40 @@ class DOFGlobalSettings
     }
 
 
-    private void parseHandlerMappings()
+    private void logMissingFileMessage(String message, String file)
     {
-        handlerMappings = getPropertiesFromFileName(HANDLER_MAPPINGS_PROPERTIES_NAME, false);
+        String getDofDirLogMessage = getDofDirLogMessage();
+        DOF.logMessage(message + ". File '" + file + "' can either be in " +
+                       "the classpath or inside directory indicated by JVM " +
+                       "property DOF_DIR: " + getDofDirLogMessage);
+    }
+
+
+    private String getDofDirLogMessage()
+    {
+        return DOFGlobalSettings.getDofDir().length() > 0 ? DOFGlobalSettings.getDofDir() : "<NOT DEFINED>";
+    }
+
+
+    private Properties parseHandlerMappings()
+    {
+        Properties handlerMappings = getPropertiesFromFileName(HANDLER_MAPPINGS_PROPERTIES_NAME);
+        if (handlerMappings == null)
+        {
+            logMissingFileMessage(
+                    "ERROR: If using text definitions and handlers, you need to specify file : " +
+                    HANDLER_MAPPINGS_PROPERTIES_NAME, HANDLER_MAPPINGS_PROPERTIES_NAME);
+
+            //System.out.println("Create an empty version of handler_mappings.properties " +
+            //                   "and dof_preferences.properties to avoid this message and to use defaults.");
+            System.exit(1);
+        }
         // Process the optional mapping to class names
         Set<Map.Entry<Object, Object>> entries = handlerMappings.entrySet();
         for (Iterator entryIterator = entries.iterator(); entryIterator.hasNext();)
         {
-            Map.Entry<Object, Object> objectObjectEntry = (Map.Entry<Object, Object>) entryIterator.next();
+            Map.Entry<Object, Object> objectObjectEntry =
+                    (Map.Entry<Object, Object>) entryIterator.next();
             String handlerClass = (String) objectObjectEntry.getValue();
             String objectTypeFileType = (String) objectObjectEntry.getKey();
 
@@ -305,12 +405,13 @@ class DOFGlobalSettings
             }
             try
             {
-                objectTypeFileTypeToDOFHandlerClass.put(objectTypeFileType, Class.forName(handlerClass));
+                objectTypeFileTypeToDOFHandlerClass
+                        .put(objectTypeFileType, Class.forName(handlerClass));
                 DependentObjectHandler doh = getDofHandlerInstanceForClassName(handlerClass);
-                if (doh instanceof ObjectDeletionHelper)
+                if (doh instanceof DeletionHelper)
                 {
-                    classNameToObjectDeletionHelper
-                            .put(doh.getCreatedClass().getName(), (ObjectDeletionHelper) doh);
+                    classToObjectDeletionHelper
+                            .put(doh.getCreatedClass(), (DeletionHelper) doh);
                 }
             }
             catch (ClassNotFoundException e)
@@ -321,63 +422,20 @@ class DOFGlobalSettings
                                                    .get(HANDLER_MAPPINGS_PROPERTIES_NAME));
             }
         }
+        return handlerMappings;
     }
 
 
-    private Properties getPropertiesFromFileName(String propertyFileName, boolean okIfNoFile)
+    private Properties getPropertiesFromFileName(String propertyFileName)
     {
+        InputStream inputStream = getInputStreamForFile(propertyFileName);
+
         Properties properties = new Properties();
-        InputStream inputStream =
-                ClassLoader.getSystemResourceAsStream(propertyFileName);
-        if (inputStream == null)
+        if(inputStream==null)
         {
-            if (DOF_DIR.length() > 0)
-            {
-                String resourceAbsolutePath = getAbsolutePath(propertyFileName);
-                File file = new File(resourceAbsolutePath);
-                String filePath = file.getAbsolutePath();
-                try
-                {
-                    inputStream = new BufferedInputStream(new FileInputStream(file));
-                    System.out.println("Loaded file " + filePath);
-                    propertyFileToResource.put(propertyFileName, filePath + "");
-
-                }
-                catch (FileNotFoundException e)
-                {
-                    if(!okIfNoFile)
-                    {
-                        throw new RuntimeException("You must put '" + propertyFileName + '\'' +
-                                                   " in the classpath or under directory defined by system property " +
-                                                   "DOF_DIR: '" + DOF_DIR + "': " + filePath);
-                    }
-                    else
-                    {
-                        return null;
-                    }
-
-                }
-            }
-            else
-            {
-                if (!okIfNoFile)
-                {
-                    throw new RuntimeException("You must put '" + propertyFileName + '\'' +
-                                           " in the classpath or under directory defined by system property " +
-                                           "DOF_DIR '");
-                }
-                else
-                {
-                    return null;
-                }
-            }
+            return properties;
         }
-        else
-        {
-            URL resource = ClassLoader.getSystemResource(HANDLER_MAPPINGS_PROPERTIES_NAME);
-            System.out.println("Loaded " + propertyFileName + " from " + resource);
-            propertyFileToResource.put(propertyFileName, resource + "");
-        }
+
         try
         {
             properties.load(inputStream);
@@ -402,10 +460,58 @@ class DOFGlobalSettings
     }
 
 
+    private InputStream getInputStreamForFile(String propertyFileName)
+    {
+        InputStream inputStream = null;
+        if (getDofDir().length() > 0)
+        {
+            String resourceAbsolutePath = getAbsolutePath(propertyFileName);
+            File file = new File(resourceAbsolutePath);
+            String filePath = file.getAbsolutePath();
+            try
+            {
+                inputStream = new BufferedInputStream(new FileInputStream(file));
+                DOF.logMessage("Loaded file " + filePath);
+                propertyFileToResource.put(propertyFileName, filePath + "");
+
+            }
+            catch (FileNotFoundException e)
+            {
+                if (dofDebug)
+                {
+                    System.out.println("WARNING: File " + resourceAbsolutePath + " was not found. " +
+                                       "Checking classpath.");
+                }
+                inputStream = null;
+            }
+        }
+
+        if (inputStream == null)
+        {
+            inputStream = ClassLoader.getSystemResourceAsStream(propertyFileName);
+            if (inputStream != null)
+            {
+                URL resource = ClassLoader.getSystemResource(HANDLER_MAPPINGS_PROPERTIES_NAME);
+                String msg = "Loaded " + propertyFileName + " from " + resource;
+                DOF.logMessage(msg);
+                propertyFileToResource.put(propertyFileName, resource + "");
+            }
+            else
+            {
+                if (dofDebug)
+                {
+                    System.out.println("WARNING: File " + propertyFileName + " was not found in the classpath. Using defaults");
+                }
+
+            }
+        }
+        return inputStream;
+    }
 
 
     String getDOFHandlerClassName(String objectType, String fileType)
     {
+        Properties handlerMappings = getHandlerMappings();
         String key = objectType + '.' + fileType;
         String exactMatch = (String) handlerMappings.get(key);
         if (exactMatch != null)
@@ -413,8 +519,8 @@ class DOFGlobalSettings
             return exactMatch;
         }
 
-        initCompiledPatterns();
-        for (Map.Entry<Pattern, String> entry : compiledPatterns.entrySet() )
+        initCompiledPatterns(handlerMappings);
+        for (Map.Entry<Pattern, String> entry : compiledPatterns.entrySet())
         {
             Pattern p = entry.getKey();
             Matcher m = p.matcher(key);
@@ -426,7 +532,8 @@ class DOFGlobalSettings
         return null;
     }
 
-    void initCompiledPatterns()
+
+    void initCompiledPatterns(Properties handlerMappings)
     {
         if (compiledPatterns == null)
         {
@@ -446,7 +553,8 @@ class DOFGlobalSettings
                     }
                     catch (Exception e)
                     {
-                        System.out.println("Caught exception in compiling regexp patter " + sKey + ", error was " + e);
+                        DOF.logMessage("Caught exception in compiling regexp patter " + sKey +
+                                       ", error was " + e);
                     }
                     compiledPatterns.put(p, (String) entry.getValue());
                 }
@@ -455,23 +563,17 @@ class DOFGlobalSettings
     }
 
 
-
-
-
-
     String getDefaultScratchPrimaryKeyProviderClassName()
     {
         return dofPreferences.getProperty(DEFAULT_SCRATCH_PRIMARY_KEY_PROVIDER);
     }
 
 
-    /**
-     No need for public constructor
-     */
+    /** No need for public constructor */
     DOFGlobalSettings()
     {
+        initialize();
     }
-
 
 
     DependentObjectHandler getDofHandlerInstanceForClassName(String className)
@@ -503,31 +605,25 @@ class DOFGlobalSettings
     }
 
 
-
-
-
-    static List<Class> calcObjectDeletionOrder(
-            Map<String, ObjectDeletionHelper> classNameToScratchObjectDeletionHelperMap)
+    static List<Class> calcObjectDeletionOrder(Map<Class, DeletionHelper> classToScratchObjectDeletionHelperMap)
     {
         List<Class> sortedClasses = new ArrayList<Class>();
         try
         {
-            Set<Map.Entry<String, ObjectDeletionHelper>> entries =
-                    classNameToScratchObjectDeletionHelperMap.entrySet();
+            Set<Map.Entry<Class, DeletionHelper>> entries =
+                    classToScratchObjectDeletionHelperMap.entrySet();
             for (Iterator entryIterator = entries.iterator(); entryIterator.hasNext();)
             {
-                Map.Entry<String, ObjectDeletionHelper> stringScratchObjectDeletionHelperEntry =
-                        (Map.Entry<String, ObjectDeletionHelper>) entryIterator.next();
-                String className = stringScratchObjectDeletionHelperEntry.getKey();
-                ObjectDeletionHelper scratchObjectDeletionHelper = stringScratchObjectDeletionHelperEntry.getValue();
-                Class currentClass = Class.forName(className);
-                calcObjectDeletionHelperWorker(sortedClasses,
-                                               currentClass,
-                                               scratchObjectDeletionHelper,
-                                               classNameToScratchObjectDeletionHelperMap);
+                Map.Entry<Class, DeletionHelper> classScratchObjectDeletionHelperEntry =
+                        (Map.Entry<Class, DeletionHelper>) entryIterator.next();
+                Class clazz = classScratchObjectDeletionHelperEntry.getKey();
+                DeletionHelper scratchDeletionHelper =
+                        classScratchObjectDeletionHelperEntry.getValue();
+                calcObjectDeletionHelperWorker(sortedClasses, clazz, scratchDeletionHelper,
+                                               classToScratchObjectDeletionHelperMap);
             }
         }
-        catch(ClassNotFoundException e)
+        catch (ClassNotFoundException e)
         {
             throw new RuntimeException(e);
 
@@ -538,11 +634,14 @@ class DOFGlobalSettings
 
     private static void calcObjectDeletionHelperWorker(List<Class> sortedClasses,
                                                        Class currentClass,
-                                                       ObjectDeletionHelper scratchObjectDeletionHelper,
-                                                       Map<String, ObjectDeletionHelper> classNameToScratchObjectDeletionHelperMap)
+                                                       DeletionHelper scratchDeletionHelper,
+                                                       Map<Class, DeletionHelper> classToScratchObjectDeletionHelperMap)
             throws ClassNotFoundException
     {
-        Class[] parentDependencyClasses = scratchObjectDeletionHelper.getDependencyClasses();
+        TargetReferencedClasses targetReferencedAnnotation = scratchDeletionHelper.getClass()
+                .getAnnotation(TargetReferencedClasses.class);
+        Class[] parentDependencyClasses = targetReferencedAnnotation != null ?
+                                          targetReferencedAnnotation.value() : null;
 
         int position = sortedClasses.indexOf(currentClass);
         if (position < 0)
@@ -556,8 +655,9 @@ class DOFGlobalSettings
                 // check if any dependencies exist in list and insert before highest order one
                 int highestOrderDependencyPosition =
                         getHighestOrderDependencyPosition(sortedClasses,
-                                                          classNameToScratchObjectDeletionHelperMap,
-                                                          parentDependencyClasses, Integer.MAX_VALUE);
+                                                          classToScratchObjectDeletionHelperMap,
+                                                          parentDependencyClasses,
+                                                          Integer.MAX_VALUE);
                 if (highestOrderDependencyPosition == Integer.MAX_VALUE)
                 {
                     sortedClasses.add(currentClass);
@@ -574,17 +674,18 @@ class DOFGlobalSettings
             for (int i = 0; i < parentDependencyClasses.length; i++)
             {
                 Class parentDependencyClass = parentDependencyClasses[i];
-                ObjectDeletionHelper deletionHelper =
-                        classNameToScratchObjectDeletionHelperMap.get(parentDependencyClass.getName());
+                DeletionHelper deletionHelper = classToScratchObjectDeletionHelperMap
+                        .get(parentDependencyClass);
                 if (deletionHelper == null)
                 {
                     throw new RuntimeException(
                             "Could not find ScratchObjectDeletionHelper for class: " +
                             parentDependencyClass);
                 }
-                calcObjectDeletionHelperWorker(sortedClasses, parentDependencyClass,
-                                               deletionHelper, classNameToScratchObjectDeletionHelperMap);
-
+                calcObjectDeletionHelperWorker(sortedClasses,
+                                               parentDependencyClass,
+                                               deletionHelper,
+                                               classToScratchObjectDeletionHelperMap);
 
                 //int positionParentDependency = sortedClasses.indexOf(parentDependencyClass);
                 //if (positionParentDependency < 0)
@@ -600,7 +701,7 @@ class DOFGlobalSettings
 
 
     private static int getHighestOrderDependencyPosition(List<Class> sortedClasses,
-                                                         Map<String, ObjectDeletionHelper> classNameToScratchObjectDeletionHelperMap,
+                                                         Map<Class, DeletionHelper> classToScratchObjectDeletionHelperMap,
                                                          Class[] parentDependencyClasses,
                                                          int highestOrderDependencyPosition)
     {
@@ -611,18 +712,24 @@ class DOFGlobalSettings
                 Class parentDependencyClass = parentDependencyClasses[i];
 
                 int positionParentDependency = sortedClasses.indexOf(parentDependencyClass);
-                if (positionParentDependency != -1 && positionParentDependency <
-                                                      highestOrderDependencyPosition)
+                if (positionParentDependency != -1 &&
+                    positionParentDependency < highestOrderDependencyPosition)
                 {
                     highestOrderDependencyPosition = positionParentDependency;
                 }
 
-                ObjectDeletionHelper parentDependencyDeletionHelper =
-                        classNameToScratchObjectDeletionHelperMap
-                                .get(parentDependencyClass.getName());
-                Class[] parentParentDependencyClasses = parentDependencyDeletionHelper.getDependencyClasses();
+                DeletionHelper parentDependencyDeletionHelper =
+                        classToScratchObjectDeletionHelperMap
+                                .get(parentDependencyClass);
+                TargetReferencedClasses annotation = parentDependencyDeletionHelper.getClass()
+                        .getAnnotation(TargetReferencedClasses.class);
+                Class[] parentParentDependencyClasses = null;
+                if (annotation != null)
+                {
+                    parentParentDependencyClasses = annotation.value();
+                }
                 highestOrderDependencyPosition = getHighestOrderDependencyPosition(sortedClasses,
-                                                                                   classNameToScratchObjectDeletionHelperMap,
+                                                                                   classToScratchObjectDeletionHelperMap,
                                                                                    parentParentDependencyClasses,
                                                                                    highestOrderDependencyPosition);
             }
@@ -631,12 +738,12 @@ class DOFGlobalSettings
     }
 
 
-    public static DOFGlobalSettings getInstance()
+    public synchronized static DOFGlobalSettings getInstance()
     {
-        //if (instance == null)
-        //{
-        //    instance = new DOFGlobalSettings();
-        //}
+        if (instance == null)
+        {
+            instance = new DOFGlobalSettings();
+        }
         return instance;
     }
 
@@ -652,7 +759,7 @@ class DOFGlobalSettings
      */
     public static String getAbsolutePath(String fileToLoad)
     {
-        return DOF_DIR + File.separator + fileToLoad;
+        return getDofDir() + File.separator + fileToLoad;
     }
 
 
@@ -666,7 +773,7 @@ class DOFGlobalSettings
      */
     static String getResourceAsString(String resourceName)
     {
-        if (DOF_DIR.length() == 0)
+        if (getDofDir().length() == 0)
         {
             return getResourceAsStringFromClassLoader(resourceName);
         }
@@ -743,4 +850,47 @@ class DOFGlobalSettings
                                        resourceName + "'. Possibly resource does not exist.", e);
         }
     }
+
+
+    /**
+     * Will throw if this is called and handler mappings file does not exist.
+     *
+     * @return properties if handler_mappings.properties was found
+     */
+    Properties getHandlerMappings()
+    {
+        if (handlerMappings == null)
+        {
+            // Next line will exit if this is called and handler mappings does not exist
+            handlerMappings = parseHandlerMappings();
+        }
+        return handlerMappings;
+    }
+
+
+    /**
+     * This is an alternate to having the JVM property of DOF_DIR set. This is where properties files
+     * will first be checked, as well as where definitions of objects will be searched.
+     * @param path Path absolute path or relative path to where the JVM is started.
+     */
+    public static void setDofDir(String path)
+    {
+        File file = new File(path);
+        dofDir = file.getAbsolutePath();
+        instance = new DOFGlobalSettings();
+    }
+
+
+    public ScratchPkProvider getDefaultScratchPrimaryKeyProvider()
+    {
+        return defaultScratchPrimaryKeyProvider;
+    }
+
+
+    public static String getDofDir()
+    {
+        return dofDir;
+    }
+
+
 }

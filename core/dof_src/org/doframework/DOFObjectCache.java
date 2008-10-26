@@ -11,10 +11,10 @@ public class DOFObjectCache
     MaxSizeObjectCache scratchObjects;
 
 
-    public DOFObjectCache()
+    public DOFObjectCache(int maxCachedReferenceObjectsSize, int maxCachedScratchObjectSize)
     {
-        referenceObjects = new MaxSizeObjectCache(DOFGlobalSettings.getInstance().getMaxCachedReferenceObjects());
-        scratchObjects = new MaxSizeObjectCache(DOFGlobalSettings.getInstance().getMaxCachedScratchObjects());
+        referenceObjects = new MaxSizeObjectCache(maxCachedReferenceObjectsSize);
+        scratchObjects = new MaxSizeObjectCache(maxCachedScratchObjectSize);
     }
 
     public void put(Object pk, Object storedObject)
