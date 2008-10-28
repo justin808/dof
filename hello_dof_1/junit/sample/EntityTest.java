@@ -77,4 +77,31 @@ public class EntityTest
     }
 
 
+    @Test
+    public void testScratchManufacturer()
+    {
+        ScratchBuilder scratchManufacturer = new ManufacturerScratchBuilder();
+        Manufacturer manufacturer1 = (Manufacturer) DOF.createScratchObject(scratchManufacturer);
+        Manufacturer manufacturer2 = (Manufacturer) DOF.createScratchObject(scratchManufacturer);
+        assertFalse(manufacturer1.getName().equals(manufacturer2.getName()));
+
+        Manufacturer m = (Manufacturer) scratchManufacturer.fetch(manufacturer1.getName());
+        assertNotNull(m);
+    }
+
+
+    @Test
+    public void testScratchProductCreatesScratchManufacturer()
+    {
+        ScratchBuilder scratchProduct = new ProductScratchBuilder();
+        Product product1 = (Product) DOF.createScratchObject(scratchProduct);
+        Product product2 = (Product) DOF.createScratchObject(scratchProduct);
+        assertFalse(product1.getName().equals(product2.getName()));
+        assertFalse(product1.getManufacturer().getName().equals(product2.getManufacturer().getName()));
+
+        Product p = (Product) scratchProduct.fetch(product1.getName());
+        assertNotNull(p);
+    }
+
+
 }

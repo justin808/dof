@@ -4,16 +4,18 @@ import javax.persistence.*;
 
 @Entity @Table(name = "PRODUCT") public class Product
 {
-    private int m_id;
+    private long m_id;
 
 
-    @Id @Column(name = "ID", nullable = false, length = 10) public int getId()
+    @Id @Column(name = "ID", nullable = false, length = 19)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public long getId()
     {
         return m_id;
     }
 
 
-    public void setId(int id)
+    public void setId(long id)
     {
         m_id = id;
     }
@@ -82,26 +84,26 @@ import javax.persistence.*;
     public int hashCode()
     {
         int result;
-        result = m_id;
+        result = (int) (m_id ^ (m_id >>> 32));
         result = 31 * result + (m_name != null ? m_name.hashCode() : 0);
         result = 31 * result + m_price;
         return result;
     }
 
 
-    private Manufacturer m_manufacturerByManufacturerId;
+    private Manufacturer m_manufacturer;
 
 
     @ManyToOne
     @JoinColumn(name = "MANUFACTURER_ID", referencedColumnName = "ID")
-    public Manufacturer getManufacturerByManufacturerId()
+    public Manufacturer getManufacturer()
     {
-        return m_manufacturerByManufacturerId;
+        return m_manufacturer;
     }
 
 
-    public void setManufacturerByManufacturerId(Manufacturer manufacturerByManufacturerId)
+    public void setManufacturer(Manufacturer manufacturer)
     {
-        m_manufacturerByManufacturerId = manufacturerByManufacturerId;
+        m_manufacturer = manufacturer;
     }
 }

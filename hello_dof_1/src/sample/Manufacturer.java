@@ -5,16 +5,18 @@ import java.util.*;
 
 @Entity @Table(name = "MANUFACTURER") public class Manufacturer
 {
-    private int m_id;
+    private long m_id;
 
 
-    @Id @Column(name = "ID", nullable = false, length = 10) public int getId()
+    @Id @Column(name = "ID", nullable = false, length = 19)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public long getId()
     {
         return m_id;
     }
 
 
-    public void setId(int id)
+    public void setId(long id)
     {
         m_id = id;
     }
@@ -64,7 +66,7 @@ import java.util.*;
     public int hashCode()
     {
         int result;
-        result = m_id;
+        result = (int) (m_id ^ (m_id >>> 32));
         result = 31 * result + (m_name != null ? m_name.hashCode() : 0);
         return result;
     }
@@ -73,8 +75,7 @@ import java.util.*;
     private Collection<Product> m_productsById;
 
 
-    @OneToMany(mappedBy = "manufacturerByManufacturerId")
-    public Collection<Product> getProductsById()
+    @OneToMany(mappedBy = "manufacturer") public Collection<Product> getProductsById()
     {
         return m_productsById;
     }

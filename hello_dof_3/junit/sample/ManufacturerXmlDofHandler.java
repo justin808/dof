@@ -59,7 +59,7 @@ public class ManufacturerXmlDofHandler implements DependentObjectHandler, Deleti
     public boolean okToDelete(Object object)
     {
         String queryText =
-                "select count(prod) from Product as prod where prod.manufacturerByManufacturerId.id = :manuId";
+                "select count(prod) from Product as prod where prod.manufacturer.id = :manuId";
         Query query = JpaUtility.getEntityManager()
                 .createQuery(queryText);
         query.setParameter("manuId", ((Manufacturer) object).getId());

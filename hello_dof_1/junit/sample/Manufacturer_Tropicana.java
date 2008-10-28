@@ -30,11 +30,9 @@ public class Manufacturer_Tropicana implements ReferenceBuilder, DeletionHelper 
     }
 
 
-
-
     public boolean okToDelete(Object object)
     {
-        String queryText = "select count(prod) from Product as prod where prod.manufacturerByManufacturerId.id = :manuId";
+        String queryText = "select count(prod) from Product as prod where prod.manufacturer.id = :manuId";
         Query query = JpaUtility.getEntityManager()
                 .createQuery(queryText);
         query.setParameter("manuId", ((Manufacturer) object).getId());

@@ -6,7 +6,6 @@ import org.w3c.dom.*;
 
 import javax.xml.parsers.*;
 import javax.xml.xpath.*;
-import javax.persistence.*;
 import java.io.*;
 
 @TargetClass(Product.class)
@@ -42,7 +41,7 @@ public class ProductXmlDofHandler implements DependentObjectHandler, DeletionHel
             product = new Product();
             product.setName(name);
             product.setPrice(price);
-            product.setManufacturerByManufacturerId(manufacturer);
+            product.setManufacturer(manufacturer);
             JpaUtility.persistObject(product);
         }
         catch (Exception e)
@@ -100,6 +99,6 @@ public class ProductXmlDofHandler implements DependentObjectHandler, DeletionHel
 
     public Object[] getReferencedObjects(Object object)
     {
-        return new Object[]{((Product) object).getManufacturerByManufacturerId()};
+        return new Object[]{((Product) object).getManufacturer()};
     }
 }

@@ -36,7 +36,7 @@ public class TextFileEntityTest
     public void testRequireProduct() {
         Product liptonTea = (Product) DOF.require("product.Lipton__Tea.xml");
         Assert.assertEquals("Tea", liptonTea.getName());
-        Assert.assertEquals("Lipton", liptonTea.getManufacturerByManufacturerId().getName());
+        Assert.assertEquals("Lipton", liptonTea.getManufacturer().getName());
         Product liptonTea2 = (Product) DOF.require("product.Lipton__Tea.xml");
         assertSame(liptonTea, liptonTea2);
     }

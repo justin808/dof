@@ -6,17 +6,17 @@
 
 create table manufacturer
 (
-    id integer primary key,
+    id identity primary key,
     name varchar(100),
     constraint unique_manufacturer_name unique (name)
 );
-create sequence manufacturer_sequence start with 1000;
+--create sequence manufacturer_sequence start with 1000;
 
 
 
 create table product
 (
-    id integer primary key,
+    id identity primary key,
     name varchar(100),
     price integer,
     manufacturer_id integer,
@@ -24,7 +24,7 @@ create table product
     foreign key(manufacturer_id) references manufacturer
 );
 
-create sequence product_sequence;
+--create sequence product_sequence;
 
 
 commit;

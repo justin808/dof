@@ -23,7 +23,7 @@ public class Product_OrangeJuice implements ReferenceBuilder, DeletionHelper {
         product.setName((String) getPrimaryKey());
         product.setPrice(4);
         Manufacturer manufacturer = (Manufacturer) DOF.require(new Manufacturer_Tropicana());
-        product.setManufacturerByManufacturerId(manufacturer);
+        product.setManufacturer(manufacturer);
         JpaUtility.persistObject(product);
         return product;
     }
@@ -37,13 +37,14 @@ public class Product_OrangeJuice implements ReferenceBuilder, DeletionHelper {
 
     public Object extractPrimaryKey(Object object)
     {
-        return ((Product)object).getName();
+        final Product product = (Product) object;
+        return product.getManufacturer().getName() + "__" + product.getName();
     }
 
 
     public Object[] getReferencedObjects(Object object)
     {
-        return new Object[] { ((Product)object).getManufacturerByManufacturerId() };
+        return new Object[] { ((Product)object).getManufacturer() };
     }
 
 

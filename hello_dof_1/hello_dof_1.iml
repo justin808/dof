@@ -6,7 +6,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
-          <factory-entry name="hello_dof" value="H2_hello_dof" />
+          <factory-entry name="hello_dof" value="HelloDof" />
         </datasource-mapping>
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/META-INF/persistence.xml" optional="false" version="1.0" />
       </configuration>
