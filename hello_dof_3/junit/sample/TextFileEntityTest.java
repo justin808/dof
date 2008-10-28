@@ -18,7 +18,7 @@ public class TextFileEntityTest
     {
         if (!JpaUtility.tableExists("MANUFACTURER"))
         {
-            JpaUtility.createSchema("hello_dof_2.sql");
+            JpaUtility.createSchema("hello_dof_.sql");
         }
     }
 

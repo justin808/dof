@@ -1,6 +1,0 @@
-<customer>
-    <customer_id>{{pk}}</customer_id>
-    <name>Scratch Customer{{pk}}</name>
-    <phone_number>808-555-1212</phone_number>
-    <balance>116.83</balance>
-</customer>

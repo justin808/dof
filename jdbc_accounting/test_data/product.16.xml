@@ -1,7 +1,0 @@
-<!-- @require("manufacturer.38.xml") -->
-<product>
-    <id>16</id>
-    <name>Kona coffee</name>
-    <price>10</price>
-    <manufacturer_id>38</manufacturer_id>
-</product>

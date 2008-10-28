@@ -1,9 +1,0 @@
-<!--Important that this is the only product that depends on manufacturer 30 b/c testing delete-->
-<!-- @require("product.31.xml") -->
-<!-- @require("manufacturer.31.xml") -->
-<product>
-    <id>31</id>
-    <name>Gatorade</name>
-    <price>1.99</price>
-    <manufacturer_id>31</manufacturer_id>
-</product>
