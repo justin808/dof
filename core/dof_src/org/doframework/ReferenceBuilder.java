@@ -28,6 +28,9 @@ package org.doframework;
  * DOF.delete(ReferenceObject ro) because the DOF caches these objects, and thus if delete is called
  * otherwise, then the object is returned even though it has been deleted!
  * <p/>
+ * Any classes that implement this MUST provide annotation TargetClass
+ * @see org.doframework.annotation.TargetClass
+ *
  *
  * @author Justin Gordon
  * @date September, 2008

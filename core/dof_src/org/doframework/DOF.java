@@ -3,6 +3,8 @@ package org.doframework;
 // Released under the Eclipse Public License-v1.0
 
 
+import org.doframework.annotation.*;
+
 import java.util.*;
 import java.util.regex.*;
 
@@ -616,8 +618,9 @@ public class DOF
             Object pk = scratchReferenceToObject.get(scratchReference);
             if (pk != null)
             {
-                Object fetchedObject = getDofObjectCache().get(scratchBuilder.getCreatedClass(),
-                                                            pk);
+                Class targetClass  = DOFGlobalSettings.getTargetClassFromAnnotatedClass(scratchBuilder);
+                Object fetchedObject = getDofObjectCache().get(targetClass,
+                                                               pk);
                 if (fetchedObject == null)
                 {
                     fetchedObject = scratchBuilder.fetch(pk);

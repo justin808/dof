@@ -1,11 +1,13 @@
 package org.doframework.sample.component.scratch;
 
 import org.doframework.*;
+import org.doframework.annotation.*;
 import org.doframework.sample.component.*;
 import org.doframework.sample.global.*;
 
 import java.util.*;
 
+@TargetClass(Manufacturer.class)
 public class Manufacturer_Scratch implements ScratchBuilder
 {
 
@@ -59,9 +61,5 @@ public class Manufacturer_Scratch implements ScratchBuilder
     }
 
 
-    public Class getCreatedClass()
-    {
-        return Manufacturer.class;
-    }
 
 }

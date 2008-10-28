@@ -1,8 +1,10 @@
 package org.doframework.sample.component.reference;
 
 import org.doframework.*;
+import org.doframework.annotation.*;
 import org.doframework.sample.component.*;
 
+@TargetClass(Manufacturer.class)
 abstract class ManufacturerReferenceBuilder implements ReferenceBuilder
 {
     ManufacturerComponent manufacturerComponent = ComponentFactory.getManufacturerComponent();
@@ -31,8 +33,4 @@ abstract class ManufacturerReferenceBuilder implements ReferenceBuilder
         return null;
     }
 
-    public Class getCreatedClass()
-    {
-        return Manufacturer.class;
-    }
 }

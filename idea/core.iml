@@ -5,19 +5,12 @@
     <content url="file://$MODULE_DIR$/../core">
       <sourceFolder url="file://$MODULE_DIR$/../core/dof_junit" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../core/dof_src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/../core/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../core/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="JUnit 44" level="application" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/../core/etc" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntryProperties />
   </component>
 </module>

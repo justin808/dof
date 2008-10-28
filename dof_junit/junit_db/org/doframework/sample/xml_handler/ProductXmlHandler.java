@@ -79,10 +79,6 @@ public class ProductXmlHandler implements DependentObjectHandler, ScratchPkProvi
     }
 
 
-
-
-
-
     public boolean delete(Object object)
     {
         return productComponent.delete((Product) object);
@@ -92,13 +88,6 @@ public class ProductXmlHandler implements DependentObjectHandler, ScratchPkProvi
     public boolean okToDelete(Object object)
     {
         return !productComponent.hasInvoices((Product) object);
-    }
-
-
-    /** @return The class object for the class that is returned from this handler. */
-    public Class getCreatedClass()
-    {
-        return Product.class;
     }
 
 

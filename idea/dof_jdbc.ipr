@@ -9,6 +9,22 @@
       <maximumHeapSize value="128" />
       <properties />
     </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/../dof_junit/build.xml">
+      <additionalClassPath>
+        <entry path="file://$PROJECT_DIR$/../../dev/junit4.4/junit-4.4.jar" />
+      </additionalClassPath>
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/../build/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
   </component>
   <component name="BuildJarProjectSettings">
     <option name="BUILD_JARS_ON_MAKE" value="false" />
@@ -26,40 +42,6 @@
     <option name="CHANGE_AFTER" value="" />
     <option name="USE_USER_FILTER" value="false" />
     <option name="USER" value="" />
-  </component>
-  <component name="CloverPlugin" class="com.cenqua.clover.idea6.config.IdeaCloverConfig">
-    <regexpContexts class="java.util.ArrayList" />
-    <flushInterval>5000</flushInterval>
-    <flattenPackages>false</flattenPackages>
-    <coveredHighlight null="true" />
-    <autoRefreshInterval>2000</autoRefreshInterval>
-    <excludes null="true" />
-    <showErrorMarks>true</showErrorMarks>
-    <showInline>true</showInline>
-    <contextFilter class="com.cenqua.clover.context.BlockContextFilter">
-      <filterMask>65535</filterMask>
-    </contextFilter>
-    <showTooltips>true</showTooltips>
-    <languageLevel>1.3</languageLevel>
-    <notCoveredHighlight>-341816</notCoveredHighlight>
-    <enabled>true</enabled>
-    <notCoveredStripe>-65536</notCoveredStripe>
-    <outOfDateStripe>-256</outOfDateStripe>
-    <instrumentTests>false</instrumentTests>
-    <showGutter>true</showGutter>
-    <manualInitString null="true" />
-    <includes null="true" />
-    <useGeneratedInitString>true</useGeneratedInitString>
-    <showSummaryInToolbar>true</showSummaryInToolbar>
-    <autoScroll>true</autoScroll>
-    <outOfDateHighlight>-32</outOfDateHighlight>
-    <showSummaryInToolwindow>true</showSummaryInToolwindow>
-    <relativeInitString>false</relativeInitString>
-    <span>0</span>
-    <flushPolicy>0</flushPolicy>
-    <autoScrollFromSource>false</autoScrollFromSource>
-    <coveredStripe>-16711936</coveredStripe>
-    <autoRefresh>false</autoRefresh>
   </component>
   <component name="CodeStyleProjectProfileManger">
     <option name="PROJECT_PROFILE" />
@@ -192,7 +174,7 @@
     <option name="MAXIMUM_HEAP_SIZE" value="128" />
   </component>
   <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../javadoc" />
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../../temp/dof/javadoc" />
     <option name="OPTION_SCOPE" value="protected" />
     <option name="OPTION_HIERARCHY" value="true" />
     <option name="OPTION_NAVIGATOR" value="true" />
@@ -351,11 +333,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/core.iml" filepath="$PROJECT_DIR$/core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jdbc.iml" filepath="$PROJECT_DIR$/jdbc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../dof_junit/dof_junit.iml" filepath="$PROJECT_DIR$/../dof_junit/dof_junit.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/out" />
+    <output url="file://$PROJECT_DIR$/../bin" />
   </component>
   <component name="ResourceManagerContainer">
     <option name="myResourceBundles">
@@ -386,6 +368,9 @@
     <option name="myValidatorValidationEnabled" value="true" />
     <option name="myReportErrorsAsWarnings" value="true" />
   </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="myVersion" value="123" />
+  </component>
   <component name="SvnChangesBrowserSettings">
     <option name="USE_AUTHOR_FIELD" value="true" />
     <option name="AUTHOR" value="" />
@@ -402,6 +387,7 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/../core" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../dof_junit" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../jdbc" vcs="svn" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />

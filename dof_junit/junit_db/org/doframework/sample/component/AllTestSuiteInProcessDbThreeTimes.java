@@ -24,7 +24,7 @@ public class AllTestSuiteInProcessDbThreeTimes
     @AfterClass
     public static void afterClass()
     {
-        System.out.println("Elapsed time '3 times' is " + (System.currentTimeMillis() - startTime) + " ms.");
+        System.out.println("Elapsed time of " + AllTestSuiteInProcessDbThreeTimes.class.getName() + " is " + (System.currentTimeMillis() - startTime) + " ms. (3 times the test suite).");
     }
 
 }

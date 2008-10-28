@@ -96,11 +96,6 @@ public class CustomerXmlHandler implements DependentObjectHandler, ScratchPkProv
     }
 
 
-    /** @return The class object for the class that is returned from this handler. */
-    public Class getCreatedClass()
-    {
-        return Customer.class;
-    }
 
 
     /**

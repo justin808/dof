@@ -12,15 +12,15 @@ import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
-/** User: gordonju Date: Oct 14, 2008 Time: 11:20:40 AM */
+/**
+ * This annotation is used for deletion of reference classes. It may be defined in a super class of
+ * a RefererenceBuilder implementation.
+ * @see org.doframework.ReferenceBuilder
+ * @see org.doframework.DeletionHelper
+ */
 @Target({TYPE}) @Retention(RUNTIME)
 public @interface TargetReferencedClasses
 {
-    ///**
-    // * @return The class object for the class that this helper is designed for.
-    // */
-    //Class deletionTarget();
-
 
     /**
      * Information on what parent dependency classes this object has are used to for operation

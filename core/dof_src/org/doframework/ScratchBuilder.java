@@ -31,6 +31,10 @@ import java.util.*;
  * <p/>
  * Note, scratch objects are not cached by the DOF, unlike reference ones. However, the builder
  * objects are cached for the ability to call cleanup methods.
+ * <p/>
+ * Any classes that implement this MUST provide annotation TargetClass
+ * @see org.doframework.annotation.TargetClass
+ *
  *
  * @author Justin Gordon
  * @date September, 2008

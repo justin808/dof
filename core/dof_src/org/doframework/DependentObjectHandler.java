@@ -53,25 +53,5 @@ public interface DependentObjectHandler
     Object get(ObjectFileInfo objectFileInfo);
 
 
-    ///**
-    // Delete the object with the given pk. Note that the framework will automatically try to delete the object's
-    // dependencies as well in a breadth first manner. It is CRITICAL that this method not delete the requested object and
-    // return false if there are any existing dependencies upon this object. For example, if this is a request to delete a
-    // customer record and invoices depend upon this customer record, it must simply return false.<p/>
-    //
-    // This method is passed the objectToDelete as a convenience as many systems will use that object
-    // as part of the deletion code.
-    //
-    // @param objectToDelete Object requested for deletion, never null
-    //  * @param objectFileInfo
-    //
-    // @return true if requested object is deleted.
-    // */
-    //boolean delete(Object objectToDelete, ObjectFileInfo objectFileInfo);
-
-
-    /** @return The class object for the class that is returned from this handler. */
-    Class getCreatedClass();
-
 
 }

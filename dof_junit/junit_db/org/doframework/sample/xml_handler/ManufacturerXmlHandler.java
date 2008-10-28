@@ -57,10 +57,6 @@ public class ManufacturerXmlHandler implements DependentObjectHandler, DeletionH
 
 
 
-    public Class getCreatedClass()
-    {
-        return Manufacturer.class;
-    }
 
 
 

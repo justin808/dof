@@ -1,8 +1,10 @@
 package org.doframework.sample.component.reference;
 
 import org.doframework.*;
+import org.doframework.annotation.*;
 import org.doframework.sample.component.*;
 
+@TargetClass(Customer.class)
 public abstract class CustomerReferenceBuilder implements ReferenceBuilder
 {
     CustomerComponent customerComponent = ComponentFactory.getCustomerComponent();
@@ -54,10 +56,6 @@ public abstract class CustomerReferenceBuilder implements ReferenceBuilder
     }
 
 
-    public Class getCreatedClass()
-    {
-        return Customer.class;
-    }
 
 
     /**

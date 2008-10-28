@@ -118,7 +118,8 @@ public class DOFObjectCache
 
     private static String getJavaBuilderHashKey(DOFBuilder rb, Object pk)
     {
-        return rb.getCreatedClass().getName() + ":" + pk;
+        Class targetClass = DOFGlobalSettings.getTargetClassFromAnnotatedClass(rb);
+        return targetClass.getName() + ":" + pk;
     }
 
 

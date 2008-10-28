@@ -2,6 +2,9 @@ package org.doframework.sample.component.reference;
 
 import org.doframework.sample.component.*;
 import org.doframework.*;
+import org.doframework.annotation.*;
+
+@TargetClass(Invoice.class)
 
 public abstract class InvoiceBuilder implements ReferenceBuilder
 {
@@ -25,9 +28,5 @@ public abstract class InvoiceBuilder implements ReferenceBuilder
     }
 
 
-    public Class getCreatedClass()
-    {
-        return Invoice.class;
-    }
 
 }

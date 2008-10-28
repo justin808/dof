@@ -171,11 +171,6 @@ public class InvoiceXmlHandler implements DependentObjectHandler, DeletionHelper
     }
 
 
-    /** @return The class object for the class that is returned from this handler. */
-    public Class getCreatedClass()
-    {
-        return Invoice.class;
-    }
 
 
     public Object extractPrimaryKey(Object object)

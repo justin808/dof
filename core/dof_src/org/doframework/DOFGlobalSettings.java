@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.regex.*;
+import java.lang.annotation.*;
 
 
 /**
@@ -112,6 +113,7 @@ public class DOFGlobalSettings
     //}
     //
     DOFObjectCache dofObjectCache;
+    private HashSet<String> m_propertyFilesNotFound = new HashSet<String>();
 
 
     /**
@@ -196,8 +198,9 @@ public class DOFGlobalSettings
 
     public Class getClassForObjectTypeFileType(String objectType, String fileType)
     {
-        return getDependentObjectHandlerForObjectTypeFileType(objectType, fileType)
-                .getCreatedClass();
+        final DependentObjectHandler doh =
+                getDependentObjectHandlerForObjectTypeFileType(objectType, fileType);
+        return getTargetClassFromAnnotatedClass(doh);
     }
 
 
@@ -324,14 +327,7 @@ public class DOFGlobalSettings
                 {
                     DeletionHelper deletionHelper = (DeletionHelper) Class
                             .forName(objectDeletionHelperClassName).newInstance();
-                    TargetClass annotation =
-                            deletionHelper.getClass().getAnnotation(TargetClass.class);
-                    if (annotation == null)
-                    {
-                        throw new RuntimeException("DeletionHelper class must declare annotation: " +
-                                                   TargetClass.class.getName());
-                    }
-                    Class deletionTarget = annotation.value();
+                    Class deletionTarget = getTargetClassFromAnnotatedClass(deletionHelper);
                     classToObjectDeletionHelper
                             .put(deletionTarget, deletionHelper);
                 }
@@ -352,6 +348,50 @@ public class DOFGlobalSettings
                 }
             }
         }
+    }
+
+
+    /**
+     * Used to consistently get the annotation value
+     * @param dofHelperInstance Either a "builder" class or a DependentObjectHandler that has annotation TargetClass
+     * @return The class that is produced by the helper class
+     */
+    static Class getTargetClassFromAnnotatedClass(Object dofHelperInstance)
+    {
+        TargetClass annotation = (TargetClass) getAnnotationFromObjectOrSuper(dofHelperInstance,
+                                                                              TargetClass.class);
+        if (annotation == null)
+        {
+            throw new RuntimeException(dofHelperInstance.getClass() + " class or superclass " +
+                                       "must declare annotation: " + TargetClass.class.getName() +
+                                       ", specifying the created " +
+                                       "class from the helper class.");
+        }
+
+        return annotation.value();
+    }
+
+
+    /**
+     * Gets the annotation from the class passed in or a parent class
+     * @param dofHelperInstance The DOFBuilder or DependentObjectHandler
+     * @param annotationClass The annotation sought
+     * @return The Annotation found or null if not defined on this the dofHelperInstance or a parent
+     */
+    private static Annotation getAnnotationFromObjectOrSuper(Object dofHelperInstance,
+                                                             Class <? extends Annotation> annotationClass )
+    {
+        Class<? extends Object> classToCheck = dofHelperInstance.getClass();
+        Annotation annotation = null;
+        while (classToCheck != null && annotation == null)
+        {
+            annotation = classToCheck.getAnnotation(annotationClass);
+            if (annotation == null)
+            {
+                classToCheck = classToCheck.getSuperclass();
+            }
+        }
+        return annotation;
     }
 
 
@@ -410,8 +450,9 @@ public class DOFGlobalSettings
                 DependentObjectHandler doh = getDofHandlerInstanceForClassName(handlerClass);
                 if (doh instanceof DeletionHelper)
                 {
+                    Class targetClass = getTargetClassFromAnnotatedClass(doh);
                     classToObjectDeletionHelper
-                            .put(doh.getCreatedClass(), (DeletionHelper) doh);
+                            .put(targetClass, (DeletionHelper) doh);
                 }
             }
             catch (ClassNotFoundException e)
@@ -477,8 +518,9 @@ public class DOFGlobalSettings
             }
             catch (FileNotFoundException e)
             {
-                if (dofDebug)
+                if (dofDebug && !m_propertyFilesNotFound.contains(resourceAbsolutePath))
                 {
+                    m_propertyFilesNotFound.add(resourceAbsolutePath);
                     System.out.println("WARNING: File " + resourceAbsolutePath + " was not found. " +
                                        "Checking classpath.");
                 }
@@ -498,9 +540,10 @@ public class DOFGlobalSettings
             }
             else
             {
-                if (dofDebug)
+                if (dofDebug && !m_propertyFilesNotFound.contains(propertyFileName))
                 {
-                    System.out.println("WARNING: File " + propertyFileName + " was not found in the classpath. Using defaults");
+                    m_propertyFilesNotFound.add(propertyFileName);
+                    System.out.println("WARNING: File " + propertyFileName + " was not found in the classpath. Using default values.");
                 }
 
             }
@@ -638,8 +681,11 @@ public class DOFGlobalSettings
                                                        Map<Class, DeletionHelper> classToScratchObjectDeletionHelperMap)
             throws ClassNotFoundException
     {
-        TargetReferencedClasses targetReferencedAnnotation = scratchDeletionHelper.getClass()
-                .getAnnotation(TargetReferencedClasses.class);
+        TargetReferencedClasses targetReferencedAnnotation = (TargetReferencedClasses)
+                getAnnotationFromObjectOrSuper(scratchDeletionHelper,
+                                               TargetReferencedClasses.class);
+
+
         Class[] parentDependencyClasses = targetReferencedAnnotation != null ?
                                           targetReferencedAnnotation.value() : null;
 
@@ -784,7 +830,13 @@ public class DOFGlobalSettings
     }
 
 
-    static String getResourceAsStringFromDofDefsDir(String resourceName)
+    /**
+     * Utility method to get a resource from the DOF_DIR. Note, this method should NEVER be used
+     * to create scratch objects, as scratch key substitution will not take place.
+     * @param resourceName File name relative to DOF_DIR
+     * @return The resource as a string from the DOF_DIR
+     */
+    public static String getResourceAsStringFromDofDefsDir(String resourceName)
     {
         final String resourceAbsolutePath = getAbsolutePath(resourceName);
         InputStreamReader isr = getInputStreamReaderForPath(resourceAbsolutePath);
@@ -794,6 +846,11 @@ public class DOFGlobalSettings
     }
 
 
+    /**
+     * Utility method to get a stream reader from a path
+     * @param resourceAbsolutePath
+     * @return
+     */
     static InputStreamReader getInputStreamReaderForPath(String resourceAbsolutePath)
     {
         File file = new File(resourceAbsolutePath);
@@ -876,8 +933,12 @@ public class DOFGlobalSettings
     public static void setDofDir(String path)
     {
         File file = new File(path);
-        dofDir = file.getAbsolutePath();
-        instance = new DOFGlobalSettings();
+        String newAbsPath = file.getAbsolutePath();
+        if (!newAbsPath.equals(dofDir))
+        {
+            dofDir = newAbsPath;
+            instance = new DOFGlobalSettings();
+        }
     }
 
 

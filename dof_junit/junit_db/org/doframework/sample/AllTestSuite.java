@@ -18,34 +18,41 @@ public class AllTestSuite
 {
     static long startTime;
 
+    static boolean runOnce = false;
+
 
     @BeforeClass
     public static void beforeClass()
     {
         startTime = System.currentTimeMillis();
-        System.out.println("Using connection:" + Configuration.getDbUrl());
 
-        if (DOFGlobalSettings.getDofDir().trim().length() == 0)
+        if (!runOnce)
         {
-            DOFGlobalSettings.setDofDir("dof_junit/dof_data");
-        }
+            System.out.println("Using connection:" + Configuration.getDbUrl());
 
-        try
-        {
-            JdbcDbUtil.executeSingleIntQuery("SELECT COUNT(*) FROM CUSTOMER");
-        }
-        catch (Exception e)
-        {
-            System.out.println("Creating Schema in memory");
-            CreateSchema.main(null);
-            System.out.println("Finished Creating Schema in memory");
+            if (DOFGlobalSettings.getDofDir().trim().length() == 0)
+            {
+                DOFGlobalSettings.setDofDir("dof_junit/dof_data");
+            }
+
+            try
+            {
+                JdbcDbUtil.executeSingleIntQuery("SELECT COUNT(*) FROM CUSTOMER");
+            }
+            catch (Exception e)
+            {
+                //System.out.println("Creating Schema in memory");
+                CreateSchema.main(null);
+                //System.out.println("Finished Creating Schema in memory");
+            }
+            runOnce = true;
         }
     }
 
     @AfterClass
     public static void afterClass()
     {
-        System.out.println("Elapsed time is " + (System.currentTimeMillis() - startTime) + " ms.");
+        System.out.println("Elapsed time of " + AllTestSuite.class.getName() + " is " + (System.currentTimeMillis() - startTime) + " ms.");
     }
 
 }

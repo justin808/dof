@@ -1,10 +1,12 @@
 package org.doframework.sample.component.scratch;
 
 import org.doframework.*;
+import org.doframework.annotation.*;
 import org.doframework.sample.component.*;
 
 import java.util.*;
 
+@TargetClass(Customer.class)
 public class Customer_Scratch implements ScratchBuilder
 {
 
@@ -52,10 +54,6 @@ public class Customer_Scratch implements ScratchBuilder
     }
 
 
-    public Class getCreatedClass()
-    {
-        return Customer.class;
-    }
 
 
 }

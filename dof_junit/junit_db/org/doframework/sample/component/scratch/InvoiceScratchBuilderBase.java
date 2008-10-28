@@ -1,7 +1,9 @@
 package org.doframework.sample.component.scratch;
 
 import org.doframework.sample.component.*;
+import org.doframework.annotation.*;
 
+@TargetClass(Invoice.class)
 public abstract class InvoiceScratchBuilderBase
 {
     InvoiceComponent invoiceComponent = ComponentFactory.getInvoiceComponent();
@@ -28,10 +30,6 @@ public abstract class InvoiceScratchBuilderBase
         return new Integer(((Invoice) scratchObject).getId());
     }
 
-    public Class getCreatedClass()
-    {
-        return Invoice.class;
-    }
 
 
 }

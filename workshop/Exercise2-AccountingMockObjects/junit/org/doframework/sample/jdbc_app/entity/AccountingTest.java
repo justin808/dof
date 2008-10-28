@@ -23,7 +23,7 @@ public class AccountingTest
     public static void beforeTests()
     {
     	// Put the Mock Factory Lookup Service in place so our
-    	// tests work.
+    	// tests use it.
     	MockFactoryLookupService mockFactoryLookupService = new MockFactoryLookupService();
         GlobalContext.setFactoryLookupService(mockFactoryLookupService);
         //GlobalContext.setAccountingConstants(new MockAccountingConstants());
@@ -34,15 +34,15 @@ public class AccountingTest
     public void testCustomerWithNoInvoicesHasZeroBalance()
     {
         Customer customer = getNewUniqueCustomer();
+        CustomerFactory customerComponent = GlobalContext.getFactoryLookupService().getCustomerFactory();
         Customer customerFromPersisted = customerComponent.getById(customer.getId());
         BigDecimal balance = customerFromPersisted.getBalance();
-        assertEquals(0, balance.doubleValue());
+        assertEquals(new BigDecimal(0), balance);
     }
 
 
     private Customer getNewUniqueCustomer()
     {
-    	int newCustomerId = customerComponent.getNextId();
         Customer customer = new Customer();
         // Example of pattern to create unique PKs
         customer.setName(System.currentTimeMillis() + "");

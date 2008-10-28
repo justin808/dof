@@ -2,6 +2,9 @@ package org.doframework.sample.component.reference;
 
 import org.doframework.sample.component.*;
 import org.doframework.*;
+import org.doframework.annotation.*;
+
+@TargetClass(Product.class)
 
 public abstract class ProductReferenceBuilder implements ReferenceBuilder
 {
@@ -56,10 +59,6 @@ public abstract class ProductReferenceBuilder implements ReferenceBuilder
     }
 
 
-    public Class getCreatedClass()
-    {
-        return Product.class;
-    }
 
 
     abstract ManufacturerReferenceBuilder getManufacturerReferenceBuilder();
