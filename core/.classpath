@@ -4,7 +4,6 @@
     <classpathentry kind="src" path="dof_src" />
     <classpathentry kind="src" path="junit" />
     <classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JUnit 44" />
-    <classpathentry kind="src" path="/hello_dof_1" combineaccessrules="false" />
     <classpathentry kind="output" path="bin" />
 </classpath>
 
