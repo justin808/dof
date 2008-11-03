@@ -1,0 +1,727 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+  <title>Dependent Object Framework -- Easy JUnit testing with database
+dependencies</title>
+</head>
+<body bgcolor="white">
+<h1>The Dependent Object Framework</h1>
+Easy datababase test fixture setup!<br>
+User Guide<br>
+By Justin Gordon<br>
+October 2008<br>
+Version 1<br>
+<h1>General Problem</h1>
+The general problem this framework solves is how does one prepare the
+test fixture (all the setup of objects in a given state) for a JUnit
+test, ensuring persistent objects needed for the test exist in the
+database (or any persistent store). Additionally, the framework handles
+the creation of persistent objects in such a manner that tests do not
+interfere with each other. <br>
+<br>
+The database is a special problem with regards to unit testing, because
+is akin to having a giant global variable that will be shared among
+tests. Many purists will suggest that "tests that hit the database are
+not unit tests" and that one should architect their system so that
+cleanly isolated dependencies can be easily stubbed and mocked out.
+However, tests that hit
+the database are good for the following reasons:<br>
+<ol>
+  <li>The end-user of the application and QA will be using the code
+that hits the database, so this database hitting code needs (automated)
+tests!</li>
+  <li>More often than not, developers are working on existing codebases
+that have intricate ties to the database. Refactoring such codebases to
+remove database dependencies would result in tremendous effort. Even if
+feasible, the situation is a catch-22 because we discourage refactoring
+without good unit test coverage, and we can't get good, non-database
+hitting, unit test coverage without significant code changes.<br>
+  </li>
+  <li>Mocks and stubs can add significant code which is more code to
+write, test, and fix bugs in. And a reliance on those mocks and stubs
+can hide errors in the database access code.<br>
+  </li>
+</ol>
+What solutions do we have to test against the database? Alternative
+solutions to using the DOF include the following monolithic setup
+options:<br>
+<ol>
+  <li>Running SQL scripts to populate the database. -- write raw
+inserts to get the DB ready for your tests, and suffer great pain when
+your schema changes.<br>
+  </li>
+  <li>Restoring database backups -- first get the database ready for
+your test and freeze it, and rework this data when your schema changes.<br>
+  </li>
+  <li>Custom Java setup code for a test -- you will spend too much time
+on the code to get the data ready for the test. <br>
+  </li>
+</ol>
+These methods are inconvenient because they are:<br>
+<ol>
+  <li>Monolithic: Because of the difficulty of setting up these
+mechanisms, developers will want to append their test setup to the
+existing large setup. As the setup grows and becomes more complex, it
+eventually collapses under the weight of its complexity.</li>
+  <li>Fragile: Changes to the code base can result in significant
+changes to the setup. Developers will often neglect to cleanly
+distinguish between which objects are shared and not shared between
+tests . Any objects shared between tests cannot be changed or else some
+other test will likely break.</li>
+  <li>Frustrating: As many developers change the monolithic setup for
+their own tests, they will break other tests. <br>
+  </li>
+</ol>
+<br>
+<h1>"Hello DOF"</h1>
+The DOF comes with very simple examples demonstrating the basic and
+more advanced techniques. You are encouraged to load up those samples
+in your IDE and to then run the unit tests. Then take a look at the
+code. This should solidify your comprehension of the following
+material. <br>
+<br>
+There are 4 parts to the Hello DOF series:<br>
+1. <span style="font-weight: bold;">Basics: </span>The simplest
+possible example using Java builders<br>
+2. <span style="font-weight: bold;"><span style="font-weight: bold;">Basics
+using Text Files and Handlers: </span></span>The simplest possible
+example using Text Files and Handlers<br>
+3. <span style="font-weight: bold;">Java Builders with Scratch
+Objects: </span>Building on part 1.<br>
+4. <span style="font-weight: bold;">Text Files and Handlers with
+Scratch Objects: </span>Building on part 2<br>
+<h1>The Technique<br>
+</h1>
+The Dependent Object Framework (DOF) solves this problem by allowing
+test writers to clearly specify which objects are background&nbsp;
+(reference) data for a test and which objects are created for a single
+run of the test can can be modified. In other words, the setup of the
+test fixture becomes crystal clear to the test writer and a test
+reader. The DOF handles all the plumbing issues of ensuring that an
+object exists in the database for a test, and, if not, then a whole
+tree of objects can get loaded if the object requested depends on those
+other objects.<br>
+<p>For both test performance and test reliability, it is critical to
+have two clear categorizations of objects when running JUnits against a
+DB. </p>
+<p> 1. <span style="font-weight: bold;">Reference Objects</span>: Also
+known as "<span style="font-weight: bold;">Shared persistent test
+fixtures</span>" in Meszaros "xUnit Test Patterns". These objects are
+immutable and thus can be shared
+between tests and betweeen repeated runs of a single test. These
+objects maybe cached by the DOF so that they are retrieved without even
+going to the persistent store. </p>
+<p> 2. <span style="font-weight: bold;">Scratch Objects:</span> Also
+known as "<span style="font-weight: bold;">Transient persistent test
+fixtures</span>" in Meszaros. These are the persisted objects that the
+test will modify.
+These objects are only visible to the test using them by ensuring that
+these
+objects have unique primary keys. They may depend on reference objects
+or other scratch objects. Modification to these objects do not affect
+other tests. </p>
+<span style="font-weight: bold;">Critical: </span>If you misuse a
+reference object by modifying it, your tests will
+behave eratically. For example, maybe a test will pass when running it
+on a clean database, but the test fails if it is run multiple times.
+The solution to this problem is to use a "Scratch Object" instead!<br>
+<h1>Handling Dependencies: One Object Per Definition File<br>
+</h1>
+DOF objects are defined so that there is <span
+ style="font-weight: bold;">one coarse grained object defined per
+definition file </span>(Java class or text file described below), and
+that definition <span style="font-weight: bold;">must</span> state
+it's own direct dependencies, and <span style="font-weight: bold;">only
+its direct dependencies</span>. By having one
+object per definition file, there can be maximum reuse of a given
+object.&nbsp; For example, suppose you have the following schema:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">Invoices</span>:
+depend on Customers and Products objects (records)<br>
+<span style="font-weight: bold;">Products</span>: depend on
+Manufacturer objects (records)<br>
+</div>
+The Dependent Object Framework allows the test writer to specify what
+objects (reference and scratch) are required for a test. The definition
+of an Invoice will state that it depends on a customer object and some
+product objects. The JUnit test for an invoice will contain a line like
+this:<br>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Invoice dofInvoice =
+(Invoice) DOF.require(new Invoice_1001());</code><br>
+<br>
+The test does not need to specify that the "Invoice 1001" depends
+on&nbsp; some customer and product objects because the definition of
+the "Invoice 1001" and the DOF will take care of that. This supports
+clarity of test setup, one of your goals for good xUnit tests! The
+product
+records will depend on manufacturers, but this test does not need to
+list that. The DOF ensures that dependencies are loaded in the correct
+order and cached as needed. This allows maximum reuse of objects
+between tests and maximum performance. In the above invoice 1001
+example, that object is known as a <span style="font-weight: bold;">reference
+object </span>because it is precisely defined by it's object
+definition file. <span style="font-weight: bold;">Scratch objects</span>
+are similar in the use of definition files, but they don't get reused
+and instead get unique identifiers. For example, a test might have this
+line:<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>Invoice dofInvoice1 =
+(Invoice) DOF.createScratchObject(new Invoice_ScratchJava());</code><br>
+<br>
+The class <span style="font-weight: bold;">Invoice_ScratchJava</span>
+will take care of its own dependencies. It may either specify its
+dependencies as scratch objects or reference objects. For example, this
+scratch invoice definition may specify a requirement of a given
+customer record. I.e., a scratch object may depend on a given reference
+object. Alternately, you could have a scratch invoice that depends on a
+scratch customer record. Suppose that your test needs two scratch
+invoices to depend on the same scratch customer record. The
+DOF.createScratchObject takes an optional Map parameter that allows
+the specification of existing objects to substitute for creating new
+scratch objects. The code could look like this:<br>
+<br>
+<code>&nbsp;&nbsp;&nbsp; @Test<br>
+&nbsp;&nbsp;&nbsp; public void
+testTwoScratchInvoicesDependOnSameCustomerAllJava()<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Invoice_ScratchJavaScratchDependencies scratchInvoiceBuilder =<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+new Invoice_ScratchJavaScratchDependencies();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Invoice invoice1 = (Invoice)
+DOF.createScratchObject(scratchInvoiceBuilder);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Customer customer =
+invoice1.getCustomer();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Map <span
+ style="font-weight: bold; color: rgb(51, 51, 255);">scratchReferenceToObject
+</span>= new HashMap();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
+ style="font-weight: bold; color: rgb(51, 51, 255);">scratchReferenceToObject</span>.put(<span
+ style="color: rgb(153, 51, 153);">"scratchCustomer"</span>,
+<span style="color: rgb(255, 0, 0);">customer</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Invoice invoice2 = (Invoice)
+DOF.createScratchObject(scratchInvoiceBuilder,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<span style="font-weight: bold;"><span style="color: rgb(51, 51, 255);">scratchReferenceToObject</span>);</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+assertEquals(</code><code><span style="color: rgb(255, 0, 0);">customer</span></code><code>.getId(),
+invoice2.getCustomer().getId());<br>
+&nbsp;&nbsp;&nbsp; }</code><br>
+<br>
+Note that the <code><span style="color: rgb(255, 0, 0);">customer </span></code>is
+a scratch object created by the scratch invoice class when no <code><span
+ style="color: rgb(153, 51, 153);">"scratchCustomer" </span></code>is
+passed to the call to create the scratch invoice. The assertion<code><span
+ style="color: rgb(153, 51, 153);"></span></code> on the final line of
+the code sample verifies this.<br>
+<br>
+Reference and Scratch objects can be specified either using <span
+ style="font-weight: bold;">Java</span> <span
+ style="font-weight: bold;">builder classes </span>or <span
+ style="font-weight: bold;">text files and handlers</span>. <br>
+<ol>
+  <li> <span style="font-weight: bold;">Java builder classes</span>.
+See interfaces org.doframework.ReferenceBuilder and
+org.doframework.ScratchBuilder for more details. The advantage of using
+Java to define objects, rather than using some file format, like XML,
+is that the classes will support automated refactorings. The test
+writer creates one java builder class per reference or scratch object. </li>
+  <li><span style="font-weight: bold;">Text files</span> and <span
+ style="font-weight: bold;">associated handler </span>classes that can
+process the files. The advantage of using text files with an associated
+handler is that the file format can be significantly more conscise than
+a Java file. The mapping of text files to handler classes is done via
+using a naming convention for the text files with a mapping in a
+configuration file, handler_mappings.properties.</li>
+</ol>
+These techniques are explained in full detail below. In summary, your
+usage of the DOF within a test will consist of:<br>
+<ol>
+  <li><span style="font-weight: bold;">Setting up the test fixture. </span>You
+will clearly specify which reference and scratch objects are needed for
+the test. You will only specify the objects that your test directly
+cares about. If one of the test's objects has dependencies, those will
+be listed within that object's definition.</li>
+  <li><span style="font-weight: bold;">Your test code. </span>A very
+common pattern is to execute some method that will change objects in
+the database, and to then fetch those objects from the database to see
+that they really changed. Of course, those changed objects must be
+scratch objects and <span style="font-weight: bold;">not</span>
+reference objects.</li>
+  <li><span style="font-weight: bold;">Optionally cleaning up the
+objects created. </span>In general, the best practice is to never
+delete any persisted objects, but to periodically rebuild the schema.
+The DOF is designed so that deletion of objects in the DB is not
+necessary because reference objects are needed for future tests and
+scratch objects have a unique ID that cannot be seen once a test
+completes. However, there are legitamate reasons to delete some or all
+the objects created with the DOF during a test run. The DOF provides
+excellent capabilities to either delete a single object (and its
+dependencies) or all objects created during a test run. These reasons
+to delete objects include:</li>
+  <ol>
+    <li>During test development, it is very common to mess up the
+records in the database. The deletion capabilities of the DOF are often
+much quicker than rebuilding the schema.</li>
+    <li>You may be working on a database where's it's either infeasible
+or inconvenient to rebuild the schema periodically.</li>
+  </ol>
+</ol>
+The best way to see how to the use the DOF is to examine the JUnit
+tests in in the directory dof_junit. In there, you can find projects
+files for both Eclipse and IntelliJ. These tests run against HSQLDB.<br>
+<br>
+<h1>Configuration</h1>
+In order to use the DOF, no explicit configuration is necessary, either
+with environment variables or properties files if you are using Java
+builders for objects. If you are using text file handlers, you'll need
+to define the mappings in <a
+ href="#handler_mappings.properties_description">handler_mappings.properties</a>.<br>
+<h2>Environment variables</h2>
+<span style="font-weight: bold;">DOF_DIR</span>: Set this VM flag to
+the directory of your configuration properties files and location of
+text object definition files. If not supplied, a default of
+{working_directory}/dof_data is used. In other words, if you start the
+JVM from C:\my_application, the directory C:\my_application\dof_data is
+used.<br>
+<br>
+<span style="font-weight: bold;">DOF_DEBUG</span>: Set this VM flag to
+true in order to see detailed messages on when reference objects and
+scratch objects are created and deleted. This is very useful for
+debugging DOF issues (and to see what the DOF is doing).<br>
+<br>
+<h2>Properties Files</h2>
+The DOF depends on the following 3 properties files for configuration.
+The properties files must be either placed in the classpath or in the
+directory provided by environment variable DOF_DIR.<br>
+<span style="font-weight: bold;"></span><br>
+<h3><span style="font-weight: bold;">dof_preferences.properties</span></h3>
+This file contains global settings to ensure that cache sizes are
+appropriate and a few setting for using text file handlers. If you're
+OK with the defaults, you don't need to include this file. In general,
+the cache sizes don't need to be set unless you are running
+out of memory, which is conceivable for a very large test suite that
+loads thousands of objects from the database. If you do limit your
+cache size and hit the limit, any calls to delete all objects will only
+delete the cached objects. The last 2 preferences are described below
+in the section on using text files and handlers.<br>
+<br>
+Here is a sample:<br>
+<div style="margin-left: 40px;"><span style="font-family: monospace;">#
+Specify the maximum number of DOF Reference objects that are cached</span><br>
+<span style="font-family: monospace;"># DOF reference objects are
+cached to avoid hitting the database when DOF.require is called.</span><br>
+<span style="font-family: monospace;"># Default is zero, which is no
+maximum.</span><br>
+<span style="font-family: monospace;">MaxCachedReferenceObjects=0</span><br>
+<span style="font-family: monospace;"></span><br>
+<span style="font-family: monospace;"># Specify the maximum number of
+DOF Reference objects that are cached.</span><br>
+<span style="font-family: monospace;"># DOF scratch objects are cached
+to avoid hitting the database when DOF.require is called.</span><br>
+<span style="font-family: monospace;"># If it is easy to recreate your
+schema, then it's better to just accumulate scratch objects</span><br>
+<span style="font-family: monospace;"># and later recreate the schema.
+That way you don't wait for cleanup of the scratch objects</span><br>
+<span style="font-family: monospace;"># when running your tests.
+However, you may have a need to track the scratch objects for cleanup.</span><br>
+<span style="font-family: monospace;"># Default is zero, which is no
+maximum.</span><br>
+<span style="font-family: monospace;">MaxCachedScratchObjects=0</span><br>
+<span style="font-family: monospace;"></span><span
+ style="font-family: monospace;"></span><span
+ style="font-family: monospace;"><br>
+# Following settings only apply if you are using text definitions of
+objects, rather than Java definitions</span><br>
+<span style="font-family: monospace;"></span><br>
+<span style="font-family: monospace;"># If you wish to have your own
+default ScratchPrimaryKeyProvider, specify the class here.</span><br>
+<span style="font-family: monospace;"># The default is to use
+System.currentTimeMillis() + ""</span><br>
+<span style="font-family: monospace;">DefaultScratchPrimaryKeyProvider=</span><br>
+<br>
+<span style="font-family: monospace;"># Specify a custom class that
+implements interface org.doframework.ObjectFileInfoProcessor</span><br>
+<span style="font-family: monospace;"># in case your files have a
+custom naming convention. See Javadoc for that file</span><br>
+<span style="font-family: monospace;"># Default handler is
+org.doframework.TypePkExtensionObjectFileInfoProcessor</span><br>
+<span style="font-family: monospace;">ObjectFileInfoProcessor=</span><br>
+<span style="font-family: monospace;"></span></div>
+<br>
+<div style="margin-left: 40px;"><code># This is the pattern for
+replacing the PK with the scratch PK</code><br>
+<code># Use this pattern in your object creation files and when</code><br>
+<code># Default if not specified is {{pk}} with optional
+{{pk:myScratchReference}}</code><br>
+<code># See javadoc for class org.doframework.DOF for info on how the
+myScratchReference works</code><br>
+<code># NOTE: This is a regexp, and there must be ONE grouping specified</code><br>
+<code># Default is ScratchPrimaryKeyPattern=\\{\\{pk(\\:(\\w+))?\\}\\}</code><br>
+<code># ScratchPrimaryKeyPattern=\\{\\{pk(\\:(\\w+))?\\}\\}</code><br>
+<code></code><br>
+<code></code></div>
+<br>
+<h3>deletion_helpers.properties</h3>
+This properties file contains a mapping of fully qualified class name
+to its associated ObjectDeletionHelper class. Note, if the classes that
+implement DependentObjectHandler specified in
+handler_mappings.properties implement the interface
+ObjectDeletionHelper, those will be used. And if you don't care about
+objection deletion, you can skip this file.<br>
+<br>
+<h3>handler_mappings.properties</h3>
+See below description of using text files and handler classes for a
+full description of <a
+ href="DofUserGuide.html#handler_mappings.properties_description">handler_mappings.properties</a>.<br>
+<br>
+<h1>Primary Keys and Alternate Keys and ORM tools<br>
+</h1>
+Since most ORM tools will require a unique id, such as a database
+sequence number, to be used as the primary key of&nbsp; the DB tables,
+it is not advised that this number be used <br>
+<br>
+It is advisable that your objects definitions have either explicit or
+implicit alternate keys that the DOF uses. <br>
+<br>
+The DOF documentation will use the term "primary key", but please keep
+in mind that the "primary key" is really the database "alternate key".<br>
+<br>
+<h1>Using Java Builder Classes</h1>
+Dependent objects are defined by using Java classes that implement the
+following interfaces:<br>
+<table style="text-align: left; width: 509px; height: 88px;" border="1"
+ cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top; font-weight: bold;">Object Type<br>
+      </td>
+      <td style="vertical-align: top; font-weight: bold;">Interface<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">Reference Object<br>
+      </td>
+      <td style="vertical-align: top;">org.doframework.ReferenceBuilder<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">Scratch Object<br>
+      </td>
+      <td style="vertical-align: top;">org.doframework.ScratchObject<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+Your test will call the methods:<br>
+<div style="margin-left: 40px;"><code>Object
+DOF.require(org.doframework.ReferenceBuilder referenceBuilder)<br>
+</code></div>
+and<br>
+<div style="margin-left: 40px;"><code>Object
+DOF.createScratchObject(org.doframework.ScratchBuilder scratchBuilder <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [, java.util.Map&lt;String,
+Object&gt; scratchReferenceToObject)<br>
+</code></div>
+<br>
+For example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Invoice dofInvoice =
+(Invoice) DOF.require(new Invoice_1000());<br>
+<br>
+Please see the example JUnit class
+org.doframework.sample.component.InvoiceJavaTest for code examples of
+how tests use the reference and scratch objects as well as how to
+implement the interfaces ReferenceBuilder and ScratchBuilder. Note,
+your implementation of create() for both interfaces should call
+DOF.require() and DOF.createScratchObject<br>
+<br>
+<h1>Using Text Files and Associated Handler Classes<br>
+</h1>
+<h2>Overview</h2>
+The alternative to using Java to define objects is to create some text
+file definition of objects and to write an appropriate "handler" class
+that knows how to read such files. The key bits to making this work are:<br>
+1. Naming the files such that the name tells what the object type and
+primary key are<br>
+2. A file that maps the object types to associated handler classes<br>
+3. Handler classes that implement the interface
+org.doframework.DependentObjectHandler<br>
+<br>
+A JUnit test that depends on "reference" objects would look like this:<br>
+<pre> public void testNewInvoiceSubtotal()<br> {<br>   Customer johnSmith = (Customer) DOF.require("customer.25.xml");<br>   Product coffee = (Product) DOF.require("product.13.xml");<br>   .... rest of the test<br> }<br><br>The product file may specify the manufacturer required, note in the XML comment using the form<br> <b>@require("fileToLoad")</b> <br>that indicates the dependency on manufacturer 35. <br></pre>
+product.13.xml<br>
+<pre> &lt;!-- <span style="color: rgb(51, 51, 255);">@require("manufacturer.35.xml") </span>--&gt;<br> &lt;product&gt;<br> &lt;id&gt;13&lt;/id&gt;<br> &lt;name&gt;coffee&lt;/name&gt;<br> &lt;price&gt;8.99&lt;/price&gt;<br> &lt;manufacturer_id&gt;35&lt;/manufacturer_id&gt;<br> &lt;/product&gt;<br></pre>
+<br>
+A JUnit test that depends on "scratch" objects would look like:<br>
+<br>
+<code>&nbsp;&nbsp;&nbsp; @Test<br>
+&nbsp;&nbsp;&nbsp; public void testNewInvoiceSubtotal()<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Invoice invoice = (Invoice)
+DOF.createScratchObject("invoice.scratch.xml");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int originalSubtotal =
+invoice.getTotal();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Product coffee = (Product)
+DOF.require("product.16.xml");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Product tea = (Product)
+DOF.require("product.17.xml");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+invoiceComponent.addLineItem(invoice, 2, coffee, coffee.getPrice());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+invoiceComponent.addLineItem(invoice, 3, tea, tea.getPrice());<br>
+</code><br>
+invoice.scratch.xml, depends on reference objects. Notice how the
+invoice id is specified as <span style="font-weight: bold;">{{pk}}</span>.<br>
+<div style="margin-left: 40px;"><code>&lt;!-- list of dependencies for
+invoice number 100 --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!--
+@require("customer.25.xml") --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!--
+@require("product.31.xml") --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!--
+@require("product.32.xml") --&gt;<br>
+&lt;invoice&gt;<br>
+<span style="color: rgb(51, 51, 255); font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&lt;id&gt;{{pk}}&lt;/id&gt;</span><br>
+&nbsp;&nbsp;&nbsp; &lt;customer_id&gt;25&lt;/customer_id&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;invoice_date&gt;2007-05-15&lt;/invoice_date&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;total&gt;38&lt;/total&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;pending_balance&gt;38&lt;/pending_balance&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;line_items&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;line_item&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;qty&gt;8&lt;/qty&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;product_id&gt;31&lt;/product_id&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;price&gt;4&lt;/price&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/line_item&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;line_item&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;qty&gt;2&lt;/qty&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;product_id&gt;32&lt;/product_id&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;price&gt;3&lt;/price&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/line_item&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;/line_items&gt;<br>
+&lt;/invoice&gt;<br>
+</code></div>
+<br>
+Here is a scratch file that depends on other scratch files. Notice how
+the PK of the customer gets placed inside the XML tags. The scratch
+reference, "scratchCustomerPk", is the second parameter of the top call
+to create the scratch object. Then down lower, the pattern <code
+ style="font-weight: bold;"><span style="color: rgb(51, 51, 255);">{{pk::scratchCustomerPk}}</span>
+</code>is substituted with the customer pk when the handler gets the
+file contents.<br>
+<br>
+<div style="margin-left: 40px;"><code>&lt;!--Sample of creating a
+scratch invoice that depends on a scratch customer--&gt;<br>
+&lt;!--Scratch customer could be needed because the customer stores the
+sum of invoices created--&gt;<br>
+&lt;!-- list of dependencies for invoice number 100 --&gt;<br>
+<span style="font-weight: bold; color: rgb(51, 51, 255);">&lt;!--
+@createScratchObject("customer.scratchBalance35.xml",
+"scratchCustomerPk")--&gt;</span><br
+ style="font-weight: bold; color: rgb(51, 51, 255);">
+&lt;!-- @require("product.31.xml") --&gt;<br>
+&lt;!-- @require("product.32.xml") --&gt;<br>
+&lt;invoice&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;id&gt;{{pk}}&lt;/id&gt;<br>
+<span style="font-weight: bold; color: rgb(51, 51, 255);">&nbsp;&nbsp;&nbsp;
+&lt;customer_id&gt;{{pk:scratchCustomerPk}}&lt;/customer_id&gt;</span><br
+ style="font-weight: bold; color: rgb(51, 51, 255);">
+&nbsp;&nbsp;&nbsp; &lt;invoice_date&gt;2007-05-15&lt;/invoice_date&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;total&gt;38&lt;/total&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;pending_balance&gt;38&lt;/pending_balance&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;line_items&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;line_item&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;qty&gt;8&lt;/qty&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;product_id&gt;31&lt;/product_id&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;price&gt;4&lt;/price&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/line_item&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;line_item&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;qty&gt;2&lt;/qty&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;product_id&gt;32&lt;/product_id&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;price&gt;3&lt;/price&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/line_item&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;/line_items&gt;<br>
+&lt;/invoice&gt;</code><br>
+</div>
+<br>
+The handler classes that implement DependentObjectHandler must not get
+the file text directly from the file system, but instead must go
+through the org.doframework.ObjectFileInfo apis to get the file
+contents. That is to ensure that the patterns for primary keys get
+substituted correctly. In other words, by going through the special
+APIs, the handler class does not need to know if the object requested
+for "create" is a scratch object or a reference object because the DOF
+will have substituted the appropriate values ahead of time.<br>
+<br>
+The next example shows how a scratch text file can reference a scratch
+Java object. In this example, we have a scratch Invoice text file
+referencing a scratch Java customer (class that implements
+ScratchBuilder). Notice how the scratch reference, "scratchCustomerPk",
+ties the creation of the scratch object to the insertion of the correct
+primary key text.<br>
+<br>
+<div style="margin-left: 40px;"><code>&lt;!--Sample of creating a
+scratch invoice that depends on a scratch customer--&gt;</code><br>
+<code>&lt;!--Scratch customer could be needed because the customer
+stores the sum of invoices created--&gt;</code><br>
+<code>&lt;!-- list of dependencies for invoice number 100 --&gt;</code><br>
+<code>&lt;!-- <span style="font-weight: bold; color: rgb(51, 51, 255);">@createScratchObjectJava("org.doframework.sample.component.scratch.Customer_Scratch","scratchCustomerPk")</span>
+--&gt;</code><br>
+<code>&lt;!--
+@createScratchObjectJava("org.doframework.sample.component.scratch.Product_Scratch","scratchProductPk1")
+--&gt;</code><br>
+<code>&lt;!--
+@createScratchObjectJava("org.doframework.sample.component.scratch.Product_Scratch","scratchProductPk2")
+--&gt;</code><br>
+<code>&lt;invoice&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp; &lt;id&gt;{{pk}}&lt;/id&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp; <span style="color: rgb(51, 51, 255);">&lt;customer_id&gt;{{pk:scratchCustomerPk}}&lt;/customer_id&gt;</span></code><br>
+<code>&nbsp;&nbsp;&nbsp;
+&lt;invoice_date&gt;2007-05-15&lt;/invoice_date&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp; &lt;total&gt;38&lt;/total&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp;
+&lt;pending_balance&gt;38&lt;/pending_balance&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp; &lt;line_items&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;line_item&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;qty&gt;8&lt;/qty&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;product_id&gt;{{pk:scratchProductPk1}}&lt;/product_id&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;price&gt;4&lt;/price&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/line_item&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;line_item&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;qty&gt;2&lt;/qty&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;product_id&gt;{{pk:scratchProductPk2}}&lt;/product_id&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;price&gt;3&lt;/price&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/line_item&gt;</code><br>
+<code>&nbsp;&nbsp;&nbsp; &lt;/line_items&gt;</code><br>
+<code>&lt;/invoice&gt;</code><br>
+</div>
+<br>
+<br>
+<br>
+<h2>Details</h2>
+The test writer provides: <br>
+<h3>Object Definition Files</h3>
+For each object, a data file containing information to create each
+object, including the specification of any object dependencies. For
+example a "product" record might specify what manufacturer record is
+required. In order to be located by the framework, all DOF data files
+must exist in the classpath, or they must be under a directory passed
+as a system parameter "DOF_DIR".<br>
+<h3>Handler Classes implement DependentObjectHandler</h3>
+An appropriate handler class for each object type. The handler class
+implements the interface <span style="font-weight: bold;">org.doframework.DepedendentObjectHandler
+</span>and needs to be mapped to an object type based on the naming
+convention of the text files. The file that contains these mapping is
+called <span style="font-weight: bold;">handler_mappings.properties </span>(see
+below). That file must either exist in the classpath or at directory
+specified as system property <b>DOF_DIR</b>. This
+DependenetObjectHandler class knows how to create, get, and delete
+objects of a given type and given a format for the description files.
+Note, the object description files can be of any form because the test
+writer is responsible for writing the code that processes the
+description files. <br>
+<h3><a name="handler_mappings.properties_description"></a>handler_mappings.properties</h3>
+Used only for the text file technique, this file must exist in the
+classpath or at directory specified as VM
+system property DOF_DIR. Please consult the sample file for more
+detailed documentation on configurable parameters. The key aspect of
+the properties file is the mapping of object types to handlers:
+<p> <code>objectType.fileSuffix=DependentObjectHandlerImplementationClassName</code>
+</p>
+<p> This is an example of a line in the mappings file: </p>
+<p> <code>customer.xml=org.doframework.sample.xml_handler.CustomerXmlFactory<br>
+</code><span style="font-family: monospace;"><br>
+</span>It states that a file named customer.101.xml file maps to the
+handler class <code>org.doframework.sample.xml_handler.CustomerXmlFactory</code>
+and has primary key 101. Note, the CustomerXmlFactory class must
+implement interface <b>DependentObjectHandler</b>.&nbsp; Even though
+the default fileToLoad pattern uses the period as the delimiter, the
+primary key may contain periods because the first and last periods are
+used to find the object type and the file suffix. This also means that
+object types may NOT contain a period.<br>
+</p>
+<p>Alternately, you can specify a regular expression to map an object
+type and file extension to a handler class. In order for the pattern to
+be recognized as a regexp, it needs to contain at least one '*', '?',
+or '+'. </p>
+<pre> {regular expression}=class<br> \\w+\\.xml=org.doframework.sample.xml_handler.GenericXmlFactory<br> # NOTE: you must use double backslashes to mean a backslash<br> </pre>
+For regexp documentation, consult the javadoc for
+java.util.regexp.Pattern
+<p>In case you do not like the form of "objectType.PK.fileType", you
+may specify a custom ObjectFileInfoProcessor class by putting in this
+property in file handler_mappings.properties. Consult
+org.doframework.ObjectFileInfoProcessor javadoc for more
+information.&nbsp; </p>
+<pre> ObjectFileInfoProcessor=FullClassNameToClassThatImplementsObjectFileInfoProcessor<br><br></pre>
+<h3>Scratch Objects</h3>
+Scratch objects are created using the call
+DOF.createScratchObject(String fileToLoad [, Map&lt;String, String&gt;
+scratchReferenceToPrimaryKey]). As shown above, text scratch objects
+can depend on reference objects, or other text or java scratch objects.
+The "scratch reference" is what ties the created dependency scratch
+object to the appropriate value in the file.<br>
+<br>
+Note that the interface DependentObjectHandler does not distinguish if
+the file is a template for a scratch object or a fully defined
+reference object. This works because the implementer must get the
+contents of the file <span style="font-weight: bold;">not</span> by
+access the file system, but by either calling:<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp; String contents =
+objectFileInfo.getFileContentsAsString();</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp; or<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp; InputStream is =
+objectFileInfo.getFileContentsAsInputStream();</code><br>
+<br>
+Please see interface definition org.doframework.DependentObjectHandler
+for more information regarding this.<br>
+<h3>Scratch Primary Key Provider</h3>
+When scratch objects are created, the text <code>{{pk}}</code> gets
+substituted with a unique primary key. The source of this primary key
+is chosen in the following order:<br>
+<ol>
+  <li>The associated DependentObjectHandler, if it implements the
+interface org.doframework.ScratchPkProvider. </li>
+  <li>The default scratch key provider defined in
+dof_preference.properties</li>
+  <li>The default of System.currTimeInMillis() + "" </li>
+</ol>
+<br>
+<h3>Deletion</h3>
+Deletion is supported by the DOF for two primary reasons. First, it's
+useful when creating new DOF classes and files in order to delete
+database objects that are incorrectly created. Second, in certain
+situations, it may be useful to formally clean up database rows created
+for a test.<br>
+<br>
+<h2>Related Documentation</h2>
+If you are interested in using this package, please sign up for google
+groups mailing list:<br>
+&nbsp;<br>
+For overviews, tutorials, examples, guides, and tool documentation,
+please see:<br>
+http://www.justingordon.org. Also, feel free to e-mail
+justingordon@yahoo.com.<br>
+<br>
+<!-- Put @see and @since tags down here. -->
+</body>
+</html>
