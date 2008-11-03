@@ -240,8 +240,8 @@
                 <exclude name="**/bin/**"/>
             </fileset>
             </copy>
-        <copy todir="${release.dir}/hello_dof_1">
-            <fileset dir="${whole.release.dir}/dof_junit">
+        <copy todir="${release.dir}/hello_dof_java">
+            <fileset dir="${whole.release.dir}/hello_dof_java">
                 <exclude name="**/*.jar"/>
                 <exclude name="**/build/**"/>
                 <exclude name="**/database/**"/>
@@ -261,6 +261,29 @@
                 <exclude name="**/bin/**"/>
             </fileset>
         </copy>
+
+        <copy todir="${release.dir}/hello_dof_text">
+            <fileset dir="${whole.release.dir}/hello_dof_text">
+                <exclude name="**/*.jar"/>
+                <exclude name="**/build/**"/>
+                <exclude name="**/database/**"/>
+                <exclude name="**/release/**"/>
+                <exclude name="**/out/**"/>
+                <exclude name="**/classes/**"/>
+                <exclude name="**/*.class"/>
+                <exclude name="**/jpa/**"/>
+                <exclude name="**/hibernate/**"/>
+                <exclude name="**/db/**"/>
+                <exclude name="**/.metadata/**"/>
+                <exclude name="**/*.zip"/>
+                <exclude name="**/*.tmp"/>
+                <exclude name="**/reports/**"/>
+                <exclude name="**/junit_out/**"/>
+                <exclude name="**/lib/**"/>
+                <exclude name="**/bin/**"/>
+            </fileset>
+        </copy>
+
 
         <copy todir="${release.dir}/lib">
             <fileset dir="${whole.release.dir}/lib">
