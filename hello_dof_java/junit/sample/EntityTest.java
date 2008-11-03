@@ -11,7 +11,7 @@ public class EntityTest
     @BeforeClass
     public static void beforeClass()
     {
-        DOFGlobalSettings.setDofDir("hello_dof_1/src/META-INF");
+        DOFGlobalSettings.setDofDir("hello_dof_java/src/META-INF");
         //JpaUtility.dropAll();
         checkSchemaCreated();
     }
