@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+
+<persistence-unit name="hello_dof">
+    <class>sample.Manufacturer</class>
+    <class>sample.Product</class>
+    <properties>
+        <property name="hibernate.connection.url"
+                  value="jdbc:h2:tcp://localhost/c:/temp/hello_dof_text"/>
+        <!--<property name="hibernate.connection.url" value="jdbc:h2:mem:memdbid"/>-->
+        <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
+        <property name="hibernate.connection.username" value="sa"/>
+        <property name="hibernate.connection.password" value=""/>
+    </properties>
+</persistence-unit>
+</persistence>
