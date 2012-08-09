@@ -1,6 +1,5 @@
 Dependent Object Framework (DOF)
 
-http://sourceforge.net/projects/dof/
 Description: http://www.junit.org/node/308
              http://www.justingordon.org
 Google Group: http://groups.google.com/group/dependent-object-framework
