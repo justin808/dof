@@ -5,7 +5,7 @@ Description: http://www.junit.org/node/308
              http://www.justingordon.org
 Google Group: http://groups.google.com/group/dependent-object-framework
 
-
+License: http://opensource.org/licenses/eclipse
 
 In a nutshell, with this framework,
 1. It's OK and EASY to run JUnit tests against the database
@@ -19,7 +19,7 @@ For more info, see article: http://www.junit.org/node/308
 Cheers,
 
 Justin Gordon
-justingordon at yahoo.com
+justin.gordon at gmail.com
 
 
 This release contains:
