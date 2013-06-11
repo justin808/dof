@@ -1,4 +1,5 @@
 Dependent Object Framework (DOF)
+(Migrated from http://sourceforge.net/projects/dof/)
 
 Description: http://www.justingordon.org/2008/03/database-dependent-junit-tests-and.html
 Google Group: http://groups.google.com/group/dependent-object-framework
